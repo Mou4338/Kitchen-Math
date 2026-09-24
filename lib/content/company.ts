@@ -150,7 +150,13 @@ export const PRODUCT_MATRIX = [
 ];
 
 export const COMPANY_IMAGES = {
-  hero: { src: u("1617347454431-f49d7ff5c3b1", 2000), alt: "Delivery rider on a scooter riding through the city at night" },
+  hero: { src: u("1753727471014-efe38840c7c7", 2000), alt: "Upscale restaurant interior with elegant dining tables" },
+  /** Hero background slideshow: elegant, upscale dining rooms. */
+  heroSlides: [
+    { src: u("1753727471014-efe38840c7c7", 2000), alt: "Upscale restaurant interior with elegant dining tables" },
+    { src: u("1661422586023-681ea60507e2", 2000), alt: "Grand dining room lit by a chandelier" },
+    { src: u("1741852197045-cc35920a3aa0", 2000), alt: "Elegant restaurant dining room" },
+  ],
   team: { src: u("1758518731706-be5d5230e5a5"), alt: "Consulting team collaborating in a modern office" },
   dish: { src: u("1631515243349-e0cb75fb8d3a", 900), alt: "Bowl of rice and meat" },
   contact: { src: u("1758518731462-d091b0b4ed0d", 1800), alt: "Business partners shaking hands over an agreement" },

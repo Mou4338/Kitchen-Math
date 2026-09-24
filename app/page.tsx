@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { ContactForm } from "@/components/company/ContactForm";
 import { GrowthCalculator } from "@/components/company/GrowthCalculator";
+import { HeroBackdrop } from "@/components/company/HeroBackdrop";
 import { FaqBlock } from "@/components/content/CalculatorContent";
 import { ServiceCard } from "@/components/company/ServiceCard";
 import { HeroPreview } from "@/components/dashboard/HeroPreview";
@@ -38,9 +39,12 @@ export default function CompanyHome() {
     <>
       {/* 1 · HERO (deep navy) */}
       <section className="relative isolate overflow-hidden bg-inverse">
-        <Image src={COMPANY_IMAGES.hero.src} alt={COMPANY_IMAGES.hero.alt} fill priority sizes="100vw" className="-z-10 object-cover" />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/90 to-inverse/40" aria-hidden />
-        <div className="absolute inset-0 -z-10 bg-accent/15 mix-blend-color" aria-hidden />
+        <HeroBackdrop />
+        {/* Royal overlay: deep navy (light theme) or black-gold (dark theme), lighter on the right so the room shows through */}
+        <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/85 to-inverse/30" aria-hidden />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/80 via-transparent to-inverse/40" aria-hidden />
+        <div className="absolute inset-0 -z-10 bg-accent/10 mix-blend-color" aria-hidden />
+        <div className="absolute inset-0 -z-10 [background:radial-gradient(120%_80%_at_70%_40%,transparent_40%,rgb(var(--inverse)/0.55)_100%)]" aria-hidden />
         <div className="container grid items-center gap-12 py-20 sm:py-24 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:py-28">
           <Reveal className="text-on-inverse">
             <p className="inline-flex items-center gap-2 rounded-full border border-on-inverse/20 bg-on-inverse/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-accent-bright backdrop-blur">
