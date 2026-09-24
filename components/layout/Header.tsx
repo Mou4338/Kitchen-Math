@@ -13,16 +13,16 @@ import { SITE } from "@/lib/site";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const NAV = [
-  { href: "/restaurant", label: "Home" },
-  { href: "/restaurant/guides", label: "Guides" },
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
+  { href: "/restaurant", label: "Tools" },
   { href: "/restaurant/help", label: "Help" },
-  { href: "/restaurant/calculator-history", label: "History" },
   { href: "/restaurant/about", label: "About" },
 ];
 
 export function Logo({ onClick }: { onClick?: () => void } = {}) {
   return (
-    <Link href="/restaurant" onClick={onClick} className="flex items-center gap-2.5 font-semibold tracking-tight text-ink" aria-label={`${SITE.name} home`}>
+    <Link href="/" onClick={onClick} className="flex items-center gap-2.5 font-semibold tracking-tight text-ink" aria-label={`${SITE.name} home`}>
       <span className="grid h-8 w-8 place-items-center rounded-lg bg-inverse text-sm font-bold text-accent-bright">₹</span>
       <span className="text-[17px]">{SITE.name}</span>
     </Link>
@@ -35,7 +35,7 @@ export function Header() {
   const [calcOpen, setCalcOpen] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
 
-  const isActive = (href: string) => (href === "/restaurant" ? pathname === "/restaurant" : pathname.startsWith(href));
+  const isActive = (href: string) => (href === "/" || href === "/restaurant" ? pathname === href : pathname.startsWith(href));
   const calcActive = CALCULATORS.some((c) => pathname.startsWith(`/restaurant/${c.slug}`));
   const navClass = (active: boolean) =>
     cn(
@@ -74,7 +74,9 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between gap-4">
         <Logo onClick={closeMenus} />
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          <Link onClick={closeMenus} href={NAV[0].href} aria-current={isActive(NAV[0].href) ? "page" : undefined} className={navClass(isActive(NAV[0].href))}>{NAV[0].label}</Link>
+          {NAV.slice(0, 3).map((n) => (
+            <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={isActive(n.href) ? "page" : undefined} className={navClass(isActive(n.href))}>{n.label}</Link>
+          ))}
           <div className="relative" ref={dropRef}>
             <button
               type="button"
@@ -110,7 +112,7 @@ export function Header() {
               ) : null}
             </AnimatePresence>
           </div>
-          {NAV.slice(1).map((n) => (
+          {NAV.slice(3).map((n) => (
             <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={isActive(n.href) ? "page" : undefined} className={navClass(isActive(n.href))}>
               {n.label}
             </Link>
@@ -118,8 +120,8 @@ export function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Link onClick={closeMenus} href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "sm", "hidden sm:inline-flex")}>
-            Start Calculating
+          <Link onClick={closeMenus} href="/#contact" className={buttonClass("accent", "sm", "hidden sm:inline-flex")}>
+            Free growth audit
           </Link>
           <button type="button" className="grid h-10 w-10 place-items-center rounded-lg text-ink hover:bg-wash lg:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen((o) => !o)}>
             {menuOpen ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
@@ -155,7 +157,7 @@ export function Header() {
                   <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={isActive(n.href) ? "page" : undefined} className={cn("flex min-h-[48px] items-center rounded-xl px-2 text-[15px] font-medium hover:bg-wash", isActive(n.href) && "bg-accent-soft text-accent-dark")}>{n.label}</Link>
                 ))}
               </div>
-              <Link onClick={closeMenus} href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg", "mt-4 w-full")}>Start Calculating</Link>
+              <Link onClick={closeMenus} href="/#contact" className={buttonClass("accent", "lg", "mt-4 w-full")}>Book a free growth audit</Link>
             </div>
           </motion.nav>
         ) : null}

@@ -61,7 +61,7 @@ export default function HelpPage() {
         title="Using the calculators,"
         accent="step by step"
         subtitle="Everything you need to go from your first number to a report you can share, in about two minutes of reading."
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Help", path: "/restaurant/help" }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "Tools", path: "/restaurant" }, { name: "Help", path: "/restaurant/help" }]}
       >
         <div className="flex flex-wrap gap-3">
           <Link href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg")}>Try the Health calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>

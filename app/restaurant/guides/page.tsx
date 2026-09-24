@@ -21,7 +21,7 @@ export default function GuidesPage() {
         title="Restaurant finance"
         accent="guides"
         subtitle="The key idea behind each calculator in two minutes, with a worked example you can check yourself."
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Guides", path: "/restaurant/guides" }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "Tools", path: "/restaurant" }, { name: "Guides", path: "/restaurant/guides" }]}
       />
     <div className="container pb-16 pt-12">
       <div className="grid gap-5 md:grid-cols-2">

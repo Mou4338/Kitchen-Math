@@ -25,7 +25,10 @@ export function Footer() {
         <nav aria-label="More">
           <p className="eyebrow mb-3">More</p>
           <ul className="grid gap-2 text-sm">
-            <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant">All tools</Link></li>
+            <li><Link className="text-ink-soft hover:text-accent-dark" href="/">Home</Link></li>
+            <li><Link className="text-ink-soft hover:text-accent-dark" href="/services">Growth consulting services</Link></li>
+            <li><Link className="text-ink-soft hover:text-accent-dark" href="/#contact">Book a free growth audit</Link></li>
+            <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant">Free tools</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant/guides">Guides</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant/help">Help &amp; how-to</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant/calculator-history">Saved scenarios</Link></li>

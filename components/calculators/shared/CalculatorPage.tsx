@@ -31,7 +31,7 @@ export function CalculatorPage({ meta, children }: { meta: CalculatorMeta; child
         title={title}
         accent={accent}
         subtitle={meta.summary}
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: meta.shortTitle, path: `/restaurant/${meta.slug}` }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "Tools", path: "/restaurant" }, { name: meta.shortTitle, path: `/restaurant/${meta.slug}` }]}
         compact
       >
         <div className="flex flex-wrap items-center gap-3">

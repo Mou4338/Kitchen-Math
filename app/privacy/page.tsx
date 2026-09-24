@@ -14,7 +14,7 @@ export default function PrivacyPage() {
         title="Privacy"
         accent="policy"
         subtitle="Last updated: September 2026"
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Privacy", path: "/privacy" }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "Privacy", path: "/privacy" }]}
         compact
       />
     <article className="container max-w-3xl pb-16 pt-10">

@@ -9,9 +9,6 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ["lucide-react", "recharts"],
   },
-  async redirects() {
-    return [{ source: "/", destination: "/restaurant", permanent: true }];
-  },
 };
 
 export default nextConfig;

@@ -23,7 +23,7 @@ export default function AboutPage() {
         eyebrow={`About ${SITE.name}`}
         title="Most restaurants don't fail on food. They fail on"
         accent="numbers."
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "About", path: "/restaurant/about" }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "About", path: "/restaurant/about" }]}
       />
     <div className="container max-w-4xl pb-16 pt-12">
       <p className="mb-10 text-lg leading-relaxed text-ink-soft">

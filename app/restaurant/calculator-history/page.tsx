@@ -17,7 +17,7 @@ export default function HistoryPage() {
         title="Saved"
         accent="scenarios"
         subtitle="Everything you saved with the Save button, on this device. View, rename, duplicate, delete or export it. No account needed."
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Saved scenarios", path: "/restaurant/calculator-history" }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "Tools", path: "/restaurant" }, { name: "Saved scenarios", path: "/restaurant/calculator-history" }]}
         compact
       />
       <div className="container max-w-4xl pb-16 pt-10">

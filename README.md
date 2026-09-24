@@ -10,7 +10,9 @@ A Next.js website with **9 calculators**, a **Restaurant Snapshot** dashboard, s
 
 | Route | What it does |
 |---|---|
-| `/restaurant` | Landing page, hero dashboard preview, Restaurant Snapshot, calculator collection |
+| `/` | Company home: consulting services, process, free-tools showcase, contact |
+| `/services` | Full service framework (9 areas), growth equation, glossary |
+| `/restaurant` | Tools home, hero dashboard preview, Restaurant Snapshot, calculator collection |
 | `/restaurant/restaurant-health-calculator` | Food, labor, marketing and prime cost %, transparent health score |
 | `/restaurant/break-even-calculator` | Break-even (monthly, daily, orders/day), margin of safety, zones chart |
 | `/restaurant/online-sale-payout-calculator` | Order waterfall, platform comparison, monthly simulation |
@@ -24,7 +26,9 @@ A Next.js website with **9 calculators**, a **Restaurant Snapshot** dashboard, s
 | `/restaurant/help` | How-to guide, colour meanings, buttons explained, glossary, FAQs |
 | `/restaurant/guides`, `/restaurant/about`, `/privacy`, `/terms` | Content pages |
 
-`/` redirects to `/restaurant`.
+`/` is the company home page (Restaurant Growth Consulting): hero, approach, about, 9 services, how we work, frameworks, free-tools showcase and a contact/enquiry section. `/services` details every service.
+
+**Company details:** edit `SITE.company` in `lib/site.ts` (email, phone, WhatsApp, location). Service text lives in `lib/content/company.ts`.
 
 ## 2. Features
 

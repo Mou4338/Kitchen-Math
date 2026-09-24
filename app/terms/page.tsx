@@ -14,7 +14,7 @@ export default function TermsPage() {
         title="Terms of"
         accent="use"
         subtitle="Last updated: September 2026"
-        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Terms", path: "/terms" }]}
+        crumbs={[{ name: "Home", path: "/" }, { name: "Terms", path: "/terms" }]}
         compact
       />
     <article className="container max-w-3xl pb-16 pt-10">
