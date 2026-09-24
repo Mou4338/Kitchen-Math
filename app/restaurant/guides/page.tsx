@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { PageHero } from "@/components/layout/PageHero";
+import { PAGE_IMAGES } from "@/lib/content/images";
 import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
 import { CALCULATORS } from "@/lib/content/calculators";
 import { pageMetadata } from "@/lib/seo";
@@ -13,12 +14,16 @@ export const metadata = pageMetadata({
 
 export default function GuidesPage() {
   return (
-    <div className="container pb-16 pt-6">
-      <Breadcrumbs items={[{ name: "Restaurant tools", path: "/restaurant" }, { name: "Guides", path: "/restaurant/guides" }]} />
-      <header className="mb-10 mt-5 max-w-2xl">
-        <h1 className="text-3xl font-semibold sm:text-4xl">Guides</h1>
-        <p className="mt-2 text-lg text-muted">The key idea behind each calculator in two minutes, with a worked example.</p>
-      </header>
+    <>
+      <PageHero
+        photo={PAGE_IMAGES.guides}
+        eyebrow="Learn the numbers"
+        title="Restaurant finance"
+        accent="guides"
+        subtitle="The key idea behind each calculator in two minutes, with a worked example you can check yourself."
+        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Guides", path: "/restaurant/guides" }]}
+      />
+    <div className="container pb-16 pt-12">
       <div className="grid gap-5 md:grid-cols-2">
         {CALCULATORS.map((c) => (
           <article key={c.slug} className="flex flex-col rounded-2xl border border-line bg-card p-6 shadow-card">
@@ -36,5 +41,6 @@ export default function GuidesPage() {
         ))}
       </div>
     </div>
+    </>
   );
 }

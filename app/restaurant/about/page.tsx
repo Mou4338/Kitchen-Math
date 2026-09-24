@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
+import { PageHero } from "@/components/layout/PageHero";
+import { PAGE_IMAGES } from "@/lib/content/images";
 import { buttonClass } from "@/components/ui/Button";
 import { BENCHMARK_NOTE } from "@/lib/calculations/benchmarks";
 import { pageMetadata } from "@/lib/seo";
@@ -16,14 +17,18 @@ const PRINCIPLES = [
 
 export default function AboutPage() {
   return (
-    <div className="container max-w-4xl pb-16 pt-6">
-      <Breadcrumbs items={[{ name: "Restaurant tools", path: "/restaurant" }, { name: "About", path: "/restaurant/about" }]} />
-      <header className="mb-10 mt-5">
-        <h1 className="text-3xl font-semibold sm:text-4xl">Most restaurants don&apos;t fail on food. They fail on numbers.</h1>
-        <p className="mt-4 text-lg leading-relaxed text-muted">
-          Net margins in Indian restaurants are often 5–10%. One unchecked point of food cost, an extra shift of staff or an untracked campaign can turn a profitable month into a loss. {SITE.name} puts the key numbers in front of owners for free, without software subscriptions or sign-ups.
-        </p>
-      </header>
+    <>
+      <PageHero
+        photo={PAGE_IMAGES.about}
+        eyebrow={`About ${SITE.name}`}
+        title="Most restaurants don't fail on food. They fail on"
+        accent="numbers."
+        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "About", path: "/restaurant/about" }]}
+      />
+    <div className="container max-w-4xl pb-16 pt-12">
+      <p className="mb-10 text-lg leading-relaxed text-ink-soft">
+        Net margins in Indian restaurants are often 5–10%. One unchecked point of food cost, an extra shift of staff or an untracked campaign can turn a profitable month into a loss. {SITE.name} puts the key numbers in front of owners for free, without software subscriptions or sign-ups.
+      </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {PRINCIPLES.map((p) => (
           <div key={p.title} className="rounded-2xl border border-line bg-card p-6 shadow-card">
@@ -38,5 +43,6 @@ export default function AboutPage() {
         <Link href="/restaurant#tools" className={buttonClass("accent", "md", "mt-5")}>Explore the calculators</Link>
       </div>
     </div>
+    </>
   );
 }

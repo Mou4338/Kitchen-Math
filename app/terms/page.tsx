@@ -1,13 +1,23 @@
 import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
+import { PageHero } from "@/components/layout/PageHero";
+import { PAGE_IMAGES } from "@/lib/content/images";
 
 export const metadata = pageMetadata({ title: "Terms of Use", description: `Terms for using ${SITE.name} calculators.`, path: "/terms" });
 
 export default function TermsPage() {
   return (
+    <>
+      <PageHero
+        photo={PAGE_IMAGES.terms}
+        eyebrow="Legal"
+        title="Terms of"
+        accent="use"
+        subtitle="Last updated: September 2026"
+        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Terms", path: "/terms" }]}
+        compact
+      />
     <article className="container max-w-3xl pb-16 pt-10">
-      <h1 className="text-3xl font-semibold sm:text-4xl">Terms of use</h1>
-      <p className="mt-2 text-sm text-muted">Last updated: September 2026</p>
       <div className="prose-km mt-8 space-y-6">
         <section>
           <h2 className="text-xl font-semibold">Estimates, not advice</h2>
@@ -27,5 +37,6 @@ export default function TermsPage() {
         </section>
       </div>
     </article>
+    </>
   );
 }

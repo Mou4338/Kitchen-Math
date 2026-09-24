@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Download, FileSpreadsheet, FolderOpen, Info, Moon, Printer, Save, Share2, SlidersHorizontal } from "lucide-react";
-import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
-import { HelpIdea, PrivacyShield, StepAnalyze, StepEnter, StepSave } from "@/components/illustrations/Illustrations";
+import { PageHero } from "@/components/layout/PageHero";
+import { PAGE_IMAGES } from "@/lib/content/images";
+import { PrivacyShield, StepAnalyze, StepEnter, StepSave } from "@/components/illustrations/Illustrations";
 import { buttonClass } from "@/components/ui/Button";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { faqSchema, pageMetadata } from "@/lib/seo";
@@ -53,23 +54,21 @@ const FAQS = [
 
 export default function HelpPage() {
   return (
-    <div className="container pb-20 pt-6">
-      <Breadcrumbs items={[{ name: "Restaurant tools", path: "/restaurant" }, { name: "Help", path: "/restaurant/help" }]} />
-
-      <header className="hero-glow mt-5 grid items-center gap-6 overflow-hidden rounded-3xl border border-line bg-card p-6 shadow-card sm:p-10 md:grid-cols-[1.3fr_1fr]">
-        <div>
-          <p className="eyebrow text-accent-dark">Help centre</p>
-          <h1 className="mt-2 text-4xl font-semibold leading-tight sm:text-5xl">
-            Using the calculators, <span className="accent-serif">step by step</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-lg text-muted">Everything you need to go from your first number to a report you can share, in about two minutes of reading.</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg")}>Try the Health calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-            <a href="#glossary" className={buttonClass("outline", "lg")}>Glossary</a>
-          </div>
+    <>
+      <PageHero
+        photo={PAGE_IMAGES.help}
+        eyebrow="Help centre"
+        title="Using the calculators,"
+        accent="step by step"
+        subtitle="Everything you need to go from your first number to a report you can share, in about two minutes of reading."
+        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Help", path: "/restaurant/help" }]}
+      >
+        <div className="flex flex-wrap gap-3">
+          <Link href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg")}>Try the Health calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+          <a href="#glossary" className="inline-flex h-12 items-center rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">Glossary</a>
         </div>
-        <HelpIdea className="mx-auto w-full max-w-[320px]" />
-      </header>
+      </PageHero>
+    <div className="container pb-20 pt-4">
 
       <section className="mt-16" aria-labelledby="start">
         <h2 id="start" className="text-3xl font-semibold">Getting started</h2>
@@ -153,5 +152,6 @@ export default function HelpPage() {
         <JsonLd data={faqSchema(FAQS)} />
       </section>
     </div>
+    </>
   );
 }

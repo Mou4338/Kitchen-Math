@@ -13,7 +13,7 @@ import { SITE } from "@/lib/site";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const NAV = [
-  { href: "/restaurant#tools", label: "Tools" },
+  { href: "/restaurant", label: "Home" },
   { href: "/restaurant/guides", label: "Guides" },
   { href: "/restaurant/help", label: "Help" },
   { href: "/restaurant/calculator-history", label: "History" },
@@ -34,6 +34,14 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [calcOpen, setCalcOpen] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
+
+  const isActive = (href: string) => (href === "/restaurant" ? pathname === "/restaurant" : pathname.startsWith(href));
+  const calcActive = CALCULATORS.some((c) => pathname.startsWith(`/restaurant/${c.slug}`));
+  const navClass = (active: boolean) =>
+    cn(
+      "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-wash hover:text-ink",
+      active ? "text-accent after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-accent" : "text-muted",
+    );
 
   const closeMenus = () => {
     setMenuOpen(false);
@@ -66,14 +74,14 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between gap-4">
         <Logo onClick={closeMenus} />
         <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
-          <Link onClick={closeMenus} href={NAV[0].href} className="rounded-lg px-3 py-2 text-sm font-medium text-muted hover:bg-wash hover:text-ink">Tools</Link>
+          <Link onClick={closeMenus} href={NAV[0].href} aria-current={isActive(NAV[0].href) ? "page" : undefined} className={navClass(isActive(NAV[0].href))}>{NAV[0].label}</Link>
           <div className="relative" ref={dropRef}>
             <button
               type="button"
               aria-expanded={calcOpen}
               aria-controls="calc-menu"
               onClick={() => setCalcOpen((o) => !o)}
-              className={cn("inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium hover:bg-wash hover:text-ink", calcOpen ? "bg-wash text-ink" : "text-muted")}
+              className={cn(navClass(calcActive), "inline-flex items-center gap-1", calcOpen && "bg-wash text-ink")}
             >
               Calculators <ChevronDown className={cn("h-4 w-4 transition-transform", calcOpen && "rotate-180")} aria-hidden />
             </button>
@@ -103,7 +111,7 @@ export function Header() {
             </AnimatePresence>
           </div>
           {NAV.slice(1).map((n) => (
-            <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={pathname === n.href ? "page" : undefined} className={cn("rounded-lg px-3 py-2 text-sm font-medium hover:bg-wash hover:text-ink", pathname === n.href ? "text-ink" : "text-muted")}>
+            <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={isActive(n.href) ? "page" : undefined} className={navClass(isActive(n.href))}>
               {n.label}
             </Link>
           ))}
@@ -144,7 +152,7 @@ export function Header() {
               </div>
               <div className="mt-4 grid gap-1 border-t border-line pt-4">
                 {NAV.map((n) => (
-                  <Link onClick={closeMenus} key={n.href} href={n.href} className="flex min-h-[48px] items-center rounded-xl px-2 text-[15px] font-medium hover:bg-wash">{n.label}</Link>
+                  <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={isActive(n.href) ? "page" : undefined} className={cn("flex min-h-[48px] items-center rounded-xl px-2 text-[15px] font-medium hover:bg-wash", isActive(n.href) && "bg-accent-soft text-accent-dark")}>{n.label}</Link>
                 ))}
               </div>
               <Link onClick={closeMenus} href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg", "mt-4 w-full")}>Start Calculating</Link>

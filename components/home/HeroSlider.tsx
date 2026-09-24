@@ -63,7 +63,7 @@ export function HeroSlider() {
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/70 via-transparent to-transparent" aria-hidden />
       <div className="absolute inset-0 -z-10 bg-accent/10 mix-blend-color" aria-hidden />
 
-      <div className="container flex min-h-[540px] items-center py-16 sm:min-h-[600px] lg:min-h-[640px]">
+      <div className="container flex min-h-[540px] items-center py-16 sm:min-h-[600px] md:px-20 lg:min-h-[640px] xl:px-24">
         <div className="max-w-2xl text-on-inverse" aria-live="polite">
           <AnimatePresence mode="wait">
             <motion.div key={index} initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}>

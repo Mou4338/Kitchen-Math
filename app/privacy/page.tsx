@@ -1,13 +1,23 @@
 import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
+import { PageHero } from "@/components/layout/PageHero";
+import { PAGE_IMAGES } from "@/lib/content/images";
 
 export const metadata = pageMetadata({ title: "Privacy Policy", description: `How ${SITE.name} handles your data.`, path: "/privacy" });
 
 export default function PrivacyPage() {
   return (
+    <>
+      <PageHero
+        photo={PAGE_IMAGES.privacy}
+        eyebrow="Legal"
+        title="Privacy"
+        accent="policy"
+        subtitle="Last updated: September 2026"
+        crumbs={[{ name: "Home", path: "/restaurant" }, { name: "Privacy", path: "/privacy" }]}
+        compact
+      />
     <article className="container max-w-3xl pb-16 pt-10">
-      <h1 className="text-3xl font-semibold sm:text-4xl">Privacy policy</h1>
-      <p className="mt-2 text-sm text-muted">Last updated: September 2026</p>
       <div className="prose-km mt-8 space-y-6">
         <section>
           <h2 className="text-xl font-semibold">The short version</h2>
@@ -31,5 +41,6 @@ export default function PrivacyPage() {
         </section>
       </div>
     </article>
+    </>
   );
 }
