@@ -153,7 +153,9 @@ export const COMPANY_IMAGES = {
   hero: { src: u("1617347454431-f49d7ff5c3b1", 2000), alt: "Delivery rider on a scooter riding through the city at night" },
   team: { src: u("1758518731706-be5d5230e5a5"), alt: "Consulting team collaborating in a modern office" },
   dish: { src: u("1631515243349-e0cb75fb8d3a", 900), alt: "Bowl of rice and meat" },
-  contact: { src: u("1714974528737-3e6c7e4d11af", 1800), alt: "Team meeting around a table" },
+  contact: { src: u("1758518731462-d091b0b4ed0d", 1800), alt: "Business partners shaking hands over an agreement" },
+  meeting: { src: u("1714974528737-3e6c7e4d11af", 1800), alt: "Team meeting around a table" },
+  ordering: { src: u("1663661759279-5edbf3d58e0c", 1200), alt: "Customer holding a phone to order food" },
   servicesHero: { src: u("1542744173-8e7e53415bb0", 2000), alt: "Consultant presenting to a restaurant team" },
 };
 

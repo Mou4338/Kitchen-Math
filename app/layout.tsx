@@ -5,6 +5,7 @@ import { Instrument_Serif } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { FloatingActions } from "@/components/layout/FloatingActions";
 import { ToastProvider } from "@/components/ui/Toast";
 import { SITE } from "@/lib/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             <Header />
             <main id="main">{children}</main>
             <Footer />
+            <FloatingActions />
           </ToastProvider>
         </MotionProvider>
       </body>

@@ -1,9 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowRight, Calculator, Filter, Check, Mail, MapPin, MessageCircle, Phone, Repeat, ShoppingBag, Sparkles, TrendingUp, Users, X, Equal,
+  ArrowRight, Calculator, ClipboardCheck, Filter, Check, Mail, MapPin, MessageCircle, Phone, Repeat, ShoppingBag, Sparkles, TrendingUp, Users, X, Equal,
 } from "lucide-react";
 import { ContactForm } from "@/components/company/ContactForm";
+import { GrowthCalculator } from "@/components/company/GrowthCalculator";
+import { FaqBlock } from "@/components/content/CalculatorContent";
 import { ServiceCard } from "@/components/company/ServiceCard";
 import { HeroPreview } from "@/components/dashboard/HeroPreview";
 import { buttonClass } from "@/components/ui/Button";
@@ -201,7 +203,28 @@ export default function CompanyHome() {
         </div>
       </section>
 
-      {/* 6 · FRAMEWORKS IN ACTION (white) */}
+      {/* 6 · GROWTH CALCULATOR (pale blue) */}
+      <section id="growth-calculator" className="scroll-mt-20 bg-wash py-16 sm:py-24">
+        <div className="container">
+          <div className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+            <Reveal>
+              <p className="eyebrow text-accent-dark">Growth calculator</p>
+              <h2 className="mt-2 text-4xl font-bold sm:text-5xl">See how small wins <span className="accent-serif">multiply</span></h2>
+              <p className="mt-4 max-w-xl text-muted">Traffic × Conversion × AOV × Repeat orders. Move the sliders to see how improving each lever changes your monthly revenue, and why working on all four beats working on one.</p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <div className="relative mx-auto aspect-[4/3] w-full max-w-[420px] overflow-hidden rounded-3xl bg-inverse shadow-lift">
+                <Image src={COMPANY_IMAGES.ordering.src} alt={COMPANY_IMAGES.ordering.alt} fill sizes="420px" className="object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-inverse/70 to-transparent" aria-hidden />
+                <p className="absolute bottom-4 left-4 right-4 text-sm font-semibold text-on-inverse">Every order starts with a customer deciding in seconds.</p>
+              </div>
+            </Reveal>
+          </div>
+          <GrowthCalculator />
+        </div>
+      </section>
+
+      {/* 7 · FRAMEWORKS IN ACTION (white) */}
       <section className="container py-16 sm:py-24">
         <Reveal className="mx-auto mb-12 max-w-2xl text-center">
           <p className="eyebrow text-accent-dark">Frameworks in action</p>
@@ -254,7 +277,21 @@ export default function CompanyHome() {
         </div>
       </section>
 
-      {/* 7 · FREE TOOLS PROMO (bright blue) */}
+      {/* 8 · SCORECARD CTA (light blue) */}
+      <section className="container pb-16 sm:pb-24">
+        <Reveal>
+          <div className="grid items-center gap-6 rounded-3xl border border-accent/25 bg-accent-soft p-6 sm:p-10 md:grid-cols-[auto_minmax(0,1fr)_auto]">
+            <span className="grid h-16 w-16 place-items-center rounded-2xl bg-accent text-accent-ink shadow-glow"><ClipboardCheck className="h-8 w-8" aria-hidden /></span>
+            <div>
+              <h2 className="text-2xl font-bold sm:text-3xl">Not sure where to start? Take the free <span className="accent-serif">Growth Scorecard</span></h2>
+              <p className="mt-2 text-muted">18 quick questions, 2 minutes. Get a score for each of the 9 areas and your top 3 priorities.</p>
+            </div>
+            <Link href="/growth-scorecard" className={buttonClass("accent", "lg")}>Start the scorecard <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* 9 · FREE TOOLS PROMO (bright blue) */}
       <section className="relative overflow-hidden bg-gradient-to-br from-accent via-accent to-accent-dark py-16 text-accent-ink sm:py-24">
         <div className="grid-dots pointer-events-none absolute inset-0 opacity-20" aria-hidden />
         <div className="container relative grid items-center gap-12 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]">
@@ -294,7 +331,20 @@ export default function CompanyHome() {
         </div>
       </section>
 
-      {/* 8 · CONTACT (light blue + photo) */}
+      {/* 10 · FAQ (white) */}
+      <section className="container max-w-4xl py-16 sm:py-24">
+        <FaqBlock
+          faqs={[
+            { q: "What kind of restaurants do you work with?", a: "Restaurants, cafés, QSR outlets and cloud kitchens: dine-in, delivery or both. The framework is built for food businesses that sell on delivery platforms as well as their own channels." },
+            { q: "What do you look at in a growth audit?", a: "Nine areas: menu, pricing & AOV, ads & discounting, the ordering funnel, hyperlocal demand, reviews & dish performance, competitors, operations & availability, and how changes are measured." },
+            { q: "What information will you need from me?", a: "Typically your menu, recent sales by dish, delivery-platform funnel and ad reports, discount history and customer reviews. We'll tell you exactly what's useful for your situation." },
+            { q: "How do you measure results?", a: "We agree the numbers up front (orders, menu-to-order conversion, average order value and revenue) and track them before and after each change." },
+            { q: "How are the free tools related to your services?", a: "The calculators answer the same questions we ask in every audit: food cost, break-even, delivery payouts, menu pricing and more. Use them on your own anytime; your numbers stay on your device." },
+          ]}
+        />
+      </section>
+
+      {/* 11 · CONTACT (light blue + photo) */}
       <section id="contact" className="scroll-mt-20 bg-accent-soft py-16 sm:py-24">
         <div className="container grid gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
           <Reveal>

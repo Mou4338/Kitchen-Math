@@ -117,7 +117,7 @@ export default function ServicesPage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link href="/#contact" className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent-ink px-6 font-semibold text-accent transition hover:opacity-90">Book a free audit <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-            <Link href="/restaurant" className="inline-flex h-12 items-center rounded-xl border border-accent-ink/30 px-5 font-medium transition hover:bg-accent-ink/10">Free tools</Link>
+            <Link href="/growth-scorecard" className="inline-flex h-12 items-center rounded-xl border border-accent-ink/30 px-5 font-medium transition hover:bg-accent-ink/10">Take the scorecard</Link>
           </div>
         </div>
       </section>

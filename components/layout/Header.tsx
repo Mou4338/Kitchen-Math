@@ -16,6 +16,8 @@ const NAV = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/restaurant", label: "Tools" },
+  { href: "/restaurant/guides", label: "Guides" },
+  { href: "/restaurant/calculator-history", label: "History" },
   { href: "/restaurant/help", label: "Help" },
   { href: "/restaurant/about", label: "About" },
 ];
@@ -39,7 +41,7 @@ export function Header() {
   const calcActive = CALCULATORS.some((c) => pathname.startsWith(`/restaurant/${c.slug}`));
   const navClass = (active: boolean) =>
     cn(
-      "relative rounded-lg px-3 py-2 text-sm font-medium transition-colors hover:bg-wash hover:text-ink",
+      "relative rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-wash hover:text-ink",
       active ? "text-accent after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-accent" : "text-muted",
     );
 
@@ -73,7 +75,7 @@ export function Header() {
     <header className="no-print sticky top-0 z-40 border-b border-line/70 bg-paper/80 backdrop-blur-xl">
       <div className="container flex h-16 items-center justify-between gap-4">
         <Logo onClick={closeMenus} />
-        <nav aria-label="Main" className="hidden items-center gap-1 lg:flex">
+        <nav aria-label="Main" className="hidden items-center gap-0.5 xl:flex">
           {NAV.slice(0, 3).map((n) => (
             <Link onClick={closeMenus} key={n.href} href={n.href} aria-current={isActive(n.href) ? "page" : undefined} className={navClass(isActive(n.href))}>{n.label}</Link>
           ))}
@@ -123,7 +125,7 @@ export function Header() {
           <Link onClick={closeMenus} href="/#contact" className={buttonClass("accent", "sm", "hidden sm:inline-flex")}>
             Free growth audit
           </Link>
-          <button type="button" className="grid h-10 w-10 place-items-center rounded-lg text-ink hover:bg-wash lg:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen((o) => !o)}>
+          <button type="button" className="grid h-10 w-10 place-items-center rounded-lg text-ink hover:bg-wash xl:hidden" aria-label={menuOpen ? "Close menu" : "Open menu"} aria-expanded={menuOpen} aria-controls="mobile-menu" onClick={() => setMenuOpen((o) => !o)}>
             {menuOpen ? <X className="h-5 w-5" aria-hidden /> : <Menu className="h-5 w-5" aria-hidden />}
           </button>
         </div>
@@ -138,7 +140,7 @@ export function Header() {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
-            className="overflow-hidden border-t border-line bg-paper lg:hidden"
+            className="overflow-hidden border-t border-line bg-paper xl:hidden"
           >
             <div className="container max-h-[calc(100dvh-4rem)] overflow-y-auto pb-8 pt-4">
               <p className="eyebrow mb-2">Calculators</p>

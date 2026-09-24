@@ -28,6 +28,7 @@ export function Footer() {
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/">Home</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/services">Growth consulting services</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/#contact">Book a free growth audit</Link></li>
+            <li><Link className="text-ink-soft hover:text-accent-dark" href="/growth-scorecard">Growth scorecard</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant">Free tools</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant/guides">Guides</Link></li>
             <li><Link className="text-ink-soft hover:text-accent-dark" href="/restaurant/help">Help &amp; how-to</Link></li>
