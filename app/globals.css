@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens. Values are "R G B" so Tailwind opacity modifiers (bg-accent/20) work.
+ * Light theme: white & blue.  Dark theme: black & gold.
+ */
+@layer base {
+  :root {
+    color-scheme: light;
+    --paper: 246 248 255;
+    --card: 255 255 255;
+    --ink: 11 27 63;
+    --ink-soft: 51 65 95;
+    --muted: 88 101 128;
+    --muted-light: 138 150 174;
+    --line: 225 231 244;
+    --line-strong: 199 210 234;
+    --wash: 238 243 255;
+    --accent: 30 79 216;
+    --accent-dark: 20 58 170;
+    --accent-soft: 227 235 255;
+    --accent-ink: 255 255 255;
+    --accent-bright: 140 172 255;
+    --inverse: 11 27 63;
+    --on-inverse: 255 255 255;
+    --sage: 34 139 87;
+    --sage-dark: 22 108 66;
+    --sage-soft: 223 244 233;
+    --caution: 183 121 31;
+    --caution-soft: 251 240 217;
+    --danger: 196 64 46;
+    --danger-soft: 251 228 223;
+    --chart-1: 59 91 169;
+    --chart-2: 30 79 216;
+    --chart-3: 34 139 87;
+    --chart-4: 124 92 196;
+    --chart-5: 201 162 39;
+    --chart-6: 138 150 174;
+    --shadow-card: 0 1px 2px rgb(11 27 63 / 0.04), 0 6px 20px -10px rgb(11 27 63 / 0.14);
+    --shadow-lift: 0 2px 6px rgb(11 27 63 / 0.06), 0 22px 44px -18px rgb(30 79 216 / 0.28);
+    --shadow-glow: 0 0 0 1px rgb(30 79 216 / 0.12), 0 18px 50px -20px rgb(30 79 216 / 0.45);
+    --hero-a: 30 79 216;
+    --hero-b: 91 140 255;
+  }
+
+  .dark {
+    color-scheme: dark;
+    --paper: 8 8 10;
+    --card: 20 19 17;
+    --ink: 245 240 226;
+    --ink-soft: 214 207 188;
+    --muted: 166 158 138;
+    --muted-light: 112 106 92;
+    --line: 42 39 32;
+    --line-strong: 64 58 45;
+    --wash: 28 26 21;
+    --accent: 212 175 55;
+    --accent-dark: 232 201 110;
+    --accent-soft: 44 37 17;
+    --accent-ink: 12 11 8;
+    --accent-bright: 230 196 92;
+    --inverse: 26 22 11;
+    --on-inverse: 247 236 204;
+    --sage: 94 196 138;
+    --sage-dark: 128 214 164;
+    --sage-soft: 18 38 27;
+    --caution: 231 169 74;
+    --caution-soft: 43 32 14;
+    --danger: 240 122 104;
+    --danger-soft: 46 21 18;
+    --chart-1: 143 167 217;
+    --chart-2: 212 175 55;
+    --chart-3: 94 196 138;
+    --chart-4: 180 154 230;
+    --chart-5: 230 199 102;
+    --chart-6: 112 106 92;
+    --shadow-card: 0 1px 0 rgb(255 255 255 / 0.03) inset, 0 8px 24px -14px rgb(0 0 0 / 0.8);
+    --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 24px 48px -20px rgb(0 0 0 / 0.9), 0 0 0 1px rgb(212 175 55 / 0.18);
+    --shadow-glow: 0 0 0 1px rgb(212 175 55 / 0.25), 0 18px 60px -18px rgb(212 175 55 / 0.35);
+    --hero-a: 212 175 55;
+    --hero-b: 120 90 20;
+  }
+
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { @apply bg-paper text-ink antialiased transition-colors duration-300; font-feature-settings: "ss01", "cv11"; }
+  h1, h2, h3, h4 { @apply tracking-tight text-ink; text-wrap: balance; }
+  ::selection { @apply bg-accent/25 text-ink; }
+  :focus-visible { @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-paper; }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"] { -moz-appearance: textfield; }
+  select, option { @apply bg-card text-ink; }
+}
+
+@layer components {
+  .tabular { font-variant-numeric: tabular-nums; }
+  .eyebrow { @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-muted; }
+  .prose-km p { @apply leading-relaxed text-ink-soft; }
+  .prose-km p + p { @apply mt-3; }
+  /* Serif accent used inside headlines */
+  .accent-serif { @apply font-serif font-normal italic text-accent; letter-spacing: -0.01em; }
+  /* Soft gradient backdrop used on the hero and feature bands */
+  .hero-glow {
+    background:
+      radial-gradient(60% 60% at 85% 10%, rgb(var(--hero-a) / 0.16), transparent 70%),
+      radial-gradient(45% 50% at 5% 90%, rgb(var(--hero-b) / 0.12), transparent 70%);
+  }
+  .grid-dots {
+    background-image: radial-gradient(rgb(var(--ink) / 0.07) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  /* Range slider */
+  .km-range { @apply h-11 w-full cursor-pointer appearance-none bg-transparent; }
+  .km-range::-webkit-slider-runnable-track { @apply h-2 rounded-full; background: linear-gradient(to right, rgb(var(--accent)) 0%, rgb(var(--accent)) var(--fill, 50%), rgb(var(--line-strong)) var(--fill, 50%), rgb(var(--line-strong)) 100%); }
+  .km-range::-moz-range-track { @apply h-2 rounded-full bg-line-strong; }
+  .km-range::-moz-range-progress { @apply h-2 rounded-full bg-accent; }
+  .km-range::-webkit-slider-thumb { @apply -mt-[9px] h-[26px] w-[26px] appearance-none rounded-full border-[3px] border-card bg-accent shadow-md transition-transform; }
+  .km-range::-moz-range-thumb { @apply h-[22px] w-[22px] rounded-full border-[3px] border-card bg-accent shadow-md; }
+  .km-range:active::-webkit-slider-thumb { transform: scale(1.12); }
+  .km-range:focus-visible { @apply ring-0; }
+  .km-range:focus-visible::-webkit-slider-thumb { @apply ring-4 ring-accent/40; }
+  .km-range:focus-visible::-moz-range-thumb { @apply ring-4 ring-accent/40; }
+}
+
+@media print {
+  @page { margin: 14mm; }
+  :root, .dark { --paper: 255 255 255; --card: 255 255 255; --ink: 11 27 63; --ink-soft: 51 65 95; --muted: 88 101 128; --line: 225 231 244; --wash: 245 247 252; }
+  body { background: #fff !important; }
+  .no-print { display: none !important; }
+  .print-break { break-inside: avoid; }
+  a[href]::after { content: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
