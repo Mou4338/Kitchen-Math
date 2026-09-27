@@ -1,96 +1,85 @@
-import { nonNegative, percentOf } from "./utils";
+import { calculateOnlinePayout, type PlatformRates } from "./onlinePayoutCalculator";
+import { nonNegative } from "./utils";
 
 export interface MenuItemInput {
   id: string;
   name: string;
   sellingPrice: number;
-  foodCost: number;
-  unitsSold: number;
+  /** Dish + Labour + PC for one order. */
+  totalCost: number;
+  /** Orders in the month. */
+  orders: number;
 }
 
 export type MenuCategory = "star" | "plowhorse" | "puzzle" | "dog";
 
 export interface MenuItemResult extends MenuItemInput {
-  contributionMargin: number;
-  foodCostPercent: number | null;
-  /** Share of all units sold (menu mix), %. */
-  popularityPercent: number;
-  profitContribution: number;
-  highPopularity: boolean;
-  highContribution: boolean;
+  /** Payout per order after discount, commission, ads and GST. */
+  payout: number;
+  /** Payout − Total cost. */
+  profitPerOrder: number;
+  /** Profit per order × Orders. */
+  totalProfit: number;
+  /** Dish orders ÷ Total orders × 100. */
+  menuMixPercent: number;
+  popular: boolean;
+  profitable: boolean;
   category: MenuCategory;
 }
 
 export interface MenuEngineeringResult {
   items: MenuItemResult[];
-  totalUnits: number;
-  totalRevenue: number;
-  totalFoodCost: number;
-  totalContribution: number;
-  averageContribution: number;
-  /** Menu-mix threshold (70% of an equal share), %. */
-  popularityThresholdPercent: number;
-  overallFoodCostPercent: number | null;
+  totalOrders: number;
+  totalProfit: number;
+  /** Total profit ÷ Total orders. */
+  averageProfitPerOrder: number;
+  /** (100% ÷ Number of dishes) × 0.7 */
+  popularityLinePercent: number;
   counts: Record<MenuCategory, number>;
 }
 
 export const CATEGORY_INFO: Record<MenuCategory, { label: string; axis: string; action: string }> = {
-  star: { label: "Star", axis: "High contribution · High popularity", action: "Keep it visible and consistent. Protect the recipe and portion." },
-  puzzle: { label: "Puzzle", axis: "High contribution · Low popularity", action: "Promote it: better menu placement, a clearer description, staff recommendations." },
-  plowhorse: { label: "Plowhorse", axis: "Low contribution · High popularity", action: "Raise the price slightly or cut plate cost without changing what guests love." },
-  dog: { label: "Dog", axis: "Low contribution · Low popularity", action: "Rework it, bundle it, or remove it to simplify the kitchen." },
+  star: { label: "Star", axis: "High profit · Popular", action: "Keep it visible and consistent. Protect the recipe and portion." },
+  puzzle: { label: "Puzzle", axis: "High profit · Less popular", action: "Promote it: better photo, clearer description, top-of-menu placement or a combo." },
+  plowhorse: { label: "Plowhorse", axis: "Low profit · Popular", action: "Raise the price slightly or cut cost without changing what customers love." },
+  dog: { label: "Dog", axis: "Low profit · Less popular", action: "Rework it, bundle it, or remove it to simplify the kitchen." },
 };
 
 /**
- * Kasavana–Smith menu engineering:
- * - Contribution margin (CM) = Selling price − Food cost
- * - High contribution: CM ≥ weighted average CM
- * - High popularity: menu mix ≥ 70% × (100% ÷ number of items)
+ * Per dish: Profit per order (payout formula), Total profit = Profit per order × Orders,
+ * Menu mix % = Dish orders ÷ Total orders × 100.
+ * Benchmarks: Popularity line = (100% ÷ Number of dishes) × 0.7;
+ * Average profit per order = Total profit of all dishes ÷ Total orders of all dishes.
+ * Popular: menu mix ≥ popularity line. High profit: profit per order ≥ average (and above ₹0).
  */
-export function analyzeMenu(items: MenuItemInput[]): MenuEngineeringResult {
+export function analyzeMenu(items: MenuItemInput[], rates: PlatformRates): MenuEngineeringResult {
   const clean = items.map((i) => ({
     ...i,
-    name: i.name.trim() || "Untitled item",
+    name: i.name.trim() || "Untitled dish",
     sellingPrice: nonNegative(i.sellingPrice),
-    foodCost: nonNegative(i.foodCost),
-    unitsSold: nonNegative(i.unitsSold),
+    totalCost: nonNegative(i.totalCost),
+    orders: nonNegative(i.orders),
   }));
-  const totalUnits = clean.reduce((s, i) => s + i.unitsSold, 0);
-  const totalRevenue = clean.reduce((s, i) => s + i.sellingPrice * i.unitsSold, 0);
-  const totalFoodCost = clean.reduce((s, i) => s + i.foodCost * i.unitsSold, 0);
-  const totalContribution = totalRevenue - totalFoodCost;
-  const averageContribution = totalUnits > 0 ? totalContribution / totalUnits : 0;
-  const popularityThresholdPercent = clean.length > 0 ? (100 / clean.length) * 0.7 : 0;
 
-  const counts: Record<MenuCategory, number> = { star: 0, plowhorse: 0, puzzle: 0, dog: 0 };
-  const results: MenuItemResult[] = clean.map((i) => {
-    const cm = i.sellingPrice - i.foodCost;
-    const popularityPercent = totalUnits > 0 ? (i.unitsSold / totalUnits) * 100 : 0;
-    const highPopularity = totalUnits > 0 && popularityPercent >= popularityThresholdPercent;
-    const highContribution = cm >= averageContribution && cm > 0;
-    const category: MenuCategory = highContribution ? (highPopularity ? "star" : "puzzle") : highPopularity ? "plowhorse" : "dog";
-    counts[category] += 1;
-    return {
-      ...i,
-      contributionMargin: cm,
-      foodCostPercent: percentOf(i.foodCost, i.sellingPrice),
-      popularityPercent,
-      profitContribution: cm * i.unitsSold,
-      highPopularity,
-      highContribution,
-      category,
-    };
+  const withProfit = clean.map((i) => {
+    const r = calculateOnlinePayout({ ...rates, sellingPrice: i.sellingPrice, dishCost: i.totalCost, labourCost: 0, packagingCost: 0 });
+    return { ...i, payout: r.payout, profitPerOrder: r.profit, totalProfit: r.profit * i.orders };
   });
 
-  return {
-    items: results,
-    totalUnits,
-    totalRevenue,
-    totalFoodCost,
-    totalContribution,
-    averageContribution,
-    popularityThresholdPercent,
-    overallFoodCostPercent: percentOf(totalFoodCost, totalRevenue),
-    counts,
-  };
+  const totalOrders = withProfit.reduce((s, i) => s + i.orders, 0);
+  const totalProfit = withProfit.reduce((s, i) => s + i.totalProfit, 0);
+  const averageProfitPerOrder = totalOrders > 0 ? totalProfit / totalOrders : 0;
+  const popularityLinePercent = clean.length > 0 ? (100 / clean.length) * 0.7 : 0;
+
+  const counts: Record<MenuCategory, number> = { star: 0, plowhorse: 0, puzzle: 0, dog: 0 };
+  const results: MenuItemResult[] = withProfit.map((i) => {
+    const menuMixPercent = totalOrders > 0 ? (i.orders / totalOrders) * 100 : 0;
+    const popular = totalOrders > 0 && menuMixPercent >= popularityLinePercent - 1e-9;
+    const profitable = i.profitPerOrder > 0 && i.profitPerOrder >= averageProfitPerOrder - 1e-9;
+    const category: MenuCategory = profitable ? (popular ? "star" : "puzzle") : popular ? "plowhorse" : "dog";
+    counts[category] += 1;
+    return { ...i, menuMixPercent, popular, profitable, category };
+  });
+
+  return { items: results, totalOrders, totalProfit, averageProfitPerOrder, popularityLinePercent, counts };
 }

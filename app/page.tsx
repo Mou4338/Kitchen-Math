@@ -1,10 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowRight, Calculator, ClipboardCheck, Filter, Check, Mail, MapPin, MessageCircle, Phone, Repeat, ShoppingBag, Sparkles, TrendingUp, Users, X, Equal,
+  ArrowRight, Calculator, ClipboardCheck, Check, Mail, MapPin, MessageCircle, Phone, Repeat, ShoppingBag, Sparkles, TrendingUp, Users, X, Equal,
 } from "lucide-react";
 import { ContactForm } from "@/components/company/ContactForm";
-import { GrowthCalculator } from "@/components/company/GrowthCalculator";
 import { HeroBackdrop } from "@/components/company/HeroBackdrop";
 import { FaqBlock } from "@/components/content/CalculatorContent";
 import { ServiceCard } from "@/components/company/ServiceCard";
@@ -13,26 +12,22 @@ import { buttonClass } from "@/components/ui/Button";
 import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Reveal } from "@/components/ui/Motion";
-import { StatusPill } from "@/components/ui/StatusPill";
 import { CALCULATORS } from "@/lib/content/calculators";
-import { COMPANY_IMAGES, FUNNEL, GROWTH_EQUATION, PROCESS, PRODUCT_MATRIX, SERVICES } from "@/lib/content/company";
+import { COMPANY_IMAGES, GROWTH_EQUATION, PROCESS, SERVICES } from "@/lib/content/company";
 import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const metadata = pageMetadata({
   title: `${SITE.name}: Restaurant Growth Consulting & Free Restaurant Tools`,
   description:
-    "Restaurant growth consulting for Indian restaurants and cloud kitchens: menu optimization, pricing & AOV, ads & discounting, funnel optimization, hyperlocal and competitor intelligence. Plus free profitability calculators.",
+    "Restaurant growth consulting for Indian restaurants and cloud kitchens: menu optimization, pricing & order value, ads & discounts, conversion, ratings & dish performance, and local market & competitors. Plus free menu pricing, payout and menu engineering calculators.",
   path: "/",
   keywords: ["restaurant growth consulting", "restaurant consultant India", "swiggy zomato growth", "menu optimization", "restaurant AOV", "cloud kitchen consulting"],
 });
 
 const EQ_ICONS = [Users, ShoppingBag, TrendingUp, Repeat];
-const TOOL_HIGHLIGHTS = ["restaurant-health-calculator", "break-even-calculator", "online-sale-payout-calculator", "menu-pricing-calculator", "menu-engineering-calculator", "profit-margin-calculator"] as const;
 
 export default function CompanyHome() {
-  const core = SERVICES.filter((s) => s.group === "core");
-  const levers = SERVICES.filter((s) => s.group === "lever");
   const c = SITE.company;
 
   return (
@@ -118,8 +113,8 @@ export default function CompanyHome() {
               </div>
               <div className="absolute -left-2 top-6 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">
                 <p className="eyebrow">Framework</p>
-                <p className="text-2xl font-bold text-accent">9 levers</p>
-                <p className="text-xs text-muted">7 core + 2 growth levers</p>
+                <p className="text-2xl font-bold text-accent">6 services</p>
+                <p className="text-xs text-muted">Menu to local market</p>
               </div>
             </div>
           </Reveal>
@@ -135,7 +130,7 @@ export default function CompanyHome() {
               Instead of generic advice, we use a clear framework: measure where orders are lost, rank every opportunity by its potential impact, turn insights into specific actions and experiments, and track the results in orders, conversion, AOV and revenue.
             </p>
             <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
-              {["Menu & pricing that sell", "Ads that pay back", "Fewer funnel drop-offs", "Know your local market", "Better ratings, fewer complaints", "Clear, measured results"].map((p) => (
+              {["Menu & pricing that sell", "Ads that pay back", "Fewer funnel drop-offs", "Better ratings, fewer complaints", "Know your local market", "Beat your competitors"].map((p) => (
                 <li key={p} className="flex items-center gap-2.5 text-sm font-medium">
                   <span className="grid h-6 w-6 place-items-center rounded-full bg-accent text-accent-ink"><Check className="h-3.5 w-3.5" aria-hidden /></span>
                   {p}
@@ -159,24 +154,9 @@ export default function CompanyHome() {
             <p className="mt-4 text-muted">A practical framework that covers every part of how a restaurant wins, and loses, orders.</p>
           </Reveal>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {core.map((s, i) => (
+            {SERVICES.map((s, i) => (
               <Reveal key={s.id} delay={(i % 3) * 0.06}>
                 <ServiceCard s={s} />
-              </Reveal>
-            ))}
-            <Reveal delay={0.06} className="flex">
-              <div className="flex w-full flex-col justify-center rounded-3xl bg-gradient-to-br from-accent to-accent-dark p-8 text-accent-ink shadow-glow">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] opacity-80">Plus two growth levers</p>
-                <p className="mt-3 text-2xl font-bold">Operations & Availability · Measurement & Execution</p>
-                <p className="mt-3 text-sm opacity-85">Growth only lasts if the kitchen can deliver it and every change is measured.</p>
-                <Link href="/services#operations-availability" className="mt-6 inline-flex items-center gap-1.5 font-semibold">See how <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-              </div>
-            </Reveal>
-          </div>
-          <div className="mt-6 grid gap-6 lg:grid-cols-2">
-            {levers.map((s, i) => (
-              <Reveal key={s.id} delay={i * 0.06}>
-                <ServiceCard s={s} wide />
               </Reveal>
             ))}
           </div>
@@ -207,80 +187,6 @@ export default function CompanyHome() {
         </div>
       </section>
 
-      {/* 6 · GROWTH CALCULATOR (pale blue) */}
-      <section id="growth-calculator" className="scroll-mt-20 bg-wash py-16 sm:py-24">
-        <div className="container">
-          <div className="mb-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
-            <Reveal>
-              <p className="eyebrow text-accent-dark">Growth calculator</p>
-              <h2 className="mt-2 text-4xl font-bold sm:text-5xl">See how small wins <span className="accent-serif">multiply</span></h2>
-              <p className="mt-4 max-w-xl text-muted">Traffic × Conversion × AOV × Repeat orders. Move the sliders to see how improving each lever changes your monthly revenue, and why working on all four beats working on one.</p>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="relative mx-auto aspect-[4/3] w-full max-w-[420px] overflow-hidden rounded-3xl bg-inverse shadow-lift">
-                <Image src={COMPANY_IMAGES.ordering.src} alt={COMPANY_IMAGES.ordering.alt} fill sizes="420px" className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-inverse/70 to-transparent" aria-hidden />
-                <p className="absolute bottom-4 left-4 right-4 text-sm font-semibold text-on-inverse">Every order starts with a customer deciding in seconds.</p>
-              </div>
-            </Reveal>
-          </div>
-          <GrowthCalculator />
-        </div>
-      </section>
-
-      {/* 7 · FRAMEWORKS IN ACTION (white) */}
-      <section className="container py-16 sm:py-24">
-        <Reveal className="mx-auto mb-12 max-w-2xl text-center">
-          <p className="eyebrow text-accent-dark">Frameworks in action</p>
-          <h2 className="mt-2 text-4xl font-bold sm:text-5xl">We measure what <span className="text-accent">matters</span></h2>
-        </Reveal>
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Reveal>
-            <div className="h-full rounded-3xl border border-line bg-card p-6 shadow-card sm:p-8">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent-dark"><Filter className="h-5 w-5" aria-hidden /></span>
-                <h3 className="text-xl font-bold">The ordering funnel</h3>
-              </div>
-              <p className="mt-2 text-sm text-muted">Where do customers drop off between seeing you and ordering? We compare each stage across mealtimes and fix the weakest one first.</p>
-              <ol className="mt-6 grid gap-3">
-                {FUNNEL.map((f, i) => (
-                  <li key={f.code} className="flex items-center gap-4">
-                    <span
-                      className="grid h-12 shrink-0 place-items-center rounded-xl bg-accent font-bold text-accent-ink"
-                      style={{ width: `${100 - i * 14}%`, maxWidth: `${9 - i * 1.2}rem`, minWidth: "4.5rem", opacity: 1 - i * 0.15 }}
-                    >
-                      {f.code}
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold">{f.name}</span>
-                      <span className="block text-xs text-muted">{f.body}</span>
-                    </span>
-                  </li>
-                ))}
-              </ol>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="h-full rounded-3xl border border-line bg-card p-6 shadow-card sm:p-8">
-              <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent-dark"><TrendingUp className="h-5 w-5" aria-hidden /></span>
-                <h3 className="text-xl font-bold">Dish performance matrix</h3>
-              </div>
-              <p className="mt-2 text-sm text-muted">Sales and ratings together tell us what to do with every dish on the menu.</p>
-              <div className="mt-6 grid grid-cols-2 gap-3">
-                {PRODUCT_MATRIX.map((m) => (
-                  <div key={m.action} className="rounded-2xl border border-line bg-paper p-4 transition hover:-translate-y-0.5 hover:shadow-card">
-                    <StatusPill tone={m.tone}>{m.action}</StatusPill>
-                    <p className="mt-3 text-sm font-medium text-ink-soft">{m.when}</p>
-                  </div>
-                ))}
-              </div>
-              <p className="mt-4 text-xs text-muted">Plus: recurring complaints and patterns from customer reviews.</p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       {/* 8 · SCORECARD CTA (light blue) */}
       <section className="container pb-16 sm:pb-24">
         <Reveal>
@@ -288,7 +194,7 @@ export default function CompanyHome() {
             <span className="grid h-16 w-16 place-items-center rounded-2xl bg-accent text-accent-ink shadow-glow"><ClipboardCheck className="h-8 w-8" aria-hidden /></span>
             <div>
               <h2 className="text-2xl font-bold sm:text-3xl">Not sure where to start? Take the free <span className="accent-serif">Growth Scorecard</span></h2>
-              <p className="mt-2 text-muted">18 quick questions, 2 minutes. Get a score for each of the 9 areas and your top 3 priorities.</p>
+              <p className="mt-2 text-muted">12 quick questions, 2 minutes. Get a score for each of our 6 service areas and your top 3 priorities.</p>
             </div>
             <Link href="/growth-scorecard" className={buttonClass("accent", "lg")}>Start the scorecard <ArrowRight className="h-4 w-4" aria-hidden /></Link>
           </div>
@@ -302,10 +208,10 @@ export default function CompanyHome() {
           <Reveal>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] opacity-80">Free for every restaurant owner</p>
             <h2 className="mt-2 text-4xl font-bold sm:text-5xl">Try our free <span className="font-serif font-normal italic">restaurant tools</span></h2>
-            <p className="mt-4 max-w-xl text-lg opacity-90">Nine calculators that answer the questions we ask in every audit, in rupees and in seconds. No login, and your numbers never leave your device.</p>
-            <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-              {TOOL_HIGHLIGHTS.map((slug) => {
-                const t = CALCULATORS.find((x) => x.slug === slug)!;
+            <p className="mt-4 max-w-xl text-lg opacity-90">Three calculators that answer the questions we ask in every audit: what to charge, what you really keep on each order, and which dishes earn the most. No login, and your numbers never leave your device.</p>
+            <ul className="mt-8 grid gap-3">
+              {CALCULATORS.map((t) => {
+                const slug = t.slug;
                 return (
                   <li key={slug}>
                     <Link href={`/restaurant/${slug}`} className="group flex items-center gap-3 rounded-2xl bg-accent-ink/10 p-3 transition hover:bg-accent-ink/20">
@@ -322,7 +228,7 @@ export default function CompanyHome() {
             </ul>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link href="/restaurant" className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent-ink px-6 font-semibold text-accent transition hover:opacity-90">
-                Open all 9 free tools <ArrowRight className="h-4 w-4" aria-hidden />
+                Open the free tools <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
               <Link href="/restaurant/help" className="inline-flex h-12 items-center rounded-xl border border-accent-ink/30 px-5 font-medium transition hover:bg-accent-ink/10">How the tools work</Link>
             </div>
@@ -340,10 +246,10 @@ export default function CompanyHome() {
         <FaqBlock
           faqs={[
             { q: "What kind of restaurants do you work with?", a: "Restaurants, cafés, QSR outlets and cloud kitchens: dine-in, delivery or both. The framework is built for food businesses that sell on delivery platforms as well as their own channels." },
-            { q: "What do you look at in a growth audit?", a: "Nine areas: menu, pricing & AOV, ads & discounting, the ordering funnel, hyperlocal demand, reviews & dish performance, competitors, operations & availability, and how changes are measured." },
-            { q: "What information will you need from me?", a: "Typically your menu, recent sales by dish, delivery-platform funnel and ad reports, discount history and customer reviews. We'll tell you exactly what's useful for your situation." },
-            { q: "How do you measure results?", a: "We agree the numbers up front (orders, menu-to-order conversion, average order value and revenue) and track them before and after each change." },
-            { q: "How are the free tools related to your services?", a: "The calculators answer the same questions we ask in every audit: food cost, break-even, delivery payouts, menu pricing and more. Use them on your own anytime; your numbers stay on your device." },
+            { q: "What do you look at in a growth audit?", a: "Six areas: your menu, pricing & order value, ads & discounts, conversion from listing view to order, ratings & dish performance, and your local market & competitors." },
+            { q: "What information will you need from me?", a: "Typically your menu, recent sales by dish, delivery-platform funnel and ad reports, discount history and customer ratings. We'll tell you exactly what's useful for your situation." },
+            { q: "How do you measure results?", a: "We agree the numbers up front (orders, conversion, average order value and revenue) and track them before and after each change." },
+            { q: "How are the free tools related to your services?", a: "The calculators answer the same questions we ask in every audit: menu pricing, delivery payouts and profit, and menu engineering. Use them on your own anytime; your numbers stay on your device." },
           ]}
         />
       </section>
@@ -370,7 +276,7 @@ export default function CompanyHome() {
           <Reveal delay={0.1}>
             <div className="rounded-3xl border border-line bg-card p-6 shadow-card sm:p-8">
               <h3 className="text-2xl font-bold">Tell us about your restaurant</h3>
-              <p className="mt-1 text-sm text-muted">Takes about a minute. We reply by email.</p>
+              <p className="mt-1 text-sm text-muted">Takes about a minute. We reply by phone, WhatsApp or email.</p>
               <div className="mt-6"><ContactForm /></div>
             </div>
           </Reveal>
@@ -382,7 +288,7 @@ export default function CompanyHome() {
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
           name: SITE.name,
-          description: "Restaurant growth consulting: menu optimization, pricing & AOV, ads & discounting, funnel optimization, hyperlocal and competitor intelligence.",
+          description: "Restaurant growth consulting: menu optimization, pricing & order value, ads & discounts, conversion, ratings & dish performance, and local market & competitors.",
           url: SITE.url,
           email: c.email,
           ...(c.phone ? { telephone: c.phone } : {}),

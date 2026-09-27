@@ -1,50 +1,44 @@
 # KitchenMath: Restaurant Profitability Toolkit
 
-Free, private, mobile-first calculators that help Indian restaurant owners understand food cost, labor, prime cost, break-even, online-order payouts, menu pricing, ROI and menu engineering. No login or database is needed, and every calculation runs in the browser.
+Free, private, mobile-first calculators that help Indian restaurant owners price dishes for delivery apps, check online-order payouts and profit, and find their most profitable dishes. No login is needed and every calculation runs in the browser. Enquiry and scorecard forms are saved to a Google Sheet.
 
 ---
 
 ## 1. What this project is
 
-A Next.js website with **9 calculators**, a **Restaurant Snapshot** dashboard, saved scenarios, sharing, and PDF/CSV export. All maths lives in pure, unit-tested TypeScript functions under `lib/calculations/`. The UI never does its own maths.
+A Next.js website with **3 calculators** (Menu Pricing, Online Payout & Profit, Menu Engineering), saved scenarios, sharing, and PDF/CSV export. All maths lives in pure, unit-tested TypeScript functions under `lib/calculations/`. The UI never does its own maths.
 
 | Route | What it does |
 |---|---|
 | `/` | Company home: consulting services, process, free-tools showcase, contact |
-| `/services` | Full service framework (9 areas), growth equation, glossary |
-| `/growth-scorecard` | Free 18-question self-audit with scores per area and top 3 priorities |
-| `/restaurant` | Tools home, hero dashboard preview, Restaurant Snapshot, calculator collection |
-| `/restaurant/restaurant-health-calculator` | Food, labor, marketing and prime cost %, transparent health score |
-| `/restaurant/break-even-calculator` | Break-even (monthly, daily, orders/day), margin of safety, zones chart |
-| `/restaurant/online-sale-payout-calculator` | Order waterfall, platform comparison, monthly simulation |
-| `/restaurant/menu-pricing-calculator` | Dine-in and online prices, minimum price, profit per plate |
-| `/restaurant/food-cost-calculator` | COGS, food cost %, waste-adjusted food cost |
-| `/restaurant/prime-cost-calculator` | Prime cost gauge and remaining operating margin |
-| `/restaurant/profit-margin-calculator` | Gross, operating and net margin with P&L waterfall |
-| `/restaurant/restaurant-roi-calculator` | ROI, payback, annualised return, 3 scenarios |
-| `/restaurant/menu-engineering-calculator` | Stars/Puzzles/Plowhorses/Dogs matrix, CSV import/export |
+| `/services` | The 6 services, growth equation, glossary |
+| `/growth-scorecard` | Free 12-question self-audit (2 per service), scores per area, top 3 priorities, "send my results" form → Google Sheet |
+| `/restaurant` | Tools home and calculator collection |
+| `/restaurant/menu-pricing-calculator` | Break-even price and menu price (rounded up to end in 9) from cost, commission, tax, discount, ads and margin |
+| `/restaurant/online-sale-payout-calculator` | Discount, commission, GST on commission, ads, GST on ads → payout, profit per order, profit % and payout % |
+| `/restaurant/menu-engineering-calculator` | Profit per order, total profit, menu mix %, popularity line and average profit per order for every dish; CSV import/export |
 | `/restaurant/calculator-history` | Saved scenarios: view, rename, duplicate, delete, export |
-| `/restaurant/help` | How-to guide, colour meanings, buttons explained, glossary, FAQs |
+| `/restaurant/help` | How-to guide, buttons explained, glossary, FAQs |
 | `/restaurant/guides`, `/restaurant/about`, `/privacy`, `/terms` | Content pages |
+| `/api/lead` | Receives the enquiry and scorecard forms and appends them to Google Sheets |
 
-`/` is the company home page (Restaurant Growth Consulting): hero, approach, about, 9 services, how we work, frameworks, free-tools showcase and a contact/enquiry section. `/services` details every service.
+`/` is the company home page (Restaurant Growth Consulting): hero, approach, about, the 6 services, how we work, scorecard link, free-tools showcase and a contact/enquiry form that saves to Google Sheets. `/services` details every service.
 
-**Company home extras:** live Growth Calculator (Traffic × Conversion × AOV × Repeat), Growth Scorecard link, FAQ, and floating "Book a free audit" / WhatsApp and back-to-top buttons on every page.
+**Company home extras:** Growth Scorecard link, FAQ, and floating "Book a free audit" / WhatsApp and back-to-top buttons on every page.
 
 **Company details:** edit `SITE.company` in `lib/site.ts` (email, phone, WhatsApp, location). Service text lives in `lib/content/company.ts`.
 
 ## 2. Features
 
-- **All three reference calculators** (Health, Break-Even, Online Payout) with the same inputs and formulas, plus 6 new calculators.
+- **Three calculators** with the exact formulas listed on each page (Formula section) and in `lib/calculations/`.
+- **Forms → Google Sheets**: the enquiry form and the scorecard results go to your sheet through `/api/lead` and a Google Apps Script. Setup: `google-apps-script/SETUP.md`.
 - **Live results** that update as you type. Indian number formatting (₹1,50,000 · ₹4.25L · ₹1.2Cr). NaN and Infinity are never shown.
-- **Results explained**: value, reference range, status and estimated ₹ impact.
+- **Results explained**: every deduction in rupees, with insights on what to change.
 - **Scenario Mode** on every calculator, with a current-vs-scenario table and green/red indicators.
-- **"What happens if…" simulator** on the Health calculator (food cost −2 pts, sales +10%, and so on).
-- **Customisable reference benchmarks**, clearly labelled as indicative.
 - **Save on this device** (localStorage): multiple named scenarios, plus rename, duplicate and delete.
 - **Share links**: calculator state is encoded in the URL, with no backend.
 - **Download PDF** (inputs, results, chart, assumptions, benchmarks, disclaimer), **CSV export**, **Print**, **Copy results**.
-- **Charts**: circular score, benchmark bars, loss/profit zone bar, break-even chart, cost donut, waterfalls, prime-cost gauge, ROI curve, menu matrix.
+- **Charts**: payout waterfall, menu-engineering matrix, circular score (scorecard).
 - **Mobile-first**: single column, sticky bottom result bar, large touch targets, easy sliders, hamburger menu.
 - **Accessibility**: semantic HTML, labelled inputs, error messages linked to fields, keyboard-friendly tabs and sliders, visible focus, skip link, reduced-motion support.
 - **SEO**: unique titles and descriptions, canonical URLs, Open Graph and Twitter tags, sitemap, robots, plus JSON-LD for WebApplication, FAQPage, BreadcrumbList and WebSite.
@@ -55,7 +49,7 @@ A Next.js website with **9 calculators**, a **Restaurant Snapshot** dashboard, s
 - **Typography:** Geist for text and numbers, with an *Instrument Serif* italic accent in headlines (`className="accent-serif"`).
 - **Illustrations:** custom, theme-aware SVG illustrations in `components/illustrations/Illustrations.tsx`, with no stock photos to license.
 - **Photos:** the home page uses free Unsplash photos (Unsplash License: free for commercial use, no credit required), listed in `lib/content/images.ts`: 3 hero slides, the welcome photo and 6 gallery photos. To use your own, put files in `public/images/` and change each `src` to e.g. `"/images/kitchen.jpg"`. Remote photos need an internet connection. For a fully offline site, download them into `public/images/` and update the paths.
-- **Home page layout:** a photo hero slider (arrows, dots, swipe, autoplay that pauses on hover), a quick-facts strip, "Welcome to KitchenMath" with a blob-shaped duotone photo, an "Our Calculators" card grid, the Restaurant Snapshot, How it works, a "Built for Real Restaurants" photo gallery and a call-to-action band.
+- **Home page layout:** a photo hero slider (arrows, dots, swipe, autoplay that pauses on hover), a quick-facts strip, "Welcome to KitchenMath" with a blob-shaped duotone photo, an "Our Calculators" card grid, How it works, a "Built for Real Restaurants" photo gallery and a call-to-action band.
 - **Guidance for users:** every calculator has a "How to use this calculator" panel (edit the steps in `lib/content/calculators.ts` → `howTo`), ⓘ tooltips on each field, and a full Help page at `/restaurant/help`.
 - **Motion:** gentle reveal-on-scroll, numbers that glide to new values, and hover lift on cards. All of it is switched off automatically for visitors who prefer reduced motion.
 
@@ -107,7 +101,7 @@ When you open the folder, VS Code suggests the recommended extensions (`.vscode/
 
 ## 7. Environment variables
 
-Nothing is required to run locally. For production, set your public URL so canonical links, the sitemap and share links are correct:
+The calculators need nothing to run locally. To save form submissions to Google Sheets, follow **`google-apps-script/SETUP.md`** (about 5 minutes) and add the two `GOOGLE_SHEETS_*` variables below. For production, also set your public URL so canonical links, the sitemap and share links are correct:
 
 ```bash
 # macOS / Linux
@@ -119,6 +113,10 @@ copy .env.example .env.local
 | Variable | Example | Purpose |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | `https://kitchenmath.in` | Canonical URLs, sitemap, Open Graph |
+| `GOOGLE_SHEETS_WEBHOOK_URL` | `https://script.google.com/macros/s/…/exec` | Where form submissions are sent (your Apps Script web app) |
+| `GOOGLE_SHEETS_SECRET` | `km-7f3a9c21e84b4d0f` | Must match `SECRET` in the Apps Script. Keeps others from writing to your sheet |
+
+Without the Google Sheets variables the forms show "The form isn't connected yet. Please email or WhatsApp us instead."
 
 ## 8. Development
 
@@ -155,13 +153,13 @@ npm test           # run all tests once
 npm run test:watch # re-run on save
 ```
 
-Tests live in `tests/` and cover every calculation: health (food, labor, marketing, prime, score, simulator), break-even and margin of safety, online payout (commission, GST on commission, gateway, discount, ads, food cost, profit, the ₹1,000 reference example, monthly simulation, channel comparison), menu pricing and rounding, food cost with waste adjustments, prime cost, profit margin, ROI and payback, menu engineering and CSV import, scenario comparison, formatters and share-link encoding. They also cover edge cases: zero revenue, 100%+ variable cost, negative values, very large values and decimal percentages.
+Tests live in `tests/` and cover every formula: total deductions %, break-even price, menu price and rounding up to end in 9, the "reduce discount or margin" case, every payout line (discount, commission, GST on commission, ads, GST on ads, payout, profit, profit %, payout %) with the ₹379 worked example, menu engineering (profit per order, total profit, menu mix, popularity line, average profit per order, categories), menu CSV import/export, scenario comparison, formatters and share-link encoding.
 
 ## 11. Deployment to Vercel
 
 1. Push the project to a GitHub repository.
 2. Go to https://vercel.com, click **Add New → Project** and import the repository. Vercel detects Next.js automatically.
-3. Under **Environment Variables**, add `NEXT_PUBLIC_SITE_URL` = your final domain (e.g. `https://kitchenmath.in`).
+3. Under **Environment Variables**, add `NEXT_PUBLIC_SITE_URL` = your final domain (e.g. `https://kitchenmath.in`), plus `GOOGLE_SHEETS_WEBHOOK_URL` and `GOOGLE_SHEETS_SECRET` (see `google-apps-script/SETUP.md`).
 4. Click **Deploy**. Every push to `main` redeploys automatically.
 5. Optional: add a custom domain under **Project → Settings → Domains**.
 
@@ -171,14 +169,15 @@ Tests live in `tests/` and cover every calculation: health (food, labor, marketi
 
 ```
 app/                       Routes (App Router)
-  restaurant/              Landing + 9 calculators + history, guides, about
+  restaurant/              Landing + 3 calculators + history, guides, about
+  api/lead/                Form submissions → Google Sheets
   privacy/ terms/          Legal pages
   layout.tsx globals.css   Shell, fonts, design tokens
   sitemap.ts robots.ts     SEO
 components/
   calculators/             One folder per calculator + shared/ (layout, actions, scenario, insights)
   charts/                  Recharts charts (lazy-loaded) and lightweight SVG/HTML charts
-  dashboard/               Hero preview + Restaurant Snapshot
+  dashboard/               Example preview used on the home page
   forms/                   Currency/percent/number inputs, sliders, RHF field wrappers
   layout/                  Header, footer, breadcrumbs
   content/                 Formula, education, FAQ, related calculators, cards
@@ -194,6 +193,7 @@ lib/
   content/                 Calculator registry and example defaults
 types/                     Shared types
 tests/                     Vitest unit tests
+google-apps-script/        Code.gs + SETUP.md for the Google Sheet
 ```
 
 ## Disclaimer

@@ -25,7 +25,7 @@ export default function PrivacyPage() {
         </section>
         <section>
           <h2 className="text-xl font-semibold">What is stored on your device</h2>
-          <p className="mt-2">We use your browser&apos;s local storage to remember your last inputs for each calculator, any scenarios you save and any benchmark settings you change. You can delete them at any time from the Saved scenarios page or by clearing your browser data.</p>
+          <p className="mt-2">We use your browser&apos;s local storage to remember your last inputs for each calculator, and any scenarios you save. You can delete them at any time from the Saved scenarios page or by clearing your browser data.</p>
         </section>
         <section>
           <h2 className="text-xl font-semibold">Share links</h2>

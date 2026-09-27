@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Download, FileSpreadsheet, FolderOpen, Info, Moon, Printer, Save, Share2, SlidersHorizontal } from "lucide-react";
+import { ArrowRight, Download, FileSpreadsheet, FolderOpen, Info, Moon, Printer, Save, Share2 } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
 import { PAGE_IMAGES } from "@/lib/content/images";
 import { PrivacyShield, StepAnalyze, StepEnter, StepSave } from "@/components/illustrations/Illustrations";
@@ -16,7 +16,7 @@ export const metadata = pageMetadata({
 const STEPS = [
   { Art: StepEnter, title: "1. Enter your numbers", body: "Every calculator opens with example numbers so you can see how it works. Replace them with your own figures from your books, POS or bank statements. Type plain numbers; commas are added for you (1,50,000)." },
   { Art: StepAnalyze, title: "2. Read your results", body: "Results update as you type. Each result shows the reference range, a coloured status and the rupee impact of any gap. On a phone, the key result stays pinned at the bottom of the screen; tap Results to jump to it." },
-  { Art: StepSave, title: "3. Test, save and share", body: "Use Scenario mode to try a change (rent +10%, food cost −2 points) without touching your inputs. Then save it on this device, share a link, or download a PDF or CSV for your partner or accountant." },
+  { Art: StepSave, title: "3. Test, save and share", body: "Use Scenario mode to try a change (dish cost +10%, commission −3 points) without touching your inputs. Then save it on this device, share a link, or download a PDF or CSV for your partner or accountant." },
 ];
 
 const ACTIONS = [
@@ -26,22 +26,18 @@ const ACTIONS = [
   { Icon: Download, title: "PDF", body: "A clean report with your inputs, results, a chart, assumptions and reference ranges." },
   { Icon: FileSpreadsheet, title: "CSV", body: "Opens in Excel or Google Sheets. Menu Engineering can also import a CSV of your dishes." },
   { Icon: Printer, title: "Print", body: "Prints the results without menus and buttons." },
-  { Icon: SlidersHorizontal, title: "Reference benchmarks", body: "In the Health calculator you can change the reference ranges to suit your format. They are saved on this device." },
   { Icon: Moon, title: "Light or dark theme", body: "Use the sun/moon button in the top bar to switch between white & blue and black & gold. Your choice is remembered." },
 ];
 
 const GLOSSARY: [string, string][] = [
-  ["COGS (cost of goods sold)", "The food you actually used: opening stock + purchases − closing stock."],
-  ["Food cost %", "COGS as a share of food sales."],
-  ["Labor cost %", "All salaries and benefits as a share of total sales."],
-  ["Prime cost", "Food cost + labor cost, your two biggest controllable costs."],
-  ["Contribution margin", "What's left of each rupee of sales after variable costs, available to pay fixed costs and profit."],
-  ["Break-even", "The monthly sales at which you make neither profit nor loss."],
-  ["Margin of safety", "How far sales can fall before you start losing money."],
+  ["Total cost", "Dish cost + Labour + PC (packaging) for one order."],
+  ["Total deductions %", "Commission% × (1 + Tax%) + Discount% + Ads% × (1 + Tax%): the share of the price the platform keeps."],
+  ["Break-even price", "The price at which a dish earns ₹0 after all deductions and costs."],
+  ["Margin %", "The profit you want to keep, as a share of the menu price."],
   ["Payout", "What a delivery platform actually sends to your bank after its deductions."],
-  ["GMV", "Gross merchandise value: the total value of orders before any deductions."],
-  ["Menu mix (popularity)", "A dish's share of all dishes sold."],
-  ["Payback period", "How many months of profit it takes to recover what you invested."],
+  ["Profit per order", "Payout − Total cost."],
+  ["Menu mix %", "A dish's share of all orders: dish orders ÷ total orders × 100."],
+  ["Popularity line", "(100% ÷ number of dishes) × 0.7. A dish at or above it counts as popular."],
 ];
 
 const FAQS = [
@@ -64,7 +60,7 @@ export default function HelpPage() {
         crumbs={[{ name: "Home", path: "/" }, { name: "Tools", path: "/restaurant" }, { name: "Help", path: "/restaurant/help" }]}
       >
         <div className="flex flex-wrap gap-3">
-          <Link href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg")}>Try the Health calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+          <Link href="/restaurant/menu-pricing-calculator" className={buttonClass("accent", "lg")}>Try the Menu Pricing calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>
           <a href="#glossary" className="inline-flex h-12 items-center rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">Glossary</a>
         </div>
       </PageHero>

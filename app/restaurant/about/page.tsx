@@ -27,7 +27,7 @@ export default function AboutPage() {
       />
     <div className="container max-w-4xl pb-16 pt-12">
       <p className="mb-10 text-lg leading-relaxed text-ink-soft">
-        Net margins in Indian restaurants are often 5–10%. One unchecked point of food cost, an extra shift of staff or an untracked campaign can turn a profitable month into a loss. {SITE.name} puts the key numbers in front of owners for free, without software subscriptions or sign-ups.
+        After commission, discounts, ads and GST, delivery-app orders can quietly lose money. A price copied from the dine-in menu or an untracked discount can turn a busy month into a loss. {SITE.name} puts the key numbers in front of owners for free, without software subscriptions or sign-ups.
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {PRINCIPLES.map((p) => (

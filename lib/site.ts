@@ -2,7 +2,7 @@ export const SITE = {
   name: "KitchenMath",
   tagline: "Know your restaurant numbers.",
   description:
-    "Free calculators that help restaurant owners understand costs, margins, break-even sales and online-order profitability.",
+    "Free calculators that help restaurant owners price dishes for profit, check online-order payouts and find their most profitable dishes.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000").replace(/\/$/, ""),
   locale: "en_IN",
   contactEmail: "hello@example.com",

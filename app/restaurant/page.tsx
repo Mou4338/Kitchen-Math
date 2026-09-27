@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Calculator, IndianRupee, Lock, UserX } from "lucide-react";
 import { CalculatorCard } from "@/components/content/CalculatorCard";
-import { SnapshotDashboard } from "@/components/dashboard/SnapshotDashboard";
 import { HeroSlider } from "@/components/home/HeroSlider";
 import { PhotoGallery } from "@/components/home/PhotoGallery";
 import { WelcomeSection } from "@/components/home/WelcomeSection";
@@ -17,11 +16,11 @@ export const metadata = pageMetadata({
   title: "Restaurant Profitability Calculators for Indian Restaurant Owners",
   description: SITE.description,
   path: "/restaurant",
-  keywords: ["restaurant calculators", "restaurant profitability", "food cost calculator", "break-even calculator", "restaurant tools India"],
+  keywords: ["restaurant calculators", "menu pricing calculator", "zomato payout calculator", "menu engineering", "restaurant tools India"],
 });
 
 const FACTS = [
-  { Icon: Calculator, value: "9", label: "Free calculators" },
+  { Icon: Calculator, value: "3", label: "Free calculators" },
   { Icon: IndianRupee, value: "₹0", label: "Cost, forever" },
   { Icon: UserX, value: "0", label: "Logins or sign-ups" },
   { Icon: Lock, value: "100%", label: "Private: runs in your browser" },
@@ -62,7 +61,7 @@ export default function RestaurantHome() {
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
             <h2 className="text-4xl font-bold sm:text-5xl">Our <span className="text-accent">Calculators</span></h2>
-            <p className="mt-4 text-muted">Reliable food cost, break-even, payout and pricing tools, built to simplify your numbers and support your restaurant&apos;s growth.</p>
+            <p className="mt-4 text-muted">Price every dish for profit, see what each online order really pays you, and find which dishes earn the most.</p>
           </Reveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {CALCULATORS.map((c, i) => (
@@ -72,16 +71,6 @@ export default function RestaurantHome() {
             ))}
           </div>
         </div>
-      </section>
-
-      {/* Snapshot */}
-      <section id="snapshot" className="container scroll-mt-20 py-16 sm:py-24">
-        <Reveal className="mb-10 max-w-2xl">
-          <p className="eyebrow text-accent-dark">Restaurant snapshot</p>
-          <h2 className="mt-2 text-4xl font-bold">Your whole restaurant in <span className="accent-serif">six numbers</span></h2>
-          <p className="mt-3 text-muted">Enter one month&apos;s figures to see prime cost, profit, break-even and margin of safety together. Tap any tile to open the detailed calculator.</p>
-        </Reveal>
-        <SnapshotDashboard />
       </section>
 
       {/* How it works */}
@@ -117,7 +106,7 @@ export default function RestaurantHome() {
               <h2 className="text-3xl font-bold text-on-inverse sm:text-4xl">Private by design. <span className="font-serif font-normal italic text-accent-bright">Free forever.</span></h2>
               <p className="mt-4 max-w-lg leading-relaxed text-on-inverse/75">Calculations happen in your browser. Nothing you type is uploaded. Save scenarios on your device, share a link when you choose, and download PDF or CSV reports anytime.</p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/restaurant/restaurant-health-calculator" className={buttonClass("accent", "lg")}>Get started free <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+                <Link href="/restaurant/menu-pricing-calculator" className={buttonClass("accent", "lg")}>Get started free <ArrowRight className="h-4 w-4" aria-hidden /></Link>
                 <Link href="/restaurant/help" className="inline-flex h-12 items-center rounded-xl border border-on-inverse/25 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">How to use</Link>
               </div>
             </div>

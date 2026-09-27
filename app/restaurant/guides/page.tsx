@@ -7,7 +7,7 @@ import { CALCULATORS } from "@/lib/content/calculators";
 import { pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
-  title: "Restaurant Finance Guides: Food Cost, Break-Even, Prime Cost & More",
+  title: "Restaurant Guides: Menu Pricing, Online Payout & Menu Engineering",
   description: "Short, practical guides to the numbers that decide restaurant profit, each linked to a free calculator.",
   path: "/restaurant/guides",
 });

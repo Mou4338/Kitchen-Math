@@ -11,9 +11,9 @@ import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
 
 export const metadata = pageMetadata({
-  title: "Restaurant Growth Services: Menu, Pricing, Ads, Funnel & Competitor Intelligence",
+  title: "Restaurant Growth Services: Menu, Pricing, Ads, Conversion, Ratings & Competitors",
   description:
-    "Our restaurant growth consulting framework: menu optimization, pricing & AOV, ads & discounting, funnel optimization, hyperlocal intelligence, reviews, competitor intelligence, operations and measurement.",
+    "Six restaurant growth services: menu optimization, pricing & order value, ads & discounts, conversion (funnel), ratings & dish performance, and local market & competitors.",
   path: "/services",
 });
 
@@ -25,7 +25,7 @@ export default function ServicesPage() {
         eyebrow={SITE.company.division}
         title="A practical framework for"
         accent="restaurant growth"
-        subtitle="Nine areas we review to find growth opportunities across menu, pricing, visibility, conversion, customers and competition."
+        subtitle="Six services that find growth across your menu, prices, ads, conversion, ratings and local market."
         crumbs={[{ name: "Home", path: "/" }, { name: "Services", path: "/services" }]}
       >
         <div className="flex flex-wrap gap-3">
@@ -49,12 +49,6 @@ export default function ServicesPage() {
         <div className="flex flex-col gap-16 sm:gap-24">
           {SERVICES.map((s, i) => (
             <section key={s.id} id={s.id} className="scroll-mt-36" aria-labelledby={`${s.id}-t`}>
-              {i === 7 ? (
-                <div className="mb-12 rounded-3xl bg-accent-soft p-6 text-center sm:p-8">
-                  <p className="eyebrow text-accent-dark">Additional growth levers</p>
-                  <p className="mt-2 text-lg font-semibold">Two areas that strengthen the framework without making it complicated.</p>
-                </div>
-              ) : null}
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
                 <Reveal className={i % 2 ? "lg:order-2" : ""}>
                   <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-inverse shadow-lift">

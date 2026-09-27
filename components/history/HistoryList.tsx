@@ -13,7 +13,9 @@ import { downloadText, slugFile, toCsv } from "@/lib/export/csv";
 
 export function HistoryList() {
   const { toast } = useToast();
-  const { scenarios: items, ready } = useSavedScenarios();
+  const { scenarios: all, ready } = useSavedScenarios();
+  // Hide scenarios saved from calculators that no longer exist.
+  const items = useMemo(() => all.filter((i) => CALCULATORS.some((c) => c.slug === i.calculator)), [all]);
   const [filter, setFilter] = useState("all");
   const [editing, setEditing] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");

@@ -20,10 +20,10 @@ export function WelcomeSection() {
             <span className="block">{SITE.name}</span>
           </h2>
           <p className="mt-6 text-lg leading-relaxed text-ink-soft">
-            <b className="font-semibold text-ink">{SITE.name}</b> is a free set of financial tools for restaurant owners across India. Work out food cost, labor, prime cost, break-even, delivery-app payouts, menu prices, ROI and menu performance in rupees, with every formula explained.
+            <b className="font-semibold text-ink">{SITE.name}</b> is a free set of tools for restaurant owners across India who sell on delivery apps. Set menu prices that cover commission, discount and ads, see what every order really pays you, and find which dishes earn the most, in rupees, with every formula explained.
           </p>
           <p className="mt-4 leading-relaxed text-muted">
-            Most restaurants don&apos;t fail on food; they fail on numbers. With net margins often just 5–10%, one unchecked point of food cost or one untracked discount can turn a good month into a loss. Our calculators show you where you stand and what to fix first.
+            Most restaurants don&apos;t fail on food; they fail on numbers. After commission, discounts, ads and GST, a dish priced like dine-in can lose money on every order. Our calculators show you where you stand and what to fix first.
           </p>
           <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
             {POINTS.map((p) => (
@@ -51,13 +51,13 @@ export function WelcomeSection() {
               <div className="absolute inset-0 bg-gradient-to-tr from-inverse/40 to-transparent" aria-hidden />
             </div>
             <div className="absolute -left-2 bottom-8 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">
-              <p className="eyebrow">Food cost</p>
-              <p className="tabular text-2xl font-bold text-sage-dark">31.8%</p>
-              <p className="text-xs text-muted">Example · within range</p>
+              <p className="eyebrow">Menu price</p>
+              <p className="tabular text-2xl font-bold text-sage-dark">₹379</p>
+              <p className="text-xs text-muted">Example · 20% margin</p>
             </div>
             <div className="absolute -right-2 top-8 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-right-4">
-              <p className="eyebrow">Health score</p>
-              <p className="tabular text-2xl font-bold text-accent">91<span className="text-sm text-muted">/100</span></p>
+              <p className="eyebrow">Profit / order</p>
+              <p className="tabular text-2xl font-bold text-accent">₹76.93</p>
             </div>
           </div>
         </Reveal>

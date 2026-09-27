@@ -15,19 +15,19 @@ interface Point {
   category: MenuCategory;
 }
 
-export default function MenuMatrixChart({ items, avgContribution, popularityThreshold }: { items: MenuItemResult[]; avgContribution: number; popularityThreshold: number }) {
-  const data: Point[] = items.map((i) => ({ name: i.name, x: i.popularityPercent, y: i.contributionMargin, z: Math.max(1, i.profitContribution), category: i.category }));
+export default function MenuMatrixChart({ items, averageProfit, popularityLine }: { items: MenuItemResult[]; averageProfit: number; popularityLine: number }) {
+  const data: Point[] = items.map((i) => ({ name: i.name, x: i.menuMixPercent, y: i.profitPerOrder, z: Math.max(1, i.totalProfit), category: i.category }));
   if (!data.length) return null;
   return (
-    <div className="h-[340px] w-full" role="img" aria-label="Menu engineering matrix: popularity against contribution margin">
+    <div className="h-[340px] w-full" role="img" aria-label="Menu engineering matrix: menu mix against profit per order">
       <ResponsiveContainer width="100%" height="100%">
         <ScatterChart margin={{ top: 16, right: 20, bottom: 24, left: 8 }}>
           <CartesianGrid stroke={CHART.grid} />
-          <XAxis type="number" dataKey="x" name="Popularity" unit="%" tick={{ fontSize: 11, fill: CHART.tick }} stroke={CHART.axis} label={{ value: "Popularity (menu mix %)", position: "insideBottom", offset: -12, fontSize: 11, fill: CHART.tick }} />
-          <YAxis type="number" dataKey="y" name="Contribution" tickFormatter={(v: number) => `₹${Math.round(v)}`} tick={{ fontSize: 11, fill: CHART.tick }} stroke={CHART.axis} width={56} />
+          <XAxis type="number" dataKey="x" name="Menu mix" unit="%" tick={{ fontSize: 11, fill: CHART.tick }} stroke={CHART.axis} label={{ value: "Menu mix (% of orders)", position: "insideBottom", offset: -12, fontSize: 11, fill: CHART.tick }} />
+          <YAxis type="number" dataKey="y" name="Profit per order" tickFormatter={(v: number) => `₹${Math.round(v)}`} tick={{ fontSize: 11, fill: CHART.tick }} stroke={CHART.axis} width={56} />
           <ZAxis type="number" dataKey="z" range={[60, 420]} />
-          <ReferenceLine x={popularityThreshold} stroke={CHART.ink} strokeDasharray="4 4" />
-          <ReferenceLine y={avgContribution} stroke={CHART.ink} strokeDasharray="4 4" />
+          <ReferenceLine x={popularityLine} stroke={CHART.ink} strokeDasharray="4 4" />
+          <ReferenceLine y={averageProfit} stroke={CHART.ink} strokeDasharray="4 4" />
           <Tooltip
             cursor={{ strokeDasharray: "3 3" }}
             content={({ active, payload }) => {
@@ -36,8 +36,8 @@ export default function MenuMatrixChart({ items, avgContribution, popularityThre
               return (
                 <div className="rounded-xl border border-line bg-card px-3 py-2 text-xs shadow-lift">
                   <p className="font-semibold">{p.name}</p>
-                  <p>Popularity {formatPercent(p.x)}</p>
-                  <p>Contribution {formatINR(p.y)} / plate</p>
+                  <p>Menu mix {formatPercent(p.x)}</p>
+                  <p>Profit {formatINR(p.y, 2)} / order</p>
                 </div>
               );
             }}

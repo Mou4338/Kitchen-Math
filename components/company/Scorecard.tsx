@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Mail, RotateCcw } from "lucide-react";
+import { ArrowRight, CheckCircle2, Loader2, RotateCcw, Send } from "lucide-react";
 import { useState } from "react";
 import { CircularScore } from "@/components/charts/CircularScore";
 import { StatusPill } from "@/components/ui/StatusPill";
@@ -9,31 +9,19 @@ import { scoreScorecard } from "@/lib/calculations/scorecardCalculator";
 import type { Tone } from "@/lib/calculations/utils";
 import { SERVICES } from "@/lib/content/company";
 import { ANSWER_LABELS, SCORECARD, type AnswerValue } from "@/lib/content/scorecard";
-import { SITE } from "@/lib/site";
+import { submitLead } from "@/lib/leads";
 import { cn } from "@/lib/utils/cn";
 
 const tone = (s: number | null): Tone => (s === null ? "neutral" : s >= 75 ? "good" : s >= 45 ? "watch" : "bad");
 const BAND = { strong: "Strong foundations", developing: "Room to grow", early: "Big opportunities ahead" };
 const BAR: Record<Tone, string> = { good: "bg-sage", watch: "bg-caution", bad: "bg-danger", neutral: "bg-line-strong" };
 
-/** 18-question self-audit across the 9 service areas, with live scores and priorities. */
+/** Two questions per service area, with live scores, priorities and a "send my results" form. */
 export function Scorecard() {
   const [answers, setAnswers] = useState<(AnswerValue | undefined)[][]>(() => SCORECARD.map((a) => a.questions.map(() => undefined)));
   const r = scoreScorecard(SCORECARD, answers);
   const set = (a: number, q: number, v: AnswerValue) => setAnswers(answers.map((row, i) => (i === a ? row.map((x, j) => (j === q ? v : x)) : row)));
   const progress = Math.round((r.answered / r.total) * 100);
-
-  const emailBody = [
-    "Hi, here are my Growth Scorecard results:",
-    "",
-    ...r.areas.map((a) => `${a.title}: ${a.score === null ? "not answered" : `${a.score}/100`}`),
-    "",
-    `Overall: ${r.overall ?? "—"}/100`,
-    r.priorities.length ? `Top priorities: ${r.priorities.map((p) => p.title).join(", ")}` : "",
-    "",
-    "Restaurant name:",
-    "City:",
-  ].join("\n");
 
   return (
     <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.9fr)]">
@@ -100,7 +88,7 @@ export function Scorecard() {
             <CircularScore value={r.overall} tone={tone(r.overall)} label="Growth score" size={108} />
             <div>
               <p className="text-2xl font-bold">{r.band ? BAND[r.band] : "Answer to see your score"}</p>
-              <p className="mt-1 text-sm text-on-inverse/70">{r.complete ? "All 9 areas scored." : `${9 - r.areas.filter((a) => a.score !== null).length} areas still to answer.`}</p>
+              <p className="mt-1 text-sm text-on-inverse/70">{r.complete ? `All ${SCORECARD.length} areas scored.` : `${SCORECARD.length - r.areas.filter((a) => a.score !== null).length} areas still to answer.`}</p>
             </div>
           </div>
           <ul className="mt-6 grid gap-2.5">
@@ -137,15 +125,78 @@ export function Scorecard() {
           </div>
         ) : null}
 
-        <a
-          href={`mailto:${SITE.company.email}?subject=${encodeURIComponent("My Growth Scorecard results")}&body=${encodeURIComponent(emailBody)}`}
-          className={cn("inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-5 font-semibold text-accent-ink shadow-glow transition hover:brightness-110", r.answered === 0 && "pointer-events-none opacity-50")}
-          aria-disabled={r.answered === 0}
-        >
-          <Mail className="h-4 w-4" aria-hidden /> Send my results for a free review
-        </a>
-        <p className="text-center text-xs text-muted">Your answers stay in this browser until you choose to send them.</p>
+        <SendResults result={r} />
       </aside>
     </div>
+  );
+}
+
+type ScoreResult = ReturnType<typeof scoreScorecard>;
+
+/** Saves the visitor's contact details and scores to Google Sheets (via /api/lead). */
+function SendResults({ result: r }: { result: ScoreResult }) {
+  const [name, setName] = useState("");
+  const [restaurant, setRestaurant] = useState("");
+  const [phone, setPhone] = useState("");
+  const [city, setCity] = useState("");
+  const [website, setWebsite] = useState("");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [error, setError] = useState<string | null>(null);
+  const field = "h-11 w-full rounded-xl border border-line-strong bg-card px-3.5 text-sm text-ink outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15";
+  const disabled = r.answered === 0;
+
+  if (status === "sent") {
+    return (
+      <div role="status" className="flex items-start gap-3 rounded-3xl border border-sage/30 bg-sage-soft p-5">
+        <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-sage-dark" aria-hidden />
+        <p className="text-sm"><b>Results sent.</b> We&apos;ll review them and get back to you with where to start.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      className="grid gap-3 rounded-3xl border border-line bg-card p-5 shadow-card"
+      noValidate
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (!name.trim() || !restaurant.trim() || !phone.trim()) {
+          setError("Please add your name, restaurant and phone number.");
+          return;
+        }
+        setError(null);
+        setStatus("sending");
+        const res = await submitLead({
+          formType: "scorecard",
+          name, restaurant, phone, city, website,
+          overallScore: r.overall,
+          areaScores: Object.fromEntries(r.areas.map((a) => [a.title, a.score])),
+          priorities: r.priorities.map((p) => p.title),
+        });
+        if (res.ok) setStatus("sent");
+        else { setStatus("idle"); setError(res.error); }
+      }}
+    >
+      <h3 className="font-bold">Get a free review of your results</h3>
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+        <input aria-label="Your name" placeholder="Your name *" value={name} onChange={(e) => setName(e.target.value)} className={field} autoComplete="name" maxLength={100} />
+        <input aria-label="Restaurant name" placeholder="Restaurant name *" value={restaurant} onChange={(e) => setRestaurant(e.target.value)} className={field} autoComplete="organization" maxLength={120} />
+        <input aria-label="Phone or WhatsApp" placeholder="Phone / WhatsApp *" type="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className={field} autoComplete="tel" maxLength={30} />
+        <input aria-label="City" placeholder="City" value={city} onChange={(e) => setCity(e.target.value)} className={field} autoComplete="address-level2" maxLength={60} />
+      </div>
+      <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+        <input tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
+      </div>
+      {error ? <p role="alert" className="text-sm font-medium text-danger">{error}</p> : null}
+      <button
+        type="submit"
+        disabled={disabled || status === "sending"}
+        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-5 font-semibold text-accent-ink shadow-glow transition hover:brightness-110 disabled:opacity-50"
+      >
+        {status === "sending" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Send className="h-4 w-4" aria-hidden />}
+        {status === "sending" ? "Sending…" : "Send my results"}
+      </button>
+      <p className="text-center text-xs text-muted">{disabled ? "Answer at least one question first." : "Your answers stay in this browser until you send them."}</p>
+    </form>
   );
 }
