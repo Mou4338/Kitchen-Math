@@ -14,8 +14,8 @@ A Next.js website with **3 calculators** (Menu Pricing, Online Payout & Profit, 
 | `/services` | The 6 services, growth equation, glossary |
 | `/growth-scorecard` | Free 12-question self-audit (2 per service), scores per area, top 3 priorities, "send my results" form → Google Sheet |
 | `/restaurant` | Tools home and calculator collection |
-| `/restaurant/menu-pricing-calculator` | Break-even price and menu price (rounded up to end in 9) from cost, commission, tax, discount, ads and margin |
-| `/restaurant/online-sale-payout-calculator` | Discount → commissionable value → commission + 18% GST → customer GST → ads → payout → profit, profit % and payout % |
+| `/restaurant/menu-pricing-calculator` | Exact break-even price and margin-safe price from cost, discount, commission (+18% GST), ads and margin |
+| `/restaurant/online-sale-payout-calculator` | Discount → commissionable value → commission + 18% GST → ads → payout → profit, profit % and payout % |
 | `/restaurant/menu-engineering-calculator` | Payout and profit per unit, total profit and Star / Plow Horse / Puzzle / Dog for every dish (vs menu averages); CSV import/export |
 | `/restaurant/calculator-history` | Saved scenarios: view, rename, duplicate, delete, export |
 | `/restaurant/help` | How-to guide, buttons explained, glossary, FAQs |
@@ -52,14 +52,13 @@ Discount          = Selling price × Discount %
 CV                = Selling price − Discount + Packaging charge
 Commission        = CV × Commission %
 GST on commission = Commission × 18%            (fixed, not an input)
-Customer GST      = CV × GST on food %          (usually 5%)
-Net sales         = CV + Customer GST
-Ads               = Net sales × Ads %
-Payout            = Net sales − Commission − GST on commission − Ads
+Ads               = CV × Ads %
+Payout            = CV − Commission − GST on commission − Ads
 Profit            = Payout − (Dish cost + Labour + Packaging cost)
 ```
 
-- **Menu Pricing** solves it backwards: `factor = (1 − d) × ((1 + g) × (1 − a) − 1.18 × c) − m`, `price = Total cost ÷ factor` (break-even with m = 0), rounded **up** to end in 9.
+- **Menu Pricing** solves it backwards: `factor = (1 − d) × (1 − a − 1.18 × c) − m`, `price = Total cost ÷ factor` (break-even with m = 0). Prices are exact, not rounded.
+- GST the customer pays on food is **not** part of the payout: the platform collects and pays it, so the restaurant never receives it.
 - **Menu Engineering** runs every dish through the payout function, then compares profit per unit and units sold with their simple averages: Star, Plow Horse, Puzzle or Dog.
 
 ## Look & feel
@@ -172,7 +171,7 @@ npm test           # run all tests once
 npm run test:watch # re-run on save
 ```
 
-Tests live in `tests/` and cover every formula: the shared payout calculation (discount, commissionable value, commission, 18% GST on commission, customer GST, net sales, ads on net sales, payout, profit, profit %, payout %) with the ₹309 worked example and a packaging charge, the menu price solved backwards (break-even, margin-safe price, rounding up to end in 9, the no-price case), menu engineering (profit per unit, total profit, simple averages, Star / Plow Horse / Puzzle / Dog), menu CSV import/export, scenario comparison, formatters and share-link encoding.
+Tests live in `tests/` and cover every formula: the shared payout calculation (discount, commissionable value, commission, 18% GST on commission, ads, payout, profit, profit %, payout %) with the ₹333.76 worked example and a packaging charge, the menu price solved backwards (break-even, exact margin-safe price, the no-price case), menu engineering (profit per unit, total profit, simple averages, Star / Plow Horse / Puzzle / Dog), menu CSV import/export, scenario comparison, formatters and share-link encoding.
 
 ## 11. Deployment to Vercel
 

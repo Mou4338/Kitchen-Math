@@ -25,7 +25,6 @@ const platformRates = {
   discountPercent: percent("Discount"),
   commissionPercent: percent("Commission"),
   adsPercent: percent("Ads"),
-  gstOnOrderPercent: percent("GST on food", 28),
   packagingCharge: amount("Packaging charge"),
 };
 

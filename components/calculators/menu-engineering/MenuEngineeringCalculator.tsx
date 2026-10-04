@@ -74,8 +74,7 @@ function readMenuDraft(raw: string | null | undefined): MenuState {
 const RATE_FIELDS: [keyof Required<PlatformRates>, string, string][] = [
   ["discountPercent", "Discount %", "%"],
   ["commissionPercent", "Commission %", "%"],
-  ["adsPercent", "Ads % (of net sales)", "%"],
-  ["gstOnOrderPercent", "GST on food %", "%"],
+  ["adsPercent", "Ads %", "%"],
   ["packagingCharge", "Packaging charge (₹)", "₹"],
 ];
 
@@ -100,7 +99,7 @@ export default function MenuEngineeringCalculator() {
   }, []);
 
   const commit = (next: MenuItemInput[], nextSource: ValueSource = "yours", nextRates: PlatformRates = rates) => saveDraft(SLUG, { items: next, rates: nextRates, source: nextSource });
-  const setRate = (k: keyof PlatformRates, v: number) => commit(items, "yours", { ...rates, [k]: Math.max(0, k === "packagingCharge" ? v : Math.min(k === "gstOnOrderPercent" ? 28 : 100, v)) });
+  const setRate = (k: keyof PlatformRates, v: number) => commit(items, "yours", { ...rates, [k]: Math.max(0, k === "packagingCharge" ? v : Math.min(100, v)) });
   const resetToExample = () => clearDraft(SLUG);
   const update = (id: string, patch: Partial<MenuItemInput>) => commit(items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
 
@@ -124,7 +123,7 @@ export default function MenuEngineeringCalculator() {
   const top = [...a.items].sort((x, y) => y.totalProfit - x.totalProfit)[0];
   if (top && top.totalProfit > 0) insights.push({ tone: "good", title: `${top.name} earns the most`, body: `${formatINR(top.totalProfit)} profit from ${formatNumber(top.unitsSold)} units sold. Keep it visible and consistent.` });
   const losing = a.items.filter((i) => i.unitsSold > 0 && i.profitPerUnit < 0);
-  if (losing.length) insights.push({ tone: "bad", title: `${losing.map((p) => p.name).slice(0, 3).join(", ")} lose${losing.length === 1 ? "s" : ""} money on every order`, body: "After discount, commission, GST and ads, the payout is below the cost. Use the Menu Pricing calculator to find the right price." });
+  if (losing.length) insights.push({ tone: "bad", title: `${losing.map((p) => p.name).slice(0, 3).join(", ")} lose${losing.length === 1 ? "s" : ""} money on every order`, body: "After discount, commission with 18% GST, and ads, the payout is below the cost. Use the Menu Pricing calculator to find the right price." });
   const puzzles = a.items.filter((i) => i.category === "puzzle");
   if (puzzles.length) insights.push({ tone: "neutral", title: `Promote ${puzzles.map((p) => p.name).slice(0, 3).join(", ")}`, body: CATEGORY_INFO.puzzle.action });
   const plow = a.items.filter((i) => i.category === "plowhorse");
@@ -146,8 +145,7 @@ export default function MenuEngineeringCalculator() {
       { label: "Discount", value: formatPercent(rates.discountPercent) },
       { label: "Commission", value: formatPercent(rates.commissionPercent) },
       { label: "GST on commission", value: `${GST_ON_COMMISSION_PERCENT}% (fixed)` },
-      { label: "Ads (of net sales)", value: formatPercent(rates.adsPercent) },
-      { label: "GST on food", value: formatPercent(rates.gstOnOrderPercent) },
+      { label: "Ads", value: formatPercent(rates.adsPercent) },
       { label: "Packaging charge to customer", value: formatINR(rates.packagingCharge ?? 0, 2) },
     ],
     results: [
@@ -178,7 +176,7 @@ export default function MenuEngineeringCalculator() {
               <p className="text-xs text-muted">Entered once, used for every dish. GST on commission is fixed at {GST_ON_COMMISSION_PERCENT}%.</p>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {RATE_FIELDS.map(([k, label, unit]) => (
               <label key={k} className="flex flex-col gap-1 text-xs font-medium text-muted">
                 {label}

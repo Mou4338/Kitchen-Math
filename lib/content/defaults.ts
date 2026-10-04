@@ -4,17 +4,17 @@ import type { PlatformRates } from "@/lib/calculations/onlinePayoutCalculator";
 
 /**
  * Example numbers every calculator opens with, so the first view is never empty. Clearly labelled as examples in the UI.
- * The pricing and payout examples match: ₹130 total cost at 10% discount, 25% commission, 5% ads and 5% GST on food
- * with a 20% margin gives a ₹309 menu price, which earns ₹65.37 (21.2%) per order.
+ * The pricing and payout examples match: ₹130 total cost at 10% discount, 25% commission and 5% ads
+ * with a 20% margin gives a ₹333.76 menu price, which pays out ₹196.75 and earns ₹66.75 (20%) per order.
  */
-export const PLATFORM_DEFAULTS: Required<PlatformRates> = { discountPercent: 10, commissionPercent: 25, adsPercent: 5, gstOnOrderPercent: 5, packagingCharge: 0 };
+export const PLATFORM_DEFAULTS: Required<PlatformRates> = { discountPercent: 10, commissionPercent: 25, adsPercent: 5, packagingCharge: 0 };
 
 export const MENU_PRICING_DEFAULTS: MenuPricingForm = {
   dishCost: 100, labourCost: 15, packagingCost: 15, ...PLATFORM_DEFAULTS, marginPercent: 20,
 };
 
 export const ONLINE_PAYOUT_DEFAULTS: OnlinePayoutForm = {
-  sellingPrice: 309, dishCost: 100, labourCost: 15, packagingCost: 15, ...PLATFORM_DEFAULTS,
+  sellingPrice: 333.76, dishCost: 100, labourCost: 15, packagingCost: 15, ...PLATFORM_DEFAULTS,
 };
 
 export const MENU_ITEMS_DEFAULTS: MenuItemInput[] = [

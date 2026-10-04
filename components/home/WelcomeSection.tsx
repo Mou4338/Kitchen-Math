@@ -52,12 +52,12 @@ export function WelcomeSection() {
             </div>
             <div className="absolute -left-2 bottom-8 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">
               <p className="eyebrow">Menu price</p>
-              <p className="tabular text-2xl font-bold text-sage-dark">₹309</p>
+              <p className="tabular text-2xl font-bold text-sage-dark">₹333.76</p>
               <p className="text-xs text-muted">Example · 20% margin</p>
             </div>
             <div className="absolute -right-2 top-8 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-right-4">
               <p className="eyebrow">Profit / order</p>
-              <p className="tabular text-2xl font-bold text-accent">₹65.37</p>
+              <p className="tabular text-2xl font-bold text-accent">₹66.75</p>
             </div>
           </div>
         </Reveal>

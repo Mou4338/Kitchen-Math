@@ -9,10 +9,8 @@ export interface PlatformRates {
   discountPercent: number;
   /** Platform commission, % of the commissionable value. */
   commissionPercent: number;
-  /** Ad spend, % of net sales. */
+  /** Ad spend, % of the commissionable value. */
   adsPercent: number;
-  /** GST slab charged to the customer on food, usually 5%. */
-  gstOnOrderPercent: number;
   /** What you charge the customer for packaging (often ₹0). */
   packagingCharge?: number;
 }
@@ -47,9 +45,6 @@ export interface OnlinePayoutResult {
   cv: number;
   commission: number;
   gstOnCommission: number;
-  customerGst: number;
-  /** What the customer actually pays = CV + Customer GST. */
-  netSales: number;
   ads: number;
   /** Money the platform settles into your bank. */
   payout: number;
@@ -69,10 +64,9 @@ export const totalCostOf = (c: OrderCosts) => nonNegative(c.dishCost) + nonNegat
  * CV               = Selling price − Discount + Packaging charge   (commissionable value)
  * Commission       = CV × Commission %
  * GST on commission= Commission × 18%
- * Customer GST     = CV × GST on order %
- * Net sales        = CV + Customer GST                              (what the customer pays)
- * Ads              = Net sales × Ads %
- * Payout           = Net sales − Commission − GST on commission − Ads
+ * Ads              = CV × Ads %
+ * Payout           = CV − Commission − GST on commission − Ads
+ * GST the customer pays on food is not included: the platform collects and pays it, so the restaurant never receives it.
  * Profit           = Payout − (Dish cost + Labour + Packaging cost)
  * Profit %         = Profit ÷ Selling price × 100;  Payout % = Payout ÷ Selling price × 100
  */
@@ -87,10 +81,8 @@ export function calculateOnlinePayout(input: OnlinePayoutInputs): OnlinePayoutRe
   const cv = sp - discount + packagingCharge;
   const commission = cv * pct(input.commissionPercent);
   const gstOnCommission = commission * (GST_ON_COMMISSION_PERCENT / 100);
-  const customerGst = cv * pct(input.gstOnOrderPercent);
-  const netSales = cv + customerGst;
-  const ads = netSales * pct(input.adsPercent);
-  const payout = netSales - commission - gstOnCommission - ads;
+  const ads = cv * pct(input.adsPercent);
+  const payout = cv - commission - gstOnCommission - ads;
   const totalCost = totalCostOf(input);
   const profit = payout - totalCost;
 
@@ -102,14 +94,12 @@ export function calculateOnlinePayout(input: OnlinePayoutInputs): OnlinePayoutRe
     if (kind === "subtotal" || kind === "result" || kind === "start") running = amount;
     steps.push({ key, label, amount: kind === "deduction" ? -amount : amount, running, kind });
   };
-  const gstOrder = nonNegative(input.gstOnOrderPercent);
   push("price", "Selling price", sp, "start");
   push("discount", "Discount", discount, "deduction");
   if (packagingCharge > 0) push("packCharge", "Packaging charge", packagingCharge, "addition");
   push("cv", "Commissionable value", cv, "subtotal");
   push("commission", "Commission", commission, "deduction");
   push("gstCommission", `GST on commission (${GST_ON_COMMISSION_PERCENT}%)`, gstOnCommission, "deduction");
-  push("customerGst", `Customer GST (${gstOrder}%)`, customerGst, "addition");
   push("ads", "Ads", ads, "deduction");
   push("payout", "Payout", payout, "subtotal");
   push("dish", "Dish cost", nonNegative(input.dishCost), "deduction");
@@ -126,8 +116,6 @@ export function calculateOnlinePayout(input: OnlinePayoutInputs): OnlinePayoutRe
     cv,
     commission,
     gstOnCommission,
-    customerGst,
-    netSales,
     ads,
     payout,
     totalCost,
@@ -141,11 +129,10 @@ export function calculateOnlinePayout(input: OnlinePayoutInputs): OnlinePayoutRe
 
 /**
  * Share of the commissionable value you keep as payout:
- * k = (1 + GST on order) × (1 − Ads) − 1.18 × Commission
+ * k = 1 − Ads − 1.18 × Commission
  */
 export function payoutFactor(r: PlatformRates): number {
-  const g = nonNegative(r.gstOnOrderPercent) / 100;
   const a = nonNegative(r.adsPercent) / 100;
   const c = nonNegative(r.commissionPercent) / 100;
-  return (1 + g) * (1 - a) - (1 + GST_ON_COMMISSION_PERCENT / 100) * c;
+  return 1 - a - (1 + GST_ON_COMMISSION_PERCENT / 100) * c;
 }

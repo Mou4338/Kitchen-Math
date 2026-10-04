@@ -18,7 +18,7 @@ export const HERO_SLIDES: (Photo & { eyebrow: string; title: [string, string]; t
     alt: "Café owner checking the day's numbers on a tablet at the counter",
     eyebrow: "Menu pricing",
     title: ["Price Every Dish", "for Profit."],
-    text: "Enter dish cost, labour and packaging with your commission, tax, discount and ads. Get the break-even price and a menu price ending in 9 that keeps your margin.",
+    text: "Enter dish cost, labour and packaging with your discount, commission and ads. Get the exact break-even price and the price that keeps your margin.",
     cta: { label: "Price my dish", href: "/restaurant/menu-pricing-calculator" },
   },
   {

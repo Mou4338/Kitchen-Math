@@ -35,7 +35,7 @@ const NO_SC: PayoutScenario = { price: 0, commission: 0, discount: 0, ads: 0 };
 const profitTone = (p: number | null): Tone => (p === null ? "neutral" : p < 0 ? "bad" : p < 10 ? "watch" : "good");
 
 export default function OnlinePayoutCalculator() {
-  const { control, values, source, loadValues, resetToExample, clearAll } = useCalculatorForm(SLUG, onlinePayoutSchema, ONLINE_PAYOUT_DEFAULTS, ["gstOnOrderPercent"]);
+  const { control, values, source, loadValues, resetToExample, clearAll } = useCalculatorForm(SLUG, onlinePayoutSchema, ONLINE_PAYOUT_DEFAULTS);
   const [sc, setSc] = useState<PayoutScenario>(NO_SC);
 
   const r = useMemo(() => calculateOnlinePayout(values), [values]);
@@ -71,15 +71,13 @@ export default function OnlinePayoutCalculator() {
       { label: "Discount", value: formatPercent(values.discountPercent) },
       { label: "Commission", value: formatPercent(values.commissionPercent) },
       { label: "GST on commission", value: `${GST_ON_COMMISSION_PERCENT}% (fixed)` },
-      { label: "Ads (of net sales)", value: formatPercent(values.adsPercent) },
-      { label: "GST on food", value: formatPercent(values.gstOnOrderPercent) },
+      { label: "Ads", value: formatPercent(values.adsPercent) },
       { label: "Dish cost", value: formatINR(values.dishCost, 2) },
       { label: "Labour", value: formatINR(values.labourCost, 2) },
       { label: "Packaging cost (yours)", value: formatINR(values.packagingCost, 2) },
     ],
     results: [
       ...r.waterfall.map((w) => ({ label: w.label, value: w.kind === "deduction" ? `−${formatINR(-w.amount, 2)}` : w.kind === "addition" ? `+${formatINR(w.amount, 2)}` : formatINR(w.amount, 2) })),
-      { label: "Net sales (customer pays)", value: formatINR(r.netSales, 2) },
       { label: "Profit %", value: formatPercent(r.profitPercent) },
       { label: "Payout %", value: formatPercent(r.payoutPercent) },
     ],
@@ -90,8 +88,8 @@ export default function OnlinePayoutCalculator() {
     assumptions: [
       "Commissionable value (CV) = Selling price − Discount + Packaging charge.",
       "Commission = CV × Commission %; GST on commission = Commission × 18%.",
-      "Customer GST = CV × GST on food %; Net sales = CV + Customer GST.",
-      "Ads = Net sales × Ads %; Payout = Net sales − Commission − GST on commission − Ads.",
+      "Ads = CV × Ads %; Payout = CV − Commission − GST on commission − Ads.",
+      "GST paid by the customer on food is not counted: the platform collects and pays it, so the restaurant never receives it.",
       "Profit = Payout − (Dish cost + Labour + Packaging cost).",
     ],
     benchmarks: [],
@@ -110,8 +108,7 @@ export default function OnlinePayoutCalculator() {
         <FieldGrid>
           <PercentField control={control} name="discountPercent" label="Discount %" tooltip="Promo and other discounts you fund, combined." />
           <PercentField control={control} name="commissionPercent" label="Commission %" tooltip="Your platform commission rate. Restaurants pay anywhere from about 9% to 25%." />
-          <PercentField control={control} name="adsPercent" label="Ads %" tooltip="Ad spend as a share of net sales (what the customer pays)." />
-          <PercentField control={control} name="gstOnOrderPercent" label="GST on food %" tooltip="GST slab charged to the customer on the food. Usually 5%." />
+          <PercentField control={control} name="adsPercent" label="Ads %" tooltip="Ad spend as a share of the commissionable value." />
         </FieldGrid>
       </InputGroup>
       <InputGroup title="Your cost per order" icon={<ChefHat className="h-5 w-5" />}>
@@ -139,7 +136,7 @@ export default function OnlinePayoutCalculator() {
       </section>
       <div className="grid gap-4 sm:grid-cols-2">
         <MetricCard label="Payout" value={formatINR(r.payout, 2)} sub={`${formatPercent(r.payoutPercent)} of the selling price`} />
-        <MetricCard label="Customer pays (net sales)" value={formatINR(r.netSales, 2)} sub="Commissionable value + customer GST" />
+        <MetricCard label="Commissionable value" value={formatINR(r.cv, 2)} sub="Selling price − Discount + Packaging charge" />
       </div>
       <section className="rounded-2xl border border-line bg-card p-5 shadow-card" aria-label="Line by line">
         <h2 className="text-sm font-semibold">Line by line</h2>
@@ -150,10 +147,8 @@ export default function OnlinePayoutCalculator() {
           <StatementRow label="Commissionable value (CV)" hint="Selling price − Discount + Packaging charge" value={formatINR(r.cv, 2)} strong />
           <StatementRow label="Commission" hint="CV × Commission %" value={`−${formatINR(r.commission, 2)}`} />
           <StatementRow label="GST on commission" hint="Commission × 18%" value={`−${formatINR(r.gstOnCommission, 2)}`} />
-          <StatementRow label="Customer GST" hint="CV × GST on food %" value={`+${formatINR(r.customerGst, 2)}`} />
-          <StatementRow label="Net sales" hint="CV + Customer GST: what the customer pays" value={formatINR(r.netSales, 2)} />
-          <StatementRow label="Ads" hint="Net sales × Ads %" value={`−${formatINR(r.ads, 2)}`} />
-          <StatementRow label="Payout" hint="Net sales − Commission − GST on commission − Ads" value={formatINR(r.payout, 2)} strong />
+          <StatementRow label="Ads" hint="CV × Ads %" value={`−${formatINR(r.ads, 2)}`} />
+          <StatementRow label="Payout" hint="CV − Commission − GST on commission − Ads" value={formatINR(r.payout, 2)} strong />
           <StatementRow label="Dish cost" value={`−${formatINR(values.dishCost, 2)}`} />
           <StatementRow label="Labour" value={`−${formatINR(values.labourCost, 2)}`} />
           <StatementRow label="Packaging cost" value={`−${formatINR(values.packagingCost, 2)}`} />

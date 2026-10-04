@@ -1,27 +1,31 @@
 import { describe, expect, it } from "vitest";
-import { calculateMenuPrice, NO_PRICE_MESSAGE, roundUpToNine } from "@/lib/calculations/menuPricingCalculator";
+import { calculateMenuPrice, NO_PRICE_MESSAGE } from "@/lib/calculations/menuPricingCalculator";
 import { calculateOnlinePayout, GST_ON_COMMISSION_PERCENT, payoutFactor } from "@/lib/calculations/onlinePayoutCalculator";
 import { analyzeMenu, classify, type MenuItemInput } from "@/lib/calculations/menuEngineeringCalculator";
 import { menuItemsToCsv, parseMenuCsv } from "@/lib/export/menuCsv";
 
-const RATES = { discountPercent: 10, commissionPercent: 25, adsPercent: 5, gstOnOrderPercent: 5 };
+const RATES = { discountPercent: 10, commissionPercent: 25, adsPercent: 5 };
 const COSTS = { dishCost: 100, labourCost: 15, packagingCost: 15 };
 
 describe("shared payout calculation", () => {
-  it("follows the waterfall: ₹309 worked example", () => {
-    const r = calculateOnlinePayout({ sellingPrice: 309, ...COSTS, ...RATES });
-    expect(r.discount).toBeCloseTo(30.9, 10);
-    expect(r.cv).toBeCloseTo(278.1, 10);
-    expect(r.commission).toBeCloseTo(69.525, 10);
-    expect(r.gstOnCommission).toBeCloseTo(12.5145, 10);
-    expect(r.customerGst).toBeCloseTo(13.905, 10);
-    expect(r.netSales).toBeCloseTo(292.005, 10);
-    expect(r.ads).toBeCloseTo(14.60025, 10);
-    expect(r.payout).toBeCloseTo(195.36525, 10);
+  it("follows the waterfall: ₹333.76 worked example", () => {
+    const r = calculateOnlinePayout({ sellingPrice: 333.76, ...COSTS, ...RATES });
+    expect(r.discount).toBeCloseTo(33.376, 10);
+    expect(r.cv).toBeCloseTo(300.384, 10);
+    expect(r.commission).toBeCloseTo(75.096, 10);
+    expect(r.gstOnCommission).toBeCloseTo(13.51728, 10);
+    expect(r.ads).toBeCloseTo(15.0192, 10);
+    expect(r.payout).toBeCloseTo(196.75152, 10);
     expect(r.totalCost).toBe(130);
-    expect(r.profit).toBeCloseTo(65.36525, 10);
-    expect(r.profitPercent).toBeCloseTo((65.36525 / 309) * 100, 10);
-    expect(r.payoutPercent).toBeCloseTo((195.36525 / 309) * 100, 10);
+    expect(r.profit).toBeCloseTo(66.75152, 10);
+    expect(r.profitPercent).toBeCloseTo((66.75152 / 333.76) * 100, 10);
+    expect(r.payoutPercent).toBeCloseTo(58.95, 10);
+  });
+
+  it("does not add the customer's GST on food to the payout", () => {
+    const r = calculateOnlinePayout({ sellingPrice: 100, ...COSTS, discountPercent: 0, commissionPercent: 0, adsPercent: 0 });
+    expect(r.payout).toBeCloseTo(100, 10);
+    expect(r.waterfall.some((w) => /customer gst/i.test(w.label))).toBe(false);
   });
 
   it("GST on commission is fixed at 18%", () => {
@@ -54,28 +58,26 @@ describe("shared payout calculation", () => {
 });
 
 describe("menu pricing calculator", () => {
-  it("solves the payout formula backwards", () => {
+  it("solves the payout formula backwards, exact (no rounding)", () => {
     const r = calculateMenuPrice({ ...COSTS, ...RATES, marginPercent: 20 });
-    const factor0 = 0.9 * (1.05 * 0.95 - 1.18 * 0.25);
+    const factor0 = 0.9 * (1 - 0.05 - 1.18 * 0.25);
     expect(r.breakEvenFactor).toBeCloseTo(factor0, 12);
     expect(r.breakEvenPrice).toBeCloseTo(130 / factor0, 8);
-    expect(r.breakEvenPrice).toBeCloseTo(205.6149, 3);
-    expect(r.exactPrice).toBeCloseTo(130 / (factor0 - 0.2), 8);
-    expect(r.recommendedPrice).toBe(309);
+    expect(r.breakEvenPrice).toBeCloseTo(220.5259, 3);
+    expect(r.recommendedPrice).toBeCloseTo(130 / (factor0 - 0.2), 8);
+    expect(r.recommendedPrice).toBeCloseTo(333.7612, 3);
     expect(r.errors).toEqual([]);
   });
 
-  it("break-even price really earns ₹0, and the exact price really earns the margin", () => {
+  it("break-even earns ₹0 and the recommended price earns exactly the margin", () => {
     const r = calculateMenuPrice({ ...COSTS, ...RATES, marginPercent: 20 });
     expect(r.breakEvenCheck?.profit).toBeCloseTo(0, 8);
-    const atExact = calculateOnlinePayout({ ...COSTS, ...RATES, sellingPrice: r.exactPrice! });
-    expect(atExact.profitPercent).toBeCloseTo(20, 8);
-    expect(r.check?.profitPercent).toBeGreaterThanOrEqual(20);
+    expect(r.check?.profitPercent).toBeCloseTo(20, 8);
   });
 
   it("handles a packaging charge to the customer", () => {
     const r = calculateMenuPrice({ ...COSTS, ...RATES, packagingCharge: 20, marginPercent: 20 });
-    const atExact = calculateOnlinePayout({ ...COSTS, ...RATES, packagingCharge: 20, sellingPrice: r.exactPrice! });
+    const atExact = calculateOnlinePayout({ ...COSTS, ...RATES, packagingCharge: 20, sellingPrice: r.recommendedPrice! });
     expect(atExact.profitPercent).toBeCloseTo(20, 8);
   });
 
@@ -86,22 +88,14 @@ describe("menu pricing calculator", () => {
     expect(payoutFactor({ ...RATES, commissionPercent: 90 })).toBeLessThan(0);
   });
 
-  it("rounds up to end in 9 and never below the price", () => {
-    expect(roundUpToNine(300.75)).toBe(309);
-    expect(roundUpToNine(309)).toBe(309);
-    expect(roundUpToNine(380)).toBe(389);
-    expect(roundUpToNine(379.5)).toBe(389);
-    expect(roundUpToNine(3)).toBe(9);
-    expect(roundUpToNine(0)).toBe(0);
-  });
 });
 
 describe("menu engineering calculator", () => {
   it("uses the shared payout calculation for every dish", () => {
-    const r = analyzeMenu([{ id: "a", name: "Biryani", sellingPrice: 309, ...COSTS, unitsSold: 10 }], RATES);
-    expect(r.items[0].payoutPerUnit).toBeCloseTo(195.36525, 10);
-    expect(r.items[0].profitPerUnit).toBeCloseTo(65.36525, 10);
-    expect(r.items[0].totalProfit).toBeCloseTo(653.6525, 8);
+    const r = analyzeMenu([{ id: "a", name: "Biryani", sellingPrice: 333.76, ...COSTS, unitsSold: 10 }], RATES);
+    expect(r.items[0].payoutPerUnit).toBeCloseTo(196.75152, 10);
+    expect(r.items[0].profitPerUnit).toBeCloseTo(66.75152, 10);
+    expect(r.items[0].totalProfit).toBeCloseTo(667.5152, 8);
   });
 
   it("uses simple averages and the four categories", () => {
