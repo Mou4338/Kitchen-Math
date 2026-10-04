@@ -12,7 +12,7 @@ import { ScenarioPanel } from "@/components/calculators/shared/ScenarioPanel";
 import { SourceBar } from "@/components/calculators/shared/SourceBar";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { AnimatedNumber } from "@/components/ui/Motion";
-import { calculateOnlinePayout } from "@/lib/calculations/onlinePayoutCalculator";
+import { calculateOnlinePayout, GST_ON_COMMISSION_PERCENT } from "@/lib/calculations/onlinePayoutCalculator";
 import type { Tone } from "@/lib/calculations/utils";
 import { ONLINE_PAYOUT_DEFAULTS } from "@/lib/content/defaults";
 import { formatINR, formatPercent, formatPoints } from "@/lib/formatters/number";
@@ -35,7 +35,7 @@ const NO_SC: PayoutScenario = { price: 0, commission: 0, discount: 0, ads: 0 };
 const profitTone = (p: number | null): Tone => (p === null ? "neutral" : p < 0 ? "bad" : p < 10 ? "watch" : "good");
 
 export default function OnlinePayoutCalculator() {
-  const { control, values, source, loadValues, resetToExample, clearAll } = useCalculatorForm(SLUG, onlinePayoutSchema, ONLINE_PAYOUT_DEFAULTS, ["taxPercent"]);
+  const { control, values, source, loadValues, resetToExample, clearAll } = useCalculatorForm(SLUG, onlinePayoutSchema, ONLINE_PAYOUT_DEFAULTS, ["gstOnOrderPercent"]);
   const [sc, setSc] = useState<PayoutScenario>(NO_SC);
 
   const r = useMemo(() => calculateOnlinePayout(values), [values]);
@@ -55,10 +55,10 @@ export default function OnlinePayoutCalculator() {
 
   const insights: Insight[] = [];
   if (r.sellingPrice > 0) {
-    if (r.profit < 0) insights.push({ tone: "bad", title: "This order loses money", body: "Deductions and cost are larger than the selling price. Lower the discount, cut ad spend or raise the price. The Menu Pricing calculator shows the price you need." });
+    if (r.profit < 0) insights.push({ tone: "bad", title: "This order loses money", body: "The payout is less than your cost. Lower the discount, cut ad spend or raise the price. The Menu Pricing calculator shows the price you need." });
     if (values.discountPercent > 0) insights.push({ tone: "watch", title: "Save discounts for slow hours", body: `Your ${formatPercent(values.discountPercent)} discount costs ${formatINR(r.discount, 2)} on every order. Running it only at off-peak times protects peak-hour profit.` });
-    if (values.commissionPercent > 0) insights.push({ tone: "neutral", title: "Commission + GST is your biggest deduction", body: `${formatINR(r.commission + r.gstOnCommission, 2)} per order. Each 1 point of commission costs ${formatINR(r.sellingPrice * 0.01 * (1 + values.taxPercent / 100), 2)} per order including GST.` });
-    if (values.adsPercent > 0) insights.push({ tone: "neutral", title: "Check ads against the orders they bring", body: `Ads + GST take ${formatINR(r.ads + r.gstOnAds, 2)} per order. Keep the ad types that bring profitable orders and cut the rest.` });
+    if (values.commissionPercent > 0) insights.push({ tone: "neutral", title: "Commission + GST is your biggest deduction", body: `${formatINR(r.commission + r.gstOnCommission, 2)} per order. Each 1 point of commission costs ${formatINR(r.cv * 0.01 * (1 + GST_ON_COMMISSION_PERCENT / 100), 2)} per order including GST.` });
+    if (values.adsPercent > 0) insights.push({ tone: "neutral", title: "Check ads against the orders they bring", body: `Ads take ${formatINR(r.ads, 2)} per order. Keep the ad types that bring profitable orders and cut the rest.` });
   }
 
   const report: ReportData = {
@@ -67,16 +67,19 @@ export default function OnlinePayoutCalculator() {
     headline: `On a ${formatINR(r.sellingPrice)} order: payout ${formatINR(r.payout, 2)}, profit ${formatINR(r.profit, 2)} (${formatPercent(r.profitPercent)})`,
     inputs: [
       { label: "Selling price", value: formatINR(values.sellingPrice, 2) },
+      { label: "Packaging charge to customer", value: formatINR(values.packagingCharge, 2) },
+      { label: "Discount", value: formatPercent(values.discountPercent) },
+      { label: "Commission", value: formatPercent(values.commissionPercent) },
+      { label: "GST on commission", value: `${GST_ON_COMMISSION_PERCENT}% (fixed)` },
+      { label: "Ads (of net sales)", value: formatPercent(values.adsPercent) },
+      { label: "GST on food", value: formatPercent(values.gstOnOrderPercent) },
       { label: "Dish cost", value: formatINR(values.dishCost, 2) },
       { label: "Labour", value: formatINR(values.labourCost, 2) },
-      { label: "PC (packaging)", value: formatINR(values.packagingCost, 2) },
-      { label: "Commission", value: formatPercent(values.commissionPercent) },
-      { label: "Tax", value: formatPercent(values.taxPercent) },
-      { label: "Discount", value: formatPercent(values.discountPercent) },
-      { label: "Ads", value: formatPercent(values.adsPercent) },
+      { label: "Packaging cost (yours)", value: formatINR(values.packagingCost, 2) },
     ],
     results: [
-      ...r.waterfall.map((w) => ({ label: w.label, value: w.kind === "deduction" ? `−${formatINR(-w.amount, 2)}` : formatINR(w.amount, 2) })),
+      ...r.waterfall.map((w) => ({ label: w.label, value: w.kind === "deduction" ? `−${formatINR(-w.amount, 2)}` : w.kind === "addition" ? `+${formatINR(w.amount, 2)}` : formatINR(w.amount, 2) })),
+      { label: "Net sales (customer pays)", value: formatINR(r.netSales, 2) },
       { label: "Profit %", value: formatPercent(r.profitPercent) },
       { label: "Payout %", value: formatPercent(r.payoutPercent) },
     ],
@@ -85,10 +88,11 @@ export default function OnlinePayoutCalculator() {
       bars: r.waterfall.filter((w) => w.kind === "deduction" || w.kind === "result").map((w) => ({ label: w.label, value: Math.abs(w.amount), display: formatINR(w.amount, 2), tone: w.kind === "result" ? (w.amount >= 0 ? "good" : "bad") : "accent" })),
     },
     assumptions: [
-      "Discount, commission and ads are percentages of the selling price.",
-      "Tax (GST) applies to the commission and ad amounts.",
-      "Payout = Selling price − Discount − Commission − GST on commission − Ads − GST on ads.",
-      "Profit per order = Payout − (Dish cost + Labour + PC).",
+      "Commissionable value (CV) = Selling price − Discount + Packaging charge.",
+      "Commission = CV × Commission %; GST on commission = Commission × 18%.",
+      "Customer GST = CV × GST on food %; Net sales = CV + Customer GST.",
+      "Ads = Net sales × Ads %; Payout = Net sales − Commission − GST on commission − Ads.",
+      "Profit = Payout − (Dish cost + Labour + Packaging cost).",
     ],
     benchmarks: [],
   };
@@ -96,22 +100,25 @@ export default function OnlinePayoutCalculator() {
   const inputs = (
     <>
       <SourceBar source={source} onExample={resetToExample} onClear={clearAll} />
-      <InputGroup title="Selling price" icon={<Receipt className="h-5 w-5" />}>
-        <CurrencyField control={control} name="sellingPrice" label="Selling price" tooltip="The price of the dish or order on the platform, before any deductions." />
+      <InputGroup title="The order" icon={<Receipt className="h-5 w-5" />}>
+        <FieldGrid>
+          <CurrencyField control={control} name="sellingPrice" label="Selling price" tooltip="The item subtotal on the platform, before discount and GST." />
+          <CurrencyField control={control} name="packagingCharge" label="Packaging charge to customer" tooltip="What the customer pays for packaging, if anything. Often ₹0." />
+        </FieldGrid>
       </InputGroup>
-      <InputGroup title="Cost per order" icon={<ChefHat className="h-5 w-5" />}>
+      <InputGroup title="Platform terms" description={`GST on commission is fixed at ${GST_ON_COMMISSION_PERCENT}% and added automatically.`} icon={<Store className="h-5 w-5" />}>
+        <FieldGrid>
+          <PercentField control={control} name="discountPercent" label="Discount %" tooltip="Promo and other discounts you fund, combined." />
+          <PercentField control={control} name="commissionPercent" label="Commission %" tooltip="Your platform commission rate. Restaurants pay anywhere from about 9% to 25%." />
+          <PercentField control={control} name="adsPercent" label="Ads %" tooltip="Ad spend as a share of net sales (what the customer pays)." />
+          <PercentField control={control} name="gstOnOrderPercent" label="GST on food %" tooltip="GST slab charged to the customer on the food. Usually 5%." />
+        </FieldGrid>
+      </InputGroup>
+      <InputGroup title="Your cost per order" icon={<ChefHat className="h-5 w-5" />}>
         <FieldGrid cols={3}>
           <CurrencyField control={control} name="dishCost" label="Dish cost" tooltip="All ingredients in one portion." />
           <CurrencyField control={control} name="labourCost" label="Labour" tooltip="Labour cost per order." />
-          <CurrencyField control={control} name="packagingCost" label="PC (packaging)" tooltip="Box, bag, cutlery and seal." />
-        </FieldGrid>
-      </InputGroup>
-      <InputGroup title="Platform deductions" description="Tax (GST) is charged on commission and ads." icon={<Store className="h-5 w-5" />}>
-        <FieldGrid>
-          <PercentField control={control} name="commissionPercent" label="Commission %" />
-          <PercentField control={control} name="taxPercent" label="Tax %" tooltip="GST on commission and ads. Usually 18%." />
-          <PercentField control={control} name="discountPercent" label="Discount %" tooltip="Discount you fund, e.g. a 'flat 10% off' offer." />
-          <PercentField control={control} name="adsPercent" label="Ads %" tooltip="Ad spend as a share of the selling price." />
+          <CurrencyField control={control} name="packagingCost" label="Packaging cost" tooltip="Your cost of the box, bag and cutlery. Not what you charge the customer." />
         </FieldGrid>
       </InputGroup>
     </>
@@ -124,7 +131,7 @@ export default function OnlinePayoutCalculator() {
           <div>
             <p className="eyebrow">Profit per order</p>
             <p className={cn("tabular mt-1 text-4xl font-bold tracking-tight", tone === "bad" ? "text-danger" : "text-ink")}><AnimatedNumber value={r.profit} format={(v) => formatINR(v, 2)} /></p>
-            <p className="tabular mt-1 text-sm text-muted">Payout {formatINR(r.payout, 2)} ({formatPercent(r.payoutPercent)} of the price)</p>
+            <p className="tabular mt-1 text-sm text-muted">Payout {formatINR(r.payout, 2)} ({formatPercent(r.payoutPercent)} of the selling price)</p>
           </div>
           <StatusPill tone={tone}>{formatPercent(r.profitPercent)} profit</StatusPill>
         </div>
@@ -132,21 +139,27 @@ export default function OnlinePayoutCalculator() {
       </section>
       <div className="grid gap-4 sm:grid-cols-2">
         <MetricCard label="Payout" value={formatINR(r.payout, 2)} sub={`${formatPercent(r.payoutPercent)} of the selling price`} />
-        <MetricCard label="Platform deductions" value={formatINR(r.platformDeductions, 2)} sub="Discount + commission + ads + GST" />
+        <MetricCard label="Customer pays (net sales)" value={formatINR(r.netSales, 2)} sub="Commissionable value + customer GST" />
       </div>
       <section className="rounded-2xl border border-line bg-card p-5 shadow-card" aria-label="Line by line">
         <h2 className="text-sm font-semibold">Line by line</h2>
         <div className="mt-2 divide-y divide-line">
-          <StatementRow label="Discount" hint="Selling price × Discount %" value={formatINR(r.discount, 2)} />
-          <StatementRow label="Commission" hint="Selling price × Commission %" value={formatINR(r.commission, 2)} />
-          <StatementRow label="GST on commission" hint="Commission × Tax %" value={formatINR(r.gstOnCommission, 2)} />
-          <StatementRow label="Ads" hint="Selling price × Ads %" value={formatINR(r.ads, 2)} />
-          <StatementRow label="GST on ads" hint="Ads × Tax %" value={formatINR(r.gstOnAds, 2)} />
-          <StatementRow label="Payout" value={formatINR(r.payout, 2)} strong />
-          <StatementRow label="Total cost (Dish + Labour + PC)" value={formatINR(r.totalCost, 2)} />
-          <StatementRow label="Profit per order" value={formatINR(r.profit, 2)} tone={r.profit >= 0 ? "good" : "bad"} strong />
-          <StatementRow label="Profit %" value={formatPercent(r.profitPercent)} />
-          <StatementRow label="Payout %" value={formatPercent(r.payoutPercent)} />
+          <StatementRow label="Selling price" value={formatINR(r.sellingPrice, 2)} />
+          <StatementRow label="Discount" hint="Selling price × Discount %" value={`−${formatINR(r.discount, 2)}`} />
+          {r.packagingCharge > 0 ? <StatementRow label="Packaging charge" value={`+${formatINR(r.packagingCharge, 2)}`} /> : null}
+          <StatementRow label="Commissionable value (CV)" hint="Selling price − Discount + Packaging charge" value={formatINR(r.cv, 2)} strong />
+          <StatementRow label="Commission" hint="CV × Commission %" value={`−${formatINR(r.commission, 2)}`} />
+          <StatementRow label="GST on commission" hint="Commission × 18%" value={`−${formatINR(r.gstOnCommission, 2)}`} />
+          <StatementRow label="Customer GST" hint="CV × GST on food %" value={`+${formatINR(r.customerGst, 2)}`} />
+          <StatementRow label="Net sales" hint="CV + Customer GST: what the customer pays" value={formatINR(r.netSales, 2)} />
+          <StatementRow label="Ads" hint="Net sales × Ads %" value={`−${formatINR(r.ads, 2)}`} />
+          <StatementRow label="Payout" hint="Net sales − Commission − GST on commission − Ads" value={formatINR(r.payout, 2)} strong />
+          <StatementRow label="Dish cost" value={`−${formatINR(values.dishCost, 2)}`} />
+          <StatementRow label="Labour" value={`−${formatINR(values.labourCost, 2)}`} />
+          <StatementRow label="Packaging cost" value={`−${formatINR(values.packagingCost, 2)}`} />
+          <StatementRow label="Profit" value={formatINR(r.profit, 2)} tone={r.profit >= 0 ? "good" : "bad"} strong />
+          <StatementRow label="Profit %" hint="Profit ÷ Selling price" value={formatPercent(r.profitPercent)} />
+          <StatementRow label="Payout %" hint="Payout ÷ Selling price" value={formatPercent(r.payoutPercent)} />
         </div>
       </section>
       <ResultActions slug={SLUG} calculatorTitle="Online Payout" path={PATH} values={values} report={report} onReset={resetToExample} onLoad={(v) => loadValues(v)} />

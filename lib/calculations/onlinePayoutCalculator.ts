@@ -1,17 +1,27 @@
 import { nonNegative, percentOf } from "./utils";
 
-/** Platform terms, all in % of the selling price. Tax (GST) applies to commission and ads. */
+/** GST the platform charges on its commission. Fixed by law, so it is not an input. */
+export const GST_ON_COMMISSION_PERCENT = 18;
+
+/** Platform terms shared by every dish. */
 export interface PlatformRates {
-  commissionPercent: number;
-  taxPercent: number;
+  /** Promo + other discounts you fund, % of the selling price. */
   discountPercent: number;
+  /** Platform commission, % of the commissionable value. */
+  commissionPercent: number;
+  /** Ad spend, % of net sales. */
   adsPercent: number;
+  /** GST slab charged to the customer on food, usually 5%. */
+  gstOnOrderPercent: number;
+  /** What you charge the customer for packaging (often ₹0). */
+  packagingCharge?: number;
 }
 
-/** Cost to make and pack one order. */
+/** Your cost to make and pack one order. */
 export interface OrderCosts {
   dishCost: number;
   labourCost: number;
+  /** Your cost of the box/container (not the charge to the customer). */
   packagingCost: number;
 }
 
@@ -22,29 +32,32 @@ export interface OnlinePayoutInputs extends PlatformRates, OrderCosts {
 export interface WaterfallStep {
   key: string;
   label: string;
-  /** Signed amount: negative for deductions. */
+  /** Signed amount: negative for deductions, positive for additions. */
   amount: number;
   /** Running total after this step. */
   running: number;
-  kind: "start" | "deduction" | "subtotal" | "result";
+  kind: "start" | "deduction" | "addition" | "subtotal" | "result";
 }
 
 export interface OnlinePayoutResult {
   sellingPrice: number;
   discount: number;
+  packagingCharge: number;
+  /** Commissionable value = Selling price − Discount + Packaging charge. */
+  cv: number;
   commission: number;
   gstOnCommission: number;
+  customerGst: number;
+  /** What the customer actually pays = CV + Customer GST. */
+  netSales: number;
   ads: number;
-  gstOnAds: number;
   /** Money the platform settles into your bank. */
   payout: number;
-  /** Dish cost + Labour + PC. */
+  /** Dish cost + Labour + Packaging cost. */
   totalCost: number;
   profit: number;
   profitPercent: number | null;
   payoutPercent: number | null;
-  /** Everything the platform keeps: discount + commission + ads + GST on both. */
-  platformDeductions: number;
   waterfall: WaterfallStep[];
   errors: string[];
 }
@@ -52,20 +65,16 @@ export interface OnlinePayoutResult {
 export const totalCostOf = (c: OrderCosts) => nonNegative(c.dishCost) + nonNegative(c.labourCost) + nonNegative(c.packagingCost);
 
 /**
- * Total deductions % = Commission% × (1 + Tax%) + Discount% + Ads% × (1 + Tax%)
- * Returned as a fraction (0.454 for 45.4%).
- */
-export function totalDeductionsRate(r: PlatformRates): number {
-  const tax = nonNegative(r.taxPercent) / 100;
-  return (nonNegative(r.commissionPercent) / 100) * (1 + tax) + nonNegative(r.discountPercent) / 100 + (nonNegative(r.adsPercent) / 100) * (1 + tax);
-}
-
-/**
- * Discount = SP × Discount%          Commission = SP × Commission%     GST on commission = Commission × Tax%
- * Ads = SP × Ads%                    GST on ads = Ads × Tax%
- * Payout = SP − Discount − Commission − GST on commission − Ads − GST on ads
- * Profit per order = Payout − (Dish cost + Labour + PC)
- * Profit % = Profit ÷ SP × 100       Payout % = Payout ÷ SP × 100
+ * Discount         = Selling price × Discount %
+ * CV               = Selling price − Discount + Packaging charge   (commissionable value)
+ * Commission       = CV × Commission %
+ * GST on commission= Commission × 18%
+ * Customer GST     = CV × GST on order %
+ * Net sales        = CV + Customer GST                              (what the customer pays)
+ * Ads              = Net sales × Ads %
+ * Payout           = Net sales − Commission − GST on commission − Ads
+ * Profit           = Payout − (Dish cost + Labour + Packaging cost)
+ * Profit %         = Profit ÷ Selling price × 100;  Payout % = Payout ÷ Selling price × 100
  */
 export function calculateOnlinePayout(input: OnlinePayoutInputs): OnlinePayoutResult {
   const sp = nonNegative(input.sellingPrice);
@@ -73,49 +82,70 @@ export function calculateOnlinePayout(input: OnlinePayoutInputs): OnlinePayoutRe
   const errors: string[] = [];
   if ([input.commissionPercent, input.discountPercent, input.adsPercent].some((p) => nonNegative(p) > 100)) errors.push("Percentages cannot be more than 100%.");
 
+  const packagingCharge = nonNegative(input.packagingCharge ?? 0);
   const discount = sp * pct(input.discountPercent);
-  const commission = sp * pct(input.commissionPercent);
-  const gstOnCommission = commission * pct(input.taxPercent);
-  const ads = sp * pct(input.adsPercent);
-  const gstOnAds = ads * pct(input.taxPercent);
-  const payout = sp - discount - commission - gstOnCommission - ads - gstOnAds;
+  const cv = sp - discount + packagingCharge;
+  const commission = cv * pct(input.commissionPercent);
+  const gstOnCommission = commission * (GST_ON_COMMISSION_PERCENT / 100);
+  const customerGst = cv * pct(input.gstOnOrderPercent);
+  const netSales = cv + customerGst;
+  const ads = netSales * pct(input.adsPercent);
+  const payout = netSales - commission - gstOnCommission - ads;
   const totalCost = totalCostOf(input);
   const profit = payout - totalCost;
 
   let running = sp;
-  const step = (key: string, label: string, amount: number, kind: WaterfallStep["kind"]): WaterfallStep => {
+  const steps: WaterfallStep[] = [];
+  const push = (key: string, label: string, amount: number, kind: WaterfallStep["kind"]) => {
     if (kind === "deduction") running -= amount;
-    return { key, label, amount: kind === "deduction" ? -amount : amount, running, kind };
+    if (kind === "addition") running += amount;
+    if (kind === "subtotal" || kind === "result" || kind === "start") running = amount;
+    steps.push({ key, label, amount: kind === "deduction" ? -amount : amount, running, kind });
   };
-  const tax = nonNegative(input.taxPercent);
-  const waterfall: WaterfallStep[] = [
-    step("price", "Selling price", sp, "start"),
-    step("discount", "Discount", discount, "deduction"),
-    step("commission", "Commission", commission, "deduction"),
-    step("gstCommission", `GST on commission (${tax}%)`, gstOnCommission, "deduction"),
-    step("ads", "Ads", ads, "deduction"),
-    step("gstAds", `GST on ads (${tax}%)`, gstOnAds, "deduction"),
-    step("payout", "Payout", payout, "subtotal"),
-    step("cost", "Dish + Labour + PC", totalCost, "deduction"),
-    step("profit", "Profit per order", profit, "result"),
-  ];
+  const gstOrder = nonNegative(input.gstOnOrderPercent);
+  push("price", "Selling price", sp, "start");
+  push("discount", "Discount", discount, "deduction");
+  if (packagingCharge > 0) push("packCharge", "Packaging charge", packagingCharge, "addition");
+  push("cv", "Commissionable value", cv, "subtotal");
+  push("commission", "Commission", commission, "deduction");
+  push("gstCommission", `GST on commission (${GST_ON_COMMISSION_PERCENT}%)`, gstOnCommission, "deduction");
+  push("customerGst", `Customer GST (${gstOrder}%)`, customerGst, "addition");
+  push("ads", "Ads", ads, "deduction");
+  push("payout", "Payout", payout, "subtotal");
+  push("dish", "Dish cost", nonNegative(input.dishCost), "deduction");
+  push("labour", "Labour", nonNegative(input.labourCost), "deduction");
+  push("packCost", "Packaging cost", nonNegative(input.packagingCost), "deduction");
+  push("profit", "Profit", profit, "result");
 
   if (sp > 0 && profit < 0) errors.push("This order loses money after all deductions.");
 
   return {
     sellingPrice: sp,
     discount,
+    packagingCharge,
+    cv,
     commission,
     gstOnCommission,
+    customerGst,
+    netSales,
     ads,
-    gstOnAds,
     payout,
     totalCost,
     profit,
     profitPercent: percentOf(profit, sp),
     payoutPercent: percentOf(payout, sp),
-    platformDeductions: sp - payout,
-    waterfall,
+    waterfall: steps,
     errors,
   };
+}
+
+/**
+ * Share of the commissionable value you keep as payout:
+ * k = (1 + GST on order) × (1 − Ads) − 1.18 × Commission
+ */
+export function payoutFactor(r: PlatformRates): number {
+  const g = nonNegative(r.gstOnOrderPercent) / 100;
+  const a = nonNegative(r.adsPercent) / 100;
+  const c = nonNegative(r.commissionPercent) / 100;
+  return (1 + g) * (1 - a) - (1 + GST_ON_COMMISSION_PERCENT / 100) * c;
 }

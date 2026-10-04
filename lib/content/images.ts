@@ -34,7 +34,7 @@ export const HERO_SLIDES: (Photo & { eyebrow: string; title: [string, string]; t
     alt: "Modern restaurant interior with booths and pendant lights",
     eyebrow: "Menu engineering",
     title: ["Know Which Dishes", "Earn the Most."],
-    text: "Profit per order, total profit and menu mix for every dish, sorted into Stars, Puzzles, Plowhorses and Dogs.",
+    text: "Payout and profit per unit and total profit for every dish, sorted into Stars, Plow Horses, Puzzles and Dogs.",
     cta: { label: "Analyse my menu", href: "/restaurant/menu-engineering-calculator" },
   },
 ];

@@ -74,22 +74,46 @@ export async function POST(req: Request) {
     userAgent: req.headers.get("user-agent")?.slice(0, 200) ?? "",
   };
 
+  const isDev = process.env.NODE_ENV !== "production";
+  const fail = (detail: string) => {
+    console.error(`[Google Sheets] ${detail}`);
+    const msg = "We couldn't save your details just now. Please try again in a minute.";
+    // On your computer (npm run dev) the form shows the exact reason; visitors on the live site never see it.
+    return NextResponse.json({ ok: false, error: isDev ? `${msg} [Setup problem: ${detail}]` : msg }, { status: 502 });
+  };
+
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[^/]+\/exec$/.test(url.trim())) {
+    return fail("GOOGLE_SHEETS_WEBHOOK_URL must look like https://script.google.com/macros/s/…/exec (copy the Web app URL from Deploy → Manage deployments).");
+  }
+
+  let res: Response;
   try {
-    const res = await fetch(url, {
+    res = await fetch(url.trim(), {
       method: "POST",
       headers: { "Content-Type": "text/plain;charset=utf-8" },
       body: JSON.stringify(row),
       redirect: "follow",
       cache: "no-store",
     });
-    const out = (await res.json().catch(() => null)) as { ok?: boolean; error?: string } | null;
-    if (!res.ok || !out?.ok) {
-      console.error("Google Sheets webhook failed", res.status, out);
-      return NextResponse.json({ ok: false, error: "We couldn't save your details just now. Please try again in a minute." }, { status: 502 });
-    }
-    return NextResponse.json({ ok: true });
   } catch (err) {
-    console.error("Google Sheets webhook error", err);
-    return NextResponse.json({ ok: false, error: "We couldn't save your details just now. Please try again in a minute." }, { status: 502 });
+    return fail(`Couldn't reach Google (${err instanceof Error ? err.message : String(err)}). Check your internet connection.`);
   }
+
+  const text = await res.text();
+  let out: { ok?: boolean; error?: string } | null = null;
+  try {
+    out = JSON.parse(text);
+  } catch {
+    out = null;
+  }
+
+  if (out?.ok) return NextResponse.json({ ok: true });
+  if (out?.error === "unauthorised") {
+    return fail("The secret doesn't match. GOOGLE_SHEETS_SECRET must be exactly the same as SECRET in the script. If you changed SECRET after deploying, publish a new version: Deploy → Manage deployments → ✏️ → Version: New version → Deploy.");
+  }
+  if (out?.error) return fail(`The script returned an error: ${out.error}`);
+  if (/<html/i.test(text)) {
+    return fail(`Google returned a web page instead of the script's reply (HTTP ${res.status}). In Deploy → Manage deployments, set "Who has access" to "Anyone" and "Execute as" to "Me", and use the URL ending in /exec.`);
+  }
+  return fail(`Unexpected reply from Google (HTTP ${res.status}): ${text.slice(0, 120)}`);
 }

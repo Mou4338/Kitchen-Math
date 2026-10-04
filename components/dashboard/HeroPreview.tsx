@@ -1,12 +1,13 @@
 /**
  * Static, clearly-labelled example used in the tools promo.
- * Numbers match the worked example in the calculators: ₹130 total cost, 25% commission,
- * 10% discount, 5% ads, 18% GST, 20% margin → ₹379 menu price.
+ * Numbers match the worked example in the calculators: ₹130 total cost, 10% discount, 25% commission,
+ * 5% ads, 5% GST on food, 20% margin → ₹309 menu price.
  */
 const PAYOUT_LINES = [
-  { label: "Discount", value: "−₹37.90" },
-  { label: "Commission + GST", value: "−₹111.81" },
-  { label: "Ads + GST", value: "−₹22.36" },
+  { label: "Discount", value: "−₹30.90" },
+  { label: "Commission + 18% GST", value: "−₹82.04" },
+  { label: "Customer GST", value: "+₹13.91" },
+  { label: "Ads", value: "−₹14.60" },
 ];
 
 const DISHES = [
@@ -24,18 +25,18 @@ export function HeroPreview() {
             <p className="text-sm font-semibold">Chicken Biryani · Zomato</p>
             <p className="text-xs text-muted">Example numbers</p>
           </div>
-          <span className="rounded-full bg-sage-soft px-2.5 py-1 text-xs font-semibold text-sage-dark">20.3% profit</span>
+          <span className="rounded-full bg-sage-soft px-2.5 py-1 text-xs font-semibold text-sage-dark">21.2% profit</span>
         </div>
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div className="rounded-xl bg-inverse p-3 text-on-inverse">
             <p className="text-[11px] font-medium uppercase tracking-wider text-on-inverse/60">Menu price</p>
-            <p className="tabular mt-1 text-2xl font-bold">₹379</p>
-            <p className="tabular mt-0.5 text-xs text-accent-bright">Break-even ₹238.10</p>
+            <p className="tabular mt-1 text-2xl font-bold">₹309</p>
+            <p className="tabular mt-0.5 text-xs text-accent-bright">Break-even ₹205.61</p>
           </div>
           <div className="rounded-xl bg-wash/70 p-3">
             <p className="text-[11px] font-medium uppercase tracking-wider text-muted">You keep</p>
-            <p className="tabular mt-1 text-2xl font-bold text-sage-dark">₹76.93</p>
-            <p className="tabular mt-0.5 text-xs text-muted">Payout ₹206.93</p>
+            <p className="tabular mt-1 text-2xl font-bold text-sage-dark">₹65.37</p>
+            <p className="tabular mt-0.5 text-xs text-muted">Payout ₹195.37</p>
           </div>
         </div>
         <ul className="mt-3 divide-y divide-line rounded-xl border border-line px-3 text-sm">

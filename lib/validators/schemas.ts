@@ -22,10 +22,11 @@ export const count = (label = "This value", max = 1e7) =>
   z.number({ invalid_type_error: `${label} must be a number` }).finite().min(0, `${label} can't be negative`).max(max, `${label} is too large`);
 
 const platformRates = {
-  commissionPercent: percent("Commission"),
-  taxPercent: percent("Tax", 40),
   discountPercent: percent("Discount"),
+  commissionPercent: percent("Commission"),
   adsPercent: percent("Ads"),
+  gstOnOrderPercent: percent("GST on food", 28),
+  packagingCharge: amount("Packaging charge"),
 };
 
 const orderCosts = {
@@ -54,7 +55,9 @@ export const menuItemSchema = z.object({
   id: z.string(),
   name: z.string().max(80),
   sellingPrice: amount("Price"),
-  totalCost: amount("Total cost"),
-  orders: count("Orders"),
+  dishCost: amount("Dish cost"),
+  labourCost: amount("Labour"),
+  packagingCost: amount("Packaging cost"),
+  unitsSold: count("Units sold"),
 });
 export const menuItemsSchema = z.array(menuItemSchema).max(500);

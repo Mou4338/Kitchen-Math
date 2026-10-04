@@ -11,7 +11,8 @@ import { ScenarioPanel } from "@/components/calculators/shared/ScenarioPanel";
 import { SourceBar } from "@/components/calculators/shared/SourceBar";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { AnimatedNumber } from "@/components/ui/Motion";
-import { calculateMenuPrice, REDUCE_MESSAGE } from "@/lib/calculations/menuPricingCalculator";
+import { calculateMenuPrice, NO_PRICE_MESSAGE } from "@/lib/calculations/menuPricingCalculator";
+import { GST_ON_COMMISSION_PERCENT } from "@/lib/calculations/onlinePayoutCalculator";
 import type { Tone } from "@/lib/calculations/utils";
 import { MENU_PRICING_DEFAULTS } from "@/lib/content/defaults";
 import { formatINR, formatPercent, formatPoints } from "@/lib/formatters/number";
@@ -25,7 +26,7 @@ const PATH = `/restaurant/${SLUG}`;
 const marginTone = (m: number | null, target: number): Tone => (m === null ? "neutral" : m < 0 ? "bad" : m + 0.01 < target ? "watch" : "good");
 
 export default function MenuPricingCalculator() {
-  const { control, values, source, loadValues, resetToExample, clearAll } = useCalculatorForm(SLUG, menuPricingSchema, MENU_PRICING_DEFAULTS, ["taxPercent"]);
+  const { control, values, source, loadValues, resetToExample, clearAll } = useCalculatorForm(SLUG, menuPricingSchema, MENU_PRICING_DEFAULTS, ["gstOnOrderPercent"]);
   const [sc, setSc] = useState({ cost: 0, commission: 0, discount: 0 });
   const r = useMemo(() => calculateMenuPrice(values), [values]);
   const scenario = useMemo(
@@ -39,57 +40,59 @@ export default function MenuPricingCalculator() {
     [values, sc],
   );
   const active = sc.cost !== 0 || sc.commission !== 0 || sc.discount !== 0;
-  const blocked = r.errors.includes(REDUCE_MESSAGE);
-  const tone = blocked ? "bad" : marginTone(r.check?.profitPercent ?? null, values.marginPercent);
+  const blocked = r.errors.includes(NO_PRICE_MESSAGE);
+  const c = r.check;
+  const tone = blocked ? "bad" : marginTone(c?.profitPercent ?? null, values.marginPercent);
 
   const insights: Insight[] = [];
   if (blocked) {
-    insights.push({ tone: "bad", title: "No price can reach this margin", body: `Deductions (${formatPercent(r.totalDeductionsPercent)}) plus your ${formatPercent(values.marginPercent)} margin add up to 100% or more. Reduce the discount or the margin.` });
-  } else if (r.menuPrice && r.check) {
+    insights.push({ tone: "bad", title: "No price can reach this margin", body: "After discount, commission, GST and ads, each rupee of price keeps too little to cover your cost and this margin. Lower the discount, ads or margin." });
+  } else if (r.recommendedPrice && c) {
     if (values.discountPercent > 0) {
       const noDisc = calculateMenuPrice({ ...values, discountPercent: 0 });
-      if (noDisc.menuPrice && noDisc.menuPrice < r.menuPrice) insights.push({ tone: "watch", title: "The discount raises your menu price", body: `Without the ${formatPercent(values.discountPercent)} discount, the same margin needs only ${formatINR(noDisc.menuPrice)} instead of ${formatINR(r.menuPrice)}. Keep discounts for slow hours or first orders.` });
+      if (noDisc.recommendedPrice && noDisc.recommendedPrice < r.recommendedPrice) insights.push({ tone: "watch", title: "The discount raises your menu price", body: `Without the ${formatPercent(values.discountPercent)} discount, the same margin needs only ${formatINR(noDisc.recommendedPrice)} instead of ${formatINR(r.recommendedPrice)}. Keep discounts for slow hours or first orders.` });
     }
-    if (r.totalDeductionsPercent > 40) insights.push({ tone: "neutral", title: `${formatPercent(r.totalDeductionsPercent)} of the price goes to the platform`, body: "Commission, discount, ads and GST on them come out of every order. Negotiate commission and review ad spend against orders they bring." });
-    insights.push({ tone: "good", title: "Never list below break-even", body: `At ${formatINR(r.breakEvenPrice, 2)} this dish earns ₹0 after deductions. Anything below loses money on every order.` });
+    insights.push({ tone: "neutral", title: `You keep ${formatPercent(r.breakEvenFactor * 100)} of each rupee of price`, body: "That's what's left of the selling price after discount, commission + 18% GST, ads and the customer GST that is added to your payout. It's the number every price is divided by." });
+    insights.push({ tone: "good", title: "Never list below break-even", body: `At ${formatINR(r.breakEvenPrice, 2)} this dish earns ₹0 after deductions and costs. Any lower and every order loses money.` });
   }
 
   const report: ReportData = {
     calculator: SLUG,
     title: "Menu Pricing Report",
-    headline: blocked ? REDUCE_MESSAGE : `Menu price ${formatINR(r.menuPrice)} · Break-even ${formatINR(r.breakEvenPrice, 2)} · Total cost ${formatINR(r.totalCost, 2)}`,
+    headline: blocked ? NO_PRICE_MESSAGE : `Recommended price ${formatINR(r.recommendedPrice)} · Break-even ${formatINR(r.breakEvenPrice, 2)} · Total cost ${formatINR(r.totalCost, 2)}`,
     inputs: [
       { label: "Dish cost", value: formatINR(values.dishCost, 2) },
       { label: "Labour", value: formatINR(values.labourCost, 2) },
-      { label: "PC (packaging)", value: formatINR(values.packagingCost, 2) },
-      { label: "Commission", value: formatPercent(values.commissionPercent) },
-      { label: "Tax", value: formatPercent(values.taxPercent) },
+      { label: "Packaging cost (yours)", value: formatINR(values.packagingCost, 2) },
+      { label: "Packaging charge to customer", value: formatINR(values.packagingCharge, 2) },
       { label: "Discount", value: formatPercent(values.discountPercent) },
-      { label: "Ads", value: formatPercent(values.adsPercent) },
-      { label: "Margin", value: formatPercent(values.marginPercent) },
+      { label: "Commission", value: formatPercent(values.commissionPercent) },
+      { label: "GST on commission", value: `${GST_ON_COMMISSION_PERCENT}% (fixed)` },
+      { label: "Ads (of net sales)", value: formatPercent(values.adsPercent) },
+      { label: "GST on food", value: formatPercent(values.gstOnOrderPercent) },
+      { label: "Target margin", value: formatPercent(values.marginPercent) },
     ],
     results: [
       { label: "Total cost", value: formatINR(r.totalCost, 2) },
-      { label: "Total deductions %", value: formatPercent(r.totalDeductionsPercent, 2) },
-      { label: "Break-even price", value: formatINR(r.breakEvenPrice, 2) },
-      { label: "Exact price for margin", value: formatINR(r.exactPrice, 2) },
-      { label: "Menu price (ends in 9)", value: blocked ? REDUCE_MESSAGE : formatINR(r.menuPrice) },
-      { label: "Payout at menu price", value: formatINR(r.check?.payout ?? null, 2) },
-      { label: "Profit per order", value: `${formatINR(r.check?.profit ?? null, 2)} (${formatPercent(r.check?.profitPercent ?? null)})` },
+      { label: "Break-even price (0% margin)", value: formatINR(r.breakEvenPrice, 2) },
+      { label: "Exact price for target margin", value: formatINR(r.exactPrice, 2) },
+      { label: "Recommended price (ends in 9)", value: blocked ? NO_PRICE_MESSAGE : formatINR(r.recommendedPrice) },
+      { label: "Expected payout", value: formatINR(c?.payout ?? null, 2) },
+      { label: "Expected profit", value: `${formatINR(c?.profit ?? null, 2)} (${formatPercent(c?.profitPercent ?? null)})` },
     ],
     chart: {
       title: "Price build-up",
       bars: [
         { label: "Total cost", value: r.totalCost, display: formatINR(r.totalCost, 2), tone: "neutral" },
         { label: "Break-even price", value: r.breakEvenPrice ?? 0, display: formatINR(r.breakEvenPrice, 2), tone: "accent" },
-        { label: "Menu price", value: r.menuPrice ?? 0, display: formatINR(r.menuPrice), tone: "good" },
+        { label: "Recommended price", value: r.recommendedPrice ?? 0, display: formatINR(r.recommendedPrice), tone: "good" },
       ],
     },
     assumptions: [
-      "Total cost = Dish cost + Labour + PC.",
-      "Total deductions % = Commission% × (1 + Tax%) + Discount% + Ads% × (1 + Tax%).",
-      "Break-even price = Total cost ÷ (1 − Total deductions %).",
-      "Menu price = Total cost ÷ (1 − Total deductions % − Margin %), rounded up to end in 9.",
+      "Total cost = Dish cost + Labour + Packaging cost.",
+      "factor = (1 − Discount) × ((1 + GST on food) × (1 − Ads) − 1.18 × Commission) − Margin.",
+      "Price = Total cost ÷ factor (break-even uses Margin = 0); the recommended price is rounded up to end in 9.",
+      "Payout and profit at that price use the Online Payout formula.",
     ],
     benchmarks: [],
   };
@@ -97,59 +100,61 @@ export default function MenuPricingCalculator() {
   const inputs = (
     <>
       <SourceBar source={source} onExample={resetToExample} onClear={clearAll} />
-      <InputGroup title="Cost per order" description="What it costs you to make and pack one order." icon={<ChefHat className="h-5 w-5" />}>
+      <InputGroup title="Your cost per order" description="What it costs you to make and pack one order." icon={<ChefHat className="h-5 w-5" />}>
         <FieldGrid cols={3}>
           <CurrencyField control={control} name="dishCost" label="Dish cost" tooltip="All ingredients in one portion, including oil, garnish and gravy base." />
           <CurrencyField control={control} name="labourCost" label="Labour" tooltip="Labour cost you want each order to carry." />
-          <CurrencyField control={control} name="packagingCost" label="PC (packaging)" tooltip="Box, bag, cutlery and seal for one order." />
+          <CurrencyField control={control} name="packagingCost" label="Packaging cost" tooltip="Your cost of the box, bag and cutlery. Not what you charge the customer." />
         </FieldGrid>
       </InputGroup>
-      <InputGroup title="Platform deductions" description="Tax (GST) is charged on commission and ads." icon={<Smartphone className="h-5 w-5" />}>
+      <InputGroup title="Platform terms" description={`GST on commission is fixed at ${GST_ON_COMMISSION_PERCENT}% and added automatically.`} icon={<Smartphone className="h-5 w-5" />}>
         <FieldGrid>
-          <PercentField control={control} name="commissionPercent" label="Commission %" tooltip="Platform commission on the selling price." />
-          <PercentField control={control} name="taxPercent" label="Tax %" tooltip="GST on commission and ads. Usually 18%." />
-          <PercentField control={control} name="discountPercent" label="Discount %" tooltip="Average discount you fund, as a share of the selling price." />
-          <PercentField control={control} name="adsPercent" label="Ads %" tooltip="Ad spend as a share of the selling price." />
+          <PercentField control={control} name="discountPercent" label="Discount %" tooltip="Promo and other discounts you fund, combined, as a share of the selling price." />
+          <PercentField control={control} name="commissionPercent" label="Commission %" tooltip="Your platform commission rate. Restaurants pay anywhere from about 9% to 25%." />
+          <PercentField control={control} name="adsPercent" label="Ads %" tooltip="Ad spend as a share of net sales (what the customer pays)." />
+          <PercentField control={control} name="gstOnOrderPercent" label="GST on food %" tooltip="GST slab charged to the customer on the food. Usually 5%." />
+          <CurrencyField control={control} name="packagingCharge" label="Packaging charge to customer" tooltip="What the customer pays for packaging, if anything. Often ₹0." />
         </FieldGrid>
       </InputGroup>
       <InputGroup title="Your margin" icon={<Target className="h-5 w-5" />}>
-        <SliderField control={control} name="marginPercent" label="Margin %" tooltip="Profit you want to keep from each order, as a share of the menu price." min={0} max={60} step={0.5} />
+        <SliderField control={control} name="marginPercent" label="Target margin %" tooltip="Profit you want to keep from each order, as a share of the selling price." min={0} max={60} step={0.5} />
       </InputGroup>
-      {blocked ? <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm font-medium text-danger">Total deductions ({formatPercent(r.totalDeductionsPercent)}) + margin ({formatPercent(values.marginPercent)}) is 100% or more. {REDUCE_MESSAGE}</div> : null}
+      {blocked ? <div role="alert" className="rounded-xl border border-danger/30 bg-danger-soft px-4 py-3 text-sm font-medium text-danger">{NO_PRICE_MESSAGE}</div> : null}
     </>
   );
 
   const results = (
     <>
-      <section className="flex flex-col rounded-2xl border border-accent/40 bg-inverse p-5 text-on-inverse shadow-card sm:p-6" aria-label="Menu price">
-        <p className="eyebrow" style={{ color: "rgb(var(--on-inverse) / 0.6)" }}>Menu price</p>
+      <section className="flex flex-col rounded-2xl border border-accent/40 bg-inverse p-5 text-on-inverse shadow-card sm:p-6" aria-label="Recommended price">
+        <p className="eyebrow" style={{ color: "rgb(var(--on-inverse) / 0.6)" }}>Recommended price</p>
         {blocked ? (
-          <p className="mt-2 text-2xl font-bold text-danger">{REDUCE_MESSAGE}</p>
+          <p className="mt-2 text-xl font-bold text-danger">{NO_PRICE_MESSAGE}</p>
         ) : (
           <>
-            <p className="tabular mt-1 text-5xl font-bold tracking-tight"><AnimatedNumber value={r.menuPrice} format={(v) => formatINR(v)} /></p>
-            <p className="tabular mt-1 text-sm text-on-inverse/70">Exact {formatINR(r.exactPrice, 2)}, rounded up to end in 9</p>
+            <p className="tabular mt-1 text-5xl font-bold tracking-tight"><AnimatedNumber value={r.recommendedPrice} format={(v) => formatINR(v)} /></p>
+            <p className="tabular mt-1 text-sm text-on-inverse/70">Exact {formatINR(r.exactPrice, 2)} for a {formatPercent(values.marginPercent)} margin, rounded up to end in 9</p>
           </>
         )}
         <div className="mt-4 divide-y divide-on-inverse/15 [&_span]:!text-on-inverse">
-          <StatementRow label="Total cost (Dish + Labour + PC)" value={formatINR(r.totalCost, 2)} />
-          <StatementRow label="Total deductions %" value={formatPercent(r.totalDeductionsPercent, 2)} />
-          <StatementRow label="Break-even price" value={r.breakEvenPrice === null ? "—" : formatINR(r.breakEvenPrice, 2)} strong />
+          <StatementRow label="Total cost (Dish + Labour + Packaging)" value={formatINR(r.totalCost, 2)} />
+          <StatementRow label="Break-even price (0% margin)" value={r.breakEvenPrice === null ? "—" : formatINR(r.breakEvenPrice, 2)} strong />
         </div>
-        {!blocked && r.check ? <div className="mt-3"><StatusPill tone={tone}>{formatPercent(r.check.profitPercent)} profit at {formatINR(r.menuPrice)}</StatusPill></div> : null}
+        {!blocked && c ? <div className="mt-3"><StatusPill tone={tone}>{formatPercent(c.profitPercent)} profit at {formatINR(r.recommendedPrice)}</StatusPill></div> : null}
       </section>
-      {r.check ? (
-        <section className="rounded-2xl border border-line bg-card p-5 shadow-card" aria-label="Check at menu price">
-          <h2 className="text-sm font-semibold">What {formatINR(r.menuPrice)} earns per order</h2>
+      {c ? (
+        <section className="rounded-2xl border border-line bg-card p-5 shadow-card" aria-label="Check at recommended price">
+          <h2 className="text-sm font-semibold">What {formatINR(r.recommendedPrice)} earns per order</h2>
           <div className="mt-2 divide-y divide-line">
-            <StatementRow label="Discount" value={`−${formatINR(r.check.discount, 2)}`} />
-            <StatementRow label="Commission" value={`−${formatINR(r.check.commission, 2)}`} />
-            <StatementRow label="GST on commission" value={`−${formatINR(r.check.gstOnCommission, 2)}`} />
-            <StatementRow label="Ads" value={`−${formatINR(r.check.ads, 2)}`} />
-            <StatementRow label="GST on ads" value={`−${formatINR(r.check.gstOnAds, 2)}`} />
-            <StatementRow label="Payout" value={formatINR(r.check.payout, 2)} />
-            <StatementRow label="Total cost" value={`−${formatINR(r.check.totalCost, 2)}`} />
-            <StatementRow label="Profit per order" value={`${formatINR(r.check.profit, 2)} · ${formatPercent(r.check.profitPercent)}`} tone={r.check.profit >= 0 ? "good" : "bad"} strong />
+            <StatementRow label="Discount" value={`−${formatINR(c.discount, 2)}`} />
+            {c.packagingCharge > 0 ? <StatementRow label="Packaging charge" value={`+${formatINR(c.packagingCharge, 2)}`} /> : null}
+            <StatementRow label="Commissionable value" value={formatINR(c.cv, 2)} />
+            <StatementRow label="Commission" value={`−${formatINR(c.commission, 2)}`} />
+            <StatementRow label={`GST on commission (${GST_ON_COMMISSION_PERCENT}%)`} value={`−${formatINR(c.gstOnCommission, 2)}`} />
+            <StatementRow label="Customer GST" value={`+${formatINR(c.customerGst, 2)}`} />
+            <StatementRow label="Ads" value={`−${formatINR(c.ads, 2)}`} />
+            <StatementRow label="Expected payout" value={formatINR(c.payout, 2)} strong />
+            <StatementRow label="Total cost" value={`−${formatINR(c.totalCost, 2)}`} />
+            <StatementRow label="Expected profit" value={`${formatINR(c.profit, 2)} · ${formatPercent(c.profitPercent)}`} tone={c.profit >= 0 ? "good" : "bad"} strong />
           </div>
         </section>
       ) : null}
@@ -159,7 +164,7 @@ export default function MenuPricingCalculator() {
 
   return (
     <>
-      <CalculatorLayout inputs={inputs} results={results} summary={{ label: "Menu price · Break-even", value: blocked ? REDUCE_MESSAGE : `${formatINR(r.menuPrice)} · ${formatINR(r.breakEvenPrice, 2)}`, tone: blocked ? "bad" : undefined }} />
+      <CalculatorLayout inputs={inputs} results={results} summary={{ label: "Recommended · Break-even", value: blocked ? "No price works" : `${formatINR(r.recommendedPrice)} · ${formatINR(r.breakEvenPrice, 2)}`, tone: blocked ? "bad" : undefined }} />
       <section>
         <BlockTitle eyebrow="Scenario mode" title="What if costs or terms change?" />
         <ScenarioPanel
@@ -180,8 +185,8 @@ export default function MenuPricingCalculator() {
           metrics={[
             { label: "Total cost", current: r.totalCost, scenario: scenario.totalCost, format: "inr", better: "down" },
             { label: "Break-even price", current: r.breakEvenPrice, scenario: scenario.breakEvenPrice, format: "inr", better: "down" },
-            { label: "Menu price", current: r.menuPrice, scenario: scenario.menuPrice, format: "inr", better: "neutral" },
-            { label: "Profit per order", current: r.check?.profit ?? null, scenario: scenario.check?.profit ?? null, format: "inr", better: "up" },
+            { label: "Recommended price", current: r.recommendedPrice, scenario: scenario.recommendedPrice, format: "inr", better: "neutral" },
+            { label: "Expected profit", current: c?.profit ?? null, scenario: scenario.check?.profit ?? null, format: "inr", better: "up" },
           ]}
         />
       </section>

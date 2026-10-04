@@ -13,7 +13,7 @@ import { SourceBar } from "@/components/calculators/shared/SourceBar";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { useToast } from "@/components/ui/Toast";
 import { analyzeMenu, CATEGORY_INFO, type MenuCategory, type MenuItemInput } from "@/lib/calculations/menuEngineeringCalculator";
-import type { PlatformRates } from "@/lib/calculations/onlinePayoutCalculator";
+import { GST_ON_COMMISSION_PERCENT, payoutFactor, type PlatformRates } from "@/lib/calculations/onlinePayoutCalculator";
 import type { Tone } from "@/lib/calculations/utils";
 import { MENU_ITEMS_DEFAULTS, PLATFORM_DEFAULTS } from "@/lib/content/defaults";
 import { downloadText, slugFile } from "@/lib/export/csv";
@@ -71,14 +71,15 @@ function readMenuDraft(raw: string | null | undefined): MenuState {
   }
 }
 
-const RATE_FIELDS: [keyof PlatformRates, string][] = [
-  ["commissionPercent", "Commission %"],
-  ["taxPercent", "Tax %"],
-  ["discountPercent", "Discount %"],
-  ["adsPercent", "Ads %"],
+const RATE_FIELDS: [keyof Required<PlatformRates>, string, string][] = [
+  ["discountPercent", "Discount %", "%"],
+  ["commissionPercent", "Commission %", "%"],
+  ["adsPercent", "Ads % (of net sales)", "%"],
+  ["gstOnOrderPercent", "GST on food %", "%"],
+  ["packagingCharge", "Packaging charge (₹)", "₹"],
 ];
 
-const blankItem = (): MenuItemInput => ({ id: newId(), name: "", sellingPrice: 0, totalCost: 0, orders: 0 });
+const blankItem = (): MenuItemInput => ({ id: newId(), name: "", sellingPrice: 0, dishCost: 0, labourCost: 0, packagingCost: 0, unitsSold: 0 });
 
 export default function MenuEngineeringCalculator() {
   const { toast } = useToast();
@@ -99,7 +100,7 @@ export default function MenuEngineeringCalculator() {
   }, []);
 
   const commit = (next: MenuItemInput[], nextSource: ValueSource = "yours", nextRates: PlatformRates = rates) => saveDraft(SLUG, { items: next, rates: nextRates, source: nextSource });
-  const setRate = (k: keyof PlatformRates, v: number) => commit(items, "yours", { ...rates, [k]: Math.max(0, Math.min(k === "taxPercent" ? 40 : 100, v)) });
+  const setRate = (k: keyof PlatformRates, v: number) => commit(items, "yours", { ...rates, [k]: Math.max(0, k === "packagingCharge" ? v : Math.min(k === "gstOnOrderPercent" ? 28 : 100, v)) });
   const resetToExample = () => clearDraft(SLUG);
   const update = (id: string, patch: Partial<MenuItemInput>) => commit(items.map((i) => (i.id === id ? { ...i, ...patch } : i)));
 
@@ -121,16 +122,16 @@ export default function MenuEngineeringCalculator() {
 
   const insights: Insight[] = [];
   const top = [...a.items].sort((x, y) => y.totalProfit - x.totalProfit)[0];
-  if (top && top.totalProfit > 0) insights.push({ tone: "good", title: `${top.name} earns the most`, body: `${formatINR(top.totalProfit)} profit this month from ${formatNumber(top.orders)} orders. Keep it visible and consistent.` });
-  const losing = a.items.filter((i) => i.orders > 0 && i.profitPerOrder < 0);
-  if (losing.length) insights.push({ tone: "bad", title: `${losing.map((p) => p.name).slice(0, 3).join(", ")} lose${losing.length === 1 ? "s" : ""} money on every order`, body: "After discount, commission, ads and GST, the payout is below the cost. Use the Menu Pricing calculator to find the right price." });
+  if (top && top.totalProfit > 0) insights.push({ tone: "good", title: `${top.name} earns the most`, body: `${formatINR(top.totalProfit)} profit from ${formatNumber(top.unitsSold)} units sold. Keep it visible and consistent.` });
+  const losing = a.items.filter((i) => i.unitsSold > 0 && i.profitPerUnit < 0);
+  if (losing.length) insights.push({ tone: "bad", title: `${losing.map((p) => p.name).slice(0, 3).join(", ")} lose${losing.length === 1 ? "s" : ""} money on every order`, body: "After discount, commission, GST and ads, the payout is below the cost. Use the Menu Pricing calculator to find the right price." });
   const puzzles = a.items.filter((i) => i.category === "puzzle");
   if (puzzles.length) insights.push({ tone: "neutral", title: `Promote ${puzzles.map((p) => p.name).slice(0, 3).join(", ")}`, body: CATEGORY_INFO.puzzle.action });
   const plow = a.items.filter((i) => i.category === "plowhorse");
   if (plow.length) {
-    const keep = 1 - (rates.commissionPercent / 100) * (1 + rates.taxPercent / 100) - rates.discountPercent / 100 - (rates.adsPercent / 100) * (1 + rates.taxPercent / 100);
-    const lift = plow.reduce((s, i) => s + i.orders * 10 * Math.max(0, keep), 0);
-    insights.push({ tone: "watch", title: `Reprice ${plow.map((p) => p.name).slice(0, 3).join(", ")}`, body: CATEGORY_INFO.plowhorse.action, impact: lift > 0 ? `A ₹10 increase could add about ${formatINR(lift)} a month if orders hold` : undefined });
+    const keep = (1 - rates.discountPercent / 100) * payoutFactor(rates);
+    const lift = plow.reduce((s, i) => s + i.unitsSold * 10 * Math.max(0, keep), 0);
+    insights.push({ tone: "watch", title: `Reprice ${plow.map((p) => p.name).slice(0, 3).join(", ")}`, body: CATEGORY_INFO.plowhorse.action, impact: lift > 0 ? `A ₹10 increase could add about ${formatINR(lift)} if units sold hold` : undefined });
   }
   const dogs = a.items.filter((i) => i.category === "dog");
   if (dogs.length) insights.push({ tone: "bad", title: `Review ${dogs.map((p) => p.name).slice(0, 3).join(", ")}`, body: CATEGORY_INFO.dog.action });
@@ -138,26 +139,29 @@ export default function MenuEngineeringCalculator() {
   const report: ReportData = {
     calculator: SLUG,
     title: "Menu Engineering Report",
-    headline: `${a.items.length} dishes · Stars ${a.counts.star} · Puzzles ${a.counts.puzzle} · Plowhorses ${a.counts.plowhorse} · Dogs ${a.counts.dog} · Total profit ${formatINR(a.totalProfit)}`,
+    headline: `${a.items.length} dishes · Stars ${a.counts.star} · Puzzles ${a.counts.puzzle} · Plow Horses ${a.counts.plowhorse} · Dogs ${a.counts.dog} · Total profit ${formatINR(a.totalProfit)}`,
     inputs: [
       { label: "Dishes analysed", value: String(a.items.length) },
-      { label: "Total orders", value: formatNumber(a.totalOrders) },
-      { label: "Commission", value: formatPercent(rates.commissionPercent) },
-      { label: "Tax", value: formatPercent(rates.taxPercent) },
+      { label: "Total units sold", value: formatNumber(a.totalUnits) },
       { label: "Discount", value: formatPercent(rates.discountPercent) },
-      { label: "Ads", value: formatPercent(rates.adsPercent) },
+      { label: "Commission", value: formatPercent(rates.commissionPercent) },
+      { label: "GST on commission", value: `${GST_ON_COMMISSION_PERCENT}% (fixed)` },
+      { label: "Ads (of net sales)", value: formatPercent(rates.adsPercent) },
+      { label: "GST on food", value: formatPercent(rates.gstOnOrderPercent) },
+      { label: "Packaging charge to customer", value: formatINR(rates.packagingCharge ?? 0, 2) },
     ],
     results: [
       { label: "Total profit", value: formatINR(a.totalProfit) },
-      { label: "Average profit per order", value: formatINR(a.averageProfitPerOrder, 2) },
-      { label: "Popularity line", value: formatPercent(a.popularityLinePercent, 2) },
+      { label: "Average profit per unit", value: formatINR(a.averageProfit, 2) },
+      { label: "Average units sold per dish", value: formatNumber(a.averagePopularity, 1) },
     ],
     chart: { title: "Total profit by dish", bars: [...a.items].sort((x, y) => y.totalProfit - x.totalProfit).slice(0, 12).map((i) => ({ label: i.name.slice(0, 26), value: i.totalProfit, display: formatINR(i.totalProfit), tone: CATEGORY_TONE[i.category] === "neutral" ? "accent" : CATEGORY_TONE[i.category] })) },
-    tables: [{ title: "Dishes", columns: ["Dish", "Price", "Total cost", "Orders", "Profit / order", "Total profit", "Menu mix", "Category"], rows: a.items.map((i) => [i.name, formatINR(i.sellingPrice), formatINR(i.totalCost), formatNumber(i.orders), formatINR(i.profitPerOrder, 2), formatINR(i.totalProfit), formatPercent(i.menuMixPercent), CATEGORY_INFO[i.category].label]) }],
+    tables: [{ title: "Dishes", columns: ["Dish", "Price", "Dish cost", "Labour", "Packaging", "Units sold", "Payout / unit", "Profit / unit", "Total profit", "Category"], rows: a.items.map((i) => [i.name, formatINR(i.sellingPrice), formatINR(i.dishCost), formatINR(i.labourCost), formatINR(i.packagingCost), formatNumber(i.unitsSold), formatINR(i.payoutPerUnit, 2), formatINR(i.profitPerUnit, 2), formatINR(i.totalProfit), CATEGORY_INFO[i.category].label]) }],
     assumptions: [
-      "Profit per order = Payout − Total cost, using the payout formula with the rates above.",
-      "Popular: menu mix ≥ (100% ÷ number of dishes) × 0.7.",
-      "High profit: profit per order ≥ average profit per order (total profit ÷ total orders) and above ₹0.",
+      "Profit per unit uses the Online Payout formula for each dish: payout − (dish cost + labour + packaging cost).",
+      "Total profit = profit per unit × units sold.",
+      "High profit: profit per unit ≥ the average profit per unit of all dishes.",
+      "Popular: units sold ≥ the average units sold of all dishes.",
     ],
     benchmarks: [],
   };
@@ -171,14 +175,14 @@ export default function MenuEngineeringCalculator() {
             <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent-soft text-accent-dark"><Smartphone className="h-5 w-5" aria-hidden /></span>
             <div>
               <h2 className="text-base font-semibold">Platform rates</h2>
-              <p className="text-xs text-muted">Entered once, used for every dish. Tax (GST) applies to commission and ads.</p>
+              <p className="text-xs text-muted">Entered once, used for every dish. GST on commission is fixed at {GST_ON_COMMISSION_PERCENT}%.</p>
             </div>
           </div>
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {RATE_FIELDS.map(([k, label]) => (
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+            {RATE_FIELDS.map(([k, label, unit]) => (
               <label key={k} className="flex flex-col gap-1 text-xs font-medium text-muted">
                 {label}
-                <NumberInput value={rates[k]} onValueChange={(v) => setRate(k, v)} suffix="%" className="h-11" aria-label={label} />
+                <NumberInput value={rates[k] ?? 0} onValueChange={(v) => setRate(k, v)} {...(unit === "₹" ? { prefix: "₹" } : { suffix: "%" })} className="h-11" aria-label={label} />
               </label>
             ))}
           </div>
@@ -206,11 +210,12 @@ export default function MenuEngineeringCalculator() {
                 <tr className="border-b border-line">
                   <th className="px-4 py-2.5 font-semibold">Dish name</th>
                   <th className="px-2 py-2.5 font-semibold">Selling price</th>
-                  <th className="px-2 py-2.5 font-semibold" title="Dish + Labour + PC">Total cost</th>
-                  <th className="px-2 py-2.5 font-semibold">Orders</th>
-                  <th className="px-2 py-2.5 text-right font-semibold">Profit / order</th>
+                  <th className="px-2 py-2.5 font-semibold">Dish cost</th>
+                  <th className="px-2 py-2.5 font-semibold">Labour</th>
+                  <th className="px-2 py-2.5 font-semibold">Packaging</th>
+                  <th className="px-2 py-2.5 font-semibold">Units sold</th>
+                  <th className="px-2 py-2.5 text-right font-semibold">Profit / unit</th>
                   <th className="px-2 py-2.5 text-right font-semibold">Total profit</th>
-                  <th className="px-2 py-2.5 text-right font-semibold">Menu mix</th>
                   <th className="px-2 py-2.5 font-semibold">Category</th>
                   <th className="px-2 py-2.5"><span className="sr-only">Remove</span></th>
                 </tr>
@@ -219,12 +224,13 @@ export default function MenuEngineeringCalculator() {
                 {a.items.map((i) => (
                   <tr key={i.id} className="align-middle">
                     <td className="px-4 py-2"><input value={items.find((x) => x.id === i.id)?.name ?? ""} onChange={(e) => update(i.id, { name: e.target.value })} placeholder="Dish name" maxLength={80} aria-label="Dish name" className="h-10 w-full min-w-[160px] rounded-lg border border-line bg-card px-3 outline-none focus:border-accent" /></td>
-                    <td className="px-2 py-2"><NumberInput value={i.sellingPrice} onValueChange={(v) => update(i.id, { sellingPrice: v })} prefix="₹" className="h-10 w-28" aria-label={`${i.name} selling price`} /></td>
-                    <td className="px-2 py-2"><NumberInput value={i.totalCost} onValueChange={(v) => update(i.id, { totalCost: v })} prefix="₹" className="h-10 w-28" aria-label={`${i.name} total cost`} /></td>
-                    <td className="px-2 py-2"><NumberInput value={i.orders} onValueChange={(v) => update(i.id, { orders: v })} className="h-10 w-24" decimals={0} aria-label={`${i.name} orders`} /></td>
-                    <td className={cn("tabular px-2 py-2 text-right font-semibold", i.profitPerOrder < 0 && "text-danger")}>{formatINR(i.profitPerOrder, 2)}</td>
+                    <td className="px-2 py-2"><NumberInput value={i.sellingPrice} onValueChange={(v) => update(i.id, { sellingPrice: v })} prefix="₹" className="h-10 w-24" aria-label={`${i.name} selling price`} /></td>
+                    <td className="px-2 py-2"><NumberInput value={i.dishCost} onValueChange={(v) => update(i.id, { dishCost: v })} prefix="₹" className="h-10 w-24" aria-label={`${i.name} dish cost`} /></td>
+                    <td className="px-2 py-2"><NumberInput value={i.labourCost} onValueChange={(v) => update(i.id, { labourCost: v })} prefix="₹" className="h-10 w-20" aria-label={`${i.name} labour`} /></td>
+                    <td className="px-2 py-2"><NumberInput value={i.packagingCost} onValueChange={(v) => update(i.id, { packagingCost: v })} prefix="₹" className="h-10 w-20" aria-label={`${i.name} packaging cost`} /></td>
+                    <td className="px-2 py-2"><NumberInput value={i.unitsSold} onValueChange={(v) => update(i.id, { unitsSold: v })} className="h-10 w-20" decimals={0} aria-label={`${i.name} units sold`} /></td>
+                    <td className={cn("tabular px-2 py-2 text-right font-semibold", i.profitPerUnit < 0 && "text-danger")}>{formatINR(i.profitPerUnit, 2)}</td>
                     <td className="tabular px-2 py-2 text-right">{formatINR(i.totalProfit)}</td>
-                    <td className="tabular px-2 py-2 text-right">{formatPercent(i.menuMixPercent)}</td>
                     <td className="px-2 py-2"><StatusPill tone={CATEGORY_TONE[i.category]}>{CATEGORY_INFO[i.category].label}</StatusPill></td>
                     <td className="px-2 py-2"><button type="button" onClick={() => commit(items.filter((x) => x.id !== i.id))} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger" aria-label={`Remove ${i.name || "item"}`}><Trash2 className="h-4 w-4" aria-hidden /></button></td>
                   </tr>
@@ -242,32 +248,34 @@ export default function MenuEngineeringCalculator() {
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   <label className="text-xs text-muted">Price<NumberInput value={i.sellingPrice} onValueChange={(v) => update(i.id, { sellingPrice: v })} prefix="₹" className="mt-1 h-11" /></label>
-                  <label className="text-xs text-muted">Total cost<NumberInput value={i.totalCost} onValueChange={(v) => update(i.id, { totalCost: v })} prefix="₹" className="mt-1 h-11" /></label>
-                  <label className="text-xs text-muted">Orders<NumberInput value={i.orders} onValueChange={(v) => update(i.id, { orders: v })} decimals={0} className="mt-1 h-11" /></label>
+                  <label className="text-xs text-muted">Dish cost<NumberInput value={i.dishCost} onValueChange={(v) => update(i.id, { dishCost: v })} prefix="₹" className="mt-1 h-11" /></label>
+                  <label className="text-xs text-muted">Labour<NumberInput value={i.labourCost} onValueChange={(v) => update(i.id, { labourCost: v })} prefix="₹" className="mt-1 h-11" /></label>
+                  <label className="text-xs text-muted">Packaging<NumberInput value={i.packagingCost} onValueChange={(v) => update(i.id, { packagingCost: v })} prefix="₹" className="mt-1 h-11" /></label>
+                  <label className="text-xs text-muted">Units sold<NumberInput value={i.unitsSold} onValueChange={(v) => update(i.id, { unitsSold: v })} decimals={0} className="mt-1 h-11" /></label>
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                  <span className="tabular text-muted">Profit <b className={i.profitPerOrder < 0 ? "text-danger" : "text-ink"}>{formatINR(i.profitPerOrder, 2)}</b>/order · {formatPercent(i.menuMixPercent)} of orders</span>
+                  <span className="tabular text-muted">Profit <b className={i.profitPerUnit < 0 ? "text-danger" : "text-ink"}>{formatINR(i.profitPerUnit, 2)}</b>/unit · total {formatINR(i.totalProfit)}</span>
                   <StatusPill tone={CATEGORY_TONE[i.category]}>{CATEGORY_INFO[i.category].label}</StatusPill>
                 </div>
               </li>
             ))}
           </ul>
-          <p className="border-t border-line px-4 py-3 text-xs text-muted sm:px-5">Total cost = Dish + Labour + PC for one order. CSV columns: Dish Name, Selling Price, Total Cost, Orders. Export first to get a ready template.</p>
+          <p className="border-t border-line px-4 py-3 text-xs text-muted sm:px-5">CSV columns: Dish Name, Selling Price, Dish Cost, Labour, Packaging Cost, Units Sold. Export first to get a ready template.</p>
         </div>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" aria-label="Menu summary">
         <MetricCard label="Total profit" value={formatINRCompact(a.totalProfit)} sub={formatINR(a.totalProfit)} />
-        <MetricCard label="Total orders" value={formatNumber(a.totalOrders)} />
-        <MetricCard label="Average profit / order" value={formatINR(a.averageProfitPerOrder, 2)} sub="Total profit ÷ total orders" />
-        <MetricCard label="Popularity line" value={formatPercent(a.popularityLinePercent, 2)} sub={`(100% ÷ ${a.items.length} dishes) × 0.7`} />
+        <MetricCard label="Total units sold" value={formatNumber(a.totalUnits)} />
+        <MetricCard label="Average profit / unit" value={formatINR(a.averageProfit, 2)} sub="Simple average across dishes" />
+        <MetricCard label="Average units sold" value={formatNumber(a.averagePopularity, 1)} sub="Simple average across dishes" />
       </section>
 
       <section className="print-break">
-        <BlockTitle eyebrow="Visual analysis" title="Menu-engineering matrix" description="Each dot is a dish. Bigger dots earn more in total. Dashed lines mark the average profit per order and the popularity line." />
+        <BlockTitle eyebrow="Visual analysis" title="Menu-engineering matrix" description="Each dot is a dish. Bigger dots earn more in total. Dashed lines mark the average profit per unit and the average units sold." />
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
           <div className="rounded-2xl border border-line bg-card p-4 shadow-card sm:p-5">
-            <MenuMatrixChart items={a.items} averageProfit={a.averageProfitPerOrder} popularityLine={a.popularityLinePercent} />
+            <MenuMatrixChart items={a.items} averageProfit={a.averageProfit} averageUnits={a.averagePopularity} />
           </div>
           <div className="grid grid-cols-2 gap-3">
             {(["puzzle", "star", "dog", "plowhorse"] as MenuCategory[]).map((k) => {

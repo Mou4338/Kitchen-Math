@@ -112,6 +112,6 @@ export const COMPANY_IMAGES = {
 export const GLOSSARY: [string, string][] = [
   ["AOV", "Average order value: total sales ÷ number of orders."],
   ["MOV", "Minimum order value: the smallest basket a customer can check out."],
-  ["Payout", "What the delivery platform sends to your bank after discount, commission, ads and GST on them."],
-  ["Menu mix", "A dish's share of all orders: dish orders ÷ total orders × 100."],
+  ["Payout", "What the delivery platform sends to your bank after discount, commission with 18% GST, and ads."],
+  ["Commissionable value", "Selling price minus discount plus packaging charge: the amount commission is charged on."],
 ];

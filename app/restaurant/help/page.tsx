@@ -30,14 +30,15 @@ const ACTIONS = [
 ];
 
 const GLOSSARY: [string, string][] = [
-  ["Total cost", "Dish cost + Labour + PC (packaging) for one order."],
-  ["Total deductions %", "Commission% × (1 + Tax%) + Discount% + Ads% × (1 + Tax%): the share of the price the platform keeps."],
-  ["Break-even price", "The price at which a dish earns ₹0 after all deductions and costs."],
-  ["Margin %", "The profit you want to keep, as a share of the menu price."],
-  ["Payout", "What a delivery platform actually sends to your bank after its deductions."],
+  ["Total cost", "Dish cost + Labour + Packaging cost for one order."],
+  ["Commissionable value (CV)", "Selling price − Discount + Packaging charge. Commission is worked out on this."],
+  ["GST on commission", "18% GST the platform charges on its commission. Fixed, not an input."],
+  ["Customer GST", "GST on food charged to the customer, usually 5% of the CV."],
+  ["Net sales", "CV + Customer GST: what the customer pays. Ads are a share of this."],
+  ["Payout", "Net sales − Commission − GST on commission − Ads: what the platform sends to your bank."],
   ["Profit per order", "Payout − Total cost."],
-  ["Menu mix %", "A dish's share of all orders: dish orders ÷ total orders × 100."],
-  ["Popularity line", "(100% ÷ number of dishes) × 0.7. A dish at or above it counts as popular."],
+  ["Break-even price", "The price at which a dish earns ₹0 after all deductions and costs."],
+  ["Star / Plow Horse / Puzzle / Dog", "Menu engineering categories from profit per unit and units sold compared with the menu averages."],
 ];
 
 const FAQS = [
