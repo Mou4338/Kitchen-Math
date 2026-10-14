@@ -1,4 +1,4 @@
-/** Light (white & blue) / dark (black & gold) theme, stored on this device. */
+/** Light (white, red & saffron) / dark (black & red) theme, stored on this device. */
 export type Theme = "light" | "dark";
 export const THEME_KEY = "km-theme";
 

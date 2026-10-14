@@ -33,7 +33,9 @@ const MenuMatrixChart = dynamic(() => import("@/components/charts/MenuMatrixChar
 const SLUG = "menu-engineering-calculator";
 const PATH = `/restaurant/${SLUG}`;
 const CATEGORY_TONE: Record<MenuCategory, Tone> = { star: "good", puzzle: "neutral", plowhorse: "watch", dog: "bad" };
-const QUAD_STYLE: Record<MenuCategory, string> = { star: "bg-sage-soft", puzzle: "bg-chart-1/15", plowhorse: "bg-accent-soft", dog: "bg-danger-soft" };
+/** Saffron marks Star dishes (solid, so it never reads as the amber "watch" tone). */
+const STAR_PILL = "bg-star text-star-ink";
+const QUAD_STYLE: Record<MenuCategory, string> = { star: "bg-star-soft", puzzle: "bg-chart-1/15", plowhorse: "bg-accent-soft", dog: "bg-danger-soft" };
 
 function parseItems(raw: unknown): MenuItemInput[] | null {
   const items = Array.isArray(raw) ? raw : raw && typeof raw === "object" && Array.isArray((raw as { items?: unknown }).items) ? (raw as { items: unknown[] }).items : null;
@@ -229,7 +231,7 @@ export default function MenuEngineeringCalculator() {
                     <td className="px-2 py-2"><NumberInput value={i.unitsSold} onValueChange={(v) => update(i.id, { unitsSold: v })} className="h-10 w-20" decimals={0} aria-label={`${i.name} units sold`} /></td>
                     <td className={cn("tabular px-2 py-2 text-right font-semibold", i.profitPerUnit < 0 && "text-danger")}>{formatINR(i.profitPerUnit, 2)}</td>
                     <td className="tabular px-2 py-2 text-right">{formatINR(i.totalProfit)}</td>
-                    <td className="px-2 py-2"><StatusPill tone={CATEGORY_TONE[i.category]}>{CATEGORY_INFO[i.category].label}</StatusPill></td>
+                    <td className="px-2 py-2"><StatusPill tone={CATEGORY_TONE[i.category]} className={i.category === "star" ? STAR_PILL : undefined}>{CATEGORY_INFO[i.category].label}</StatusPill></td>
                     <td className="px-2 py-2"><button type="button" onClick={() => commit(items.filter((x) => x.id !== i.id))} className="grid h-9 w-9 place-items-center rounded-lg text-muted hover:bg-danger-soft hover:text-danger" aria-label={`Remove ${i.name || "item"}`}><Trash2 className="h-4 w-4" aria-hidden /></button></td>
                   </tr>
                 ))}
@@ -253,7 +255,7 @@ export default function MenuEngineeringCalculator() {
                 </div>
                 <div className="flex flex-wrap items-center justify-between gap-2 text-sm">
                   <span className="tabular text-muted">Profit <b className={i.profitPerUnit < 0 ? "text-danger" : "text-ink"}>{formatINR(i.profitPerUnit, 2)}</b>/unit · total {formatINR(i.totalProfit)}</span>
-                  <StatusPill tone={CATEGORY_TONE[i.category]}>{CATEGORY_INFO[i.category].label}</StatusPill>
+                  <StatusPill tone={CATEGORY_TONE[i.category]} className={i.category === "star" ? STAR_PILL : undefined}>{CATEGORY_INFO[i.category].label}</StatusPill>
                 </div>
               </li>
             ))}

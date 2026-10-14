@@ -11,6 +11,7 @@ export const CHART = {
   accent: cv("accent"),
   accentDark: cv("accent-dark"),
   good: cv("sage"),
+  star: cv("star"),
   bad: cv("danger"),
   watch: cv("caution"),
   neutral: cv("muted-light"),

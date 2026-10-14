@@ -1,7 +1,7 @@
 "use client";
 
-import { CheckCircle2, Loader2, Send } from "lucide-react";
-import { useState } from "react";
+import { Check, CheckCircle2, Loader2, Send } from "lucide-react";
+import { useEffect, useState } from "react";
 import { submitLead } from "@/lib/leads";
 import { SITE } from "@/lib/site";
 
@@ -20,7 +20,13 @@ export function ContactForm() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
 
-  const field = "h-12 w-full rounded-xl border border-line-strong bg-card px-4 text-sm text-ink outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15";
+  // A topic picked on the Contact page arrives as ?topic=… and pre-fills the message.
+  useEffect(() => {
+    const t = new URLSearchParams(window.location.search).get("topic");
+    if (t) setMessage(`I'd like to discuss: ${t.slice(0, 80)}.\n`);
+  }, []);
+
+  const field = "h-12 w-full rounded-xl border border-line bg-wash px-4 text-sm text-ink outline-none transition placeholder:text-muted-light hover:border-line-strong focus:border-accent focus:bg-card focus:ring-4 focus:ring-accent/15";
 
   if (status === "sent") {
     return (
@@ -93,8 +99,9 @@ export function ContactForm() {
                 type="button"
                 aria-pressed={on}
                 onClick={() => setPlatforms(on ? platforms.filter((x) => x !== p) : [...platforms, p])}
-                className={`h-10 rounded-full border px-4 text-sm font-medium transition ${on ? "border-accent bg-accent text-accent-ink" : "border-line-strong bg-card text-ink-soft hover:border-accent"}`}
+                className={`inline-flex h-10 items-center gap-1.5 rounded-full border px-4 text-sm font-medium transition ${on ? "border-accent bg-accent text-accent-ink shadow-glow" : "border-line bg-wash text-ink-soft hover:border-line-strong hover:text-ink"}`}
               >
+                {on ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}
                 {p}
               </button>
             );
@@ -102,7 +109,7 @@ export function ContactForm() {
         </div>
       </fieldset>
       <label className="grid gap-1.5 text-sm font-medium">What would you like to improve?
-        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={4} maxLength={2000} className="w-full rounded-xl border border-line-strong bg-card px-4 py-3 text-sm text-ink outline-none transition focus:border-accent focus:ring-4 focus:ring-accent/15" placeholder="e.g. More orders at dinner, better ratings, lower ad spend…" />
+        <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={4} maxLength={2000} className="w-full rounded-xl border border-line bg-wash px-4 py-3 text-sm text-ink outline-none transition placeholder:text-muted-light hover:border-line-strong focus:border-accent focus:bg-card focus:ring-4 focus:ring-accent/15" placeholder="e.g. More orders at dinner, better ratings, lower ad spend…" />
       </label>
       {error ? (
         <p role="alert" className="text-sm font-medium text-danger">
@@ -110,11 +117,11 @@ export function ContactForm() {
           <a className="underline" href={`mailto:${SITE.company.email}`}>Or email us</a>.
         </p>
       ) : null}
-      <button type="submit" disabled={status === "sending"} className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-6 font-semibold text-accent-ink shadow-glow transition hover:brightness-110 active:scale-[0.98] disabled:opacity-70">
+      <button type="submit" disabled={status === "sending"} className="mt-2 inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl px-6 text-base font-semibold transition brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)] hover:brightness-110 active:scale-[0.98] disabled:opacity-70">
         {status === "sending" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Send className="h-4 w-4" aria-hidden />}
         {status === "sending" ? "Sending…" : "Request my free growth audit"}
       </button>
-      <p className="text-xs text-muted">We only use your details to reply to this enquiry.</p>
+      <p className="text-center text-xs text-muted">We only use your details to reply to this enquiry.</p>
     </form>
   );
 }

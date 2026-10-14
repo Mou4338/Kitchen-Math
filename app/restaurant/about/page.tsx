@@ -43,6 +43,7 @@ export default function AboutPage() {
         <Link href="/restaurant#tools" className={buttonClass("accent", "md", "mt-5")}>Explore the calculators</Link>
       </div>
     </div>
+
     </>
   );
 }

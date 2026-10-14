@@ -56,7 +56,7 @@ export const GALLERY: (Photo & { caption: string })[] = [
 
 /** Photo banners for every inner page (same style as the home hero). */
 export interface PageHeroImage extends Photo {
-  /** Headline split: first part in light blue (gold in dark mode), second part in white. */
+  /** Headline split: first part in red, second part in white. */
   title: [string, string];
 }
 
@@ -83,4 +83,5 @@ export const PAGE_IMAGES: Record<string, Photo> = {
   about: { src: u("1596797038530-2c107229654b"), alt: "Food cooking in a black pot" },
   privacy: { src: u("1554224155-6726b3ff858f"), alt: "Bills and a calculator on a desk" },
   terms: { src: u("1460925895917-afdab827c52f"), alt: "Laptop showing business charts" },
+  contact: { src: u("1758518730083-4c12527b6742"), alt: "Consultants in a meeting around a table in a modern office" },
 };

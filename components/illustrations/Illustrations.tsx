@@ -1,6 +1,6 @@
 /**
  * Custom, theme-aware illustrations (no stock photos needed).
- * Colours come from the theme tokens, so they switch between white & blue and black & gold automatically.
+ * Colours come from the theme tokens (black & red with saffron accents).
  */
 import { cv } from "@/lib/utils/colors";
 

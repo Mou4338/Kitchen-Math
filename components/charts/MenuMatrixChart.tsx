@@ -5,7 +5,7 @@ import type { MenuCategory, MenuItemResult } from "@/lib/calculations/menuEngine
 import { formatINR, formatNumber } from "@/lib/formatters/number";
 import { CHART } from "@/lib/utils/colors";
 
-export const CATEGORY_COLOR: Record<MenuCategory, string> = { star: CHART.good, puzzle: CHART.c1, plowhorse: CHART.accent, dog: CHART.bad };
+export const CATEGORY_COLOR: Record<MenuCategory, string> = { star: CHART.star, puzzle: CHART.c1, plowhorse: CHART.accent, dog: CHART.bad };
 
 interface Point {
   name: string;

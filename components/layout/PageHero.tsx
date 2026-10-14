@@ -5,14 +5,14 @@ import type { Photo } from "@/lib/content/images";
 
 /**
  * Photo banner used at the top of every inner page, in the same style as the home page hero:
- * photo + navy/blue overlay (light theme) or black/gold overlay (dark theme), white text.
+ * photo + deep black overlay, white text.
  */
 export function PageHero({
   photo, eyebrow, title, accent, subtitle, crumbs, children, compact,
 }: {
   photo: Photo;
   eyebrow: string;
-  /** Main words, shown in light blue (gold in dark mode). */
+  /** Main words, shown in red. */
   title: string;
   /** Final word(s), shown in white serif italic. */
   accent?: string;
@@ -24,9 +24,9 @@ export function PageHero({
   return (
     <section className="relative isolate overflow-hidden bg-inverse">
       <Image src={photo.src} alt={photo.alt} fill priority sizes="100vw" className="-z-10 object-cover" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/85 to-inverse/40" aria-hidden />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/30" aria-hidden />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/70 via-transparent to-transparent" aria-hidden />
-      <div className="absolute inset-0 -z-10 bg-accent/10 mix-blend-color" aria-hidden />
+      <div className="grid-lines grid-lines-inverse grid-fade absolute inset-0 -z-10 opacity-70" aria-hidden />
 
       <div className={compact ? "container py-10 sm:py-14" : "container py-14 sm:py-20 lg:py-24"}>
         <Breadcrumbs items={crumbs} onDark />

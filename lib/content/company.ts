@@ -3,6 +3,9 @@
  * Edit text here; the home page and /services page update automatically.
  */
 const u = (id: string, w = 1400) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=${w}`;
+/** Tall crop of the same photo for phones (smart-cropped around the busiest part of the image). */
+const portrait = (id: string) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&crop=entropy&q=80&w=900&h=1600`;
+const slide = (id: string, alt: string) => ({ src: u(id, 2000), mobileSrc: portrait(id), alt });
 
 export type ServiceIcon = "menu" | "pricing" | "ads" | "funnel" | "reviews" | "competitor";
 
@@ -25,7 +28,7 @@ export const SERVICES: Service[] = [
       "Combos and add-ons around your bestsellers",
       "Remove dead items and add dishes customers are searching for",
     ],
-    image: { src: u("1589302168068-964664d93dc0"), alt: "Plated biryani ready to serve" },
+    image: { src: u("1782541370275-6761522e39d1"), alt: "Hands serving chicken biryani with lemon and sauce" },
   },
   {
     id: "pricing-order-value", number: "02", title: "Pricing & Order Value", icon: "pricing",
@@ -35,7 +38,7 @@ export const SERVICES: Service[] = [
       "Smart price points across variants and combos",
       "Raise average order value with add-ons and minimum order value",
     ],
-    image: { src: u("1563379091339-03b21ab4a4f8"), alt: "Two plates of food served as a combo" },
+    image: { src: u("1631515242808-497c3fbd3972"), alt: "Table spread with bowls of curries, sides and sauces" },
   },
   {
     id: "ads-discounts", number: "03", title: "Ads & Discounts", icon: "ads",
@@ -65,7 +68,7 @@ export const SERVICES: Service[] = [
       "Spot recurring complaints, cancellations and stock-outs",
       "Protect ratings during peak hours",
     ],
-    image: { src: u("1755811248324-c70c1f10a7fd"), alt: "Guests enjoying a variety of dishes at a round table" },
+    image: { src: u("1663530761401-15eefb544889"), alt: "Chef finishing a plated dish with sauce" },
   },
   {
     id: "local-market-competitors", number: "06", title: "Local Market & Competitors", icon: "competitor",
@@ -75,7 +78,7 @@ export const SERVICES: Service[] = [
       "Competitor bestsellers, prices and offers",
       "Turn their gaps into your growth",
     ],
-    image: { src: u("1572195577046-2f25894c06fc"), alt: "Delivery rider on a scooter in the city" },
+    image: { src: u("1774979160994-3306b4872084"), alt: "Restaurant staff outside the outlet with a delivery scooter" },
   },
 ];
 
@@ -95,18 +98,24 @@ export const PROCESS = [
 
 export const COMPANY_IMAGES = {
   hero: { src: u("1753727471014-efe38840c7c7", 2000), alt: "Upscale restaurant interior with elegant dining tables" },
-  /** Hero background slideshow: elegant, upscale dining rooms. */
+  /** Hero background slideshow: moody, upscale dining rooms and a busy kitchen. */
   heroSlides: [
-    { src: u("1753727471014-efe38840c7c7", 2000), alt: "Upscale restaurant interior with elegant dining tables" },
-    { src: u("1661422586023-681ea60507e2", 2000), alt: "Grand dining room lit by a chandelier" },
-    { src: u("1741852197045-cc35920a3aa0", 2000), alt: "Elegant restaurant dining room" },
+    slide("1753727471014-efe38840c7c7", "Upscale restaurant interior with elegant dining tables"),
+    slide("1721637713270-5470ea1d6389", "Chefs preparing food together in a restaurant kitchen"),
+    slide("1782541370275-6761522e39d1", "Hands serving chicken biryani with lemon and sauce"),
+    slide("1703793578040-07e1778b6b2c", "Dimly lit restaurant dining room"),
+    slide("1663530761401-15eefb544889", "Chef finishing a plated dish with sauce"),
+    slide("1517248135467-4c7edcad34c4", "Busy restaurant dining room in the evening"),
+    slide("1661422586023-681ea60507e2", "Grand dining room lit by a chandelier"),
   ],
-  team: { src: u("1758518731706-be5d5230e5a5"), alt: "Consulting team collaborating in a modern office" },
-  dish: { src: u("1631515243349-e0cb75fb8d3a", 900), alt: "Bowl of rice and meat" },
-  contact: { src: u("1758518731462-d091b0b4ed0d", 1800), alt: "Business partners shaking hands over an agreement" },
-  meeting: { src: u("1714974528737-3e6c7e4d11af", 1800), alt: "Team meeting around a table" },
+  team: { src: u("1517245386807-bb43f82c33c4"), alt: "Consultant walking a client through numbers on a laptop" },
+  dish: { src: u("1772730064951-89b427965dbc", 900), alt: "Bowl of chicken tikka masala garnished with mint" },
+  contact: { src: u("1758518731462-d091b0b4ed0d", 1800), alt: "Consultant smiling while talking with a client in the office" },
+  meeting: { src: u("1551135049-8a33b5883817", 1800), alt: "Team reviewing a plan on paper around a table" },
   ordering: { src: u("1663661759279-5edbf3d58e0c", 1200), alt: "Customer holding a phone to order food" },
   servicesHero: { src: u("1542744173-8e7e53415bb0", 2000), alt: "Consultant presenting to a restaurant team" },
+  /** Faint background photos behind the darker feature bands. */
+  kitchen: { src: u("1721637713270-5470ea1d6389", 2000), alt: "" },
 };
 
 export const GLOSSARY: [string, string][] = [

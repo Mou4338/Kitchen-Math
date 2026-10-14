@@ -1,6 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Download, FileSpreadsheet, FolderOpen, Info, Moon, Printer, Save, Share2 } from "lucide-react";
+import { ArrowRight, BookOpen, Download, FileSpreadsheet, FolderOpen, Info, Printer, Save, Share2 } from "lucide-react";
 import { PageHero } from "@/components/layout/PageHero";
+import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
+import { CALCULATORS } from "@/lib/content/calculators";
 import { PAGE_IMAGES } from "@/lib/content/images";
 import { PrivacyShield, StepAnalyze, StepEnter, StepSave } from "@/components/illustrations/Illustrations";
 import { buttonClass } from "@/components/ui/Button";
@@ -9,7 +11,7 @@ import { faqSchema, pageMetadata } from "@/lib/seo";
 
 export const metadata = pageMetadata({
   title: "Help: How to Use the Restaurant Calculators",
-  description: "Step-by-step guide to using the restaurant calculators: entering numbers, reading results, scenarios, saving, sharing, PDF and CSV export, and a glossary of terms.",
+  description: "Step-by-step guide to using the restaurant calculators, plus short guides to menu pricing, online payout and menu engineering, a glossary and common questions.",
   path: "/restaurant/help",
 });
 
@@ -26,7 +28,6 @@ const ACTIONS = [
   { Icon: Download, title: "PDF", body: "A clean report with your inputs, results, a chart, assumptions and reference ranges." },
   { Icon: FileSpreadsheet, title: "CSV", body: "Opens in Excel or Google Sheets. Menu Engineering can also import a CSV of your dishes." },
   { Icon: Printer, title: "Print", body: "Prints the results without menus and buttons." },
-  { Icon: Moon, title: "Light or dark theme", body: "Use the sun/moon button in the top bar to switch between white & blue and black & gold. Your choice is remembered." },
 ];
 
 const GLOSSARY: [string, string][] = [
@@ -60,6 +61,7 @@ export default function HelpPage() {
       >
         <div className="flex flex-wrap gap-3">
           <Link href="/restaurant/menu-pricing-calculator" className={buttonClass("accent", "lg")}>Try the Menu Pricing calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>
+          <a href="#guides" className="inline-flex h-12 items-center gap-2 rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10"><BookOpen className="h-4 w-4" aria-hidden /> Guides</a>
           <a href="#glossary" className="inline-flex h-12 items-center rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">Glossary</a>
         </div>
       </PageHero>
@@ -73,6 +75,28 @@ export default function HelpPage() {
               <Art className="mx-auto h-40 w-full max-w-[260px]" />
               <h3 className="mt-4 text-lg font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{body}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="guides" className="mt-16 scroll-mt-24" aria-labelledby="guides-title">
+        <p className="eyebrow text-star-dark">Learn the numbers</p>
+        <h2 id="guides-title" className="mt-2 text-3xl font-semibold">Restaurant finance guides</h2>
+        <p className="mt-2 max-w-2xl text-ink-soft">The key idea behind each calculator in two minutes, with a worked example you can check yourself.</p>
+        <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          {CALCULATORS.map((c) => (
+            <article key={c.slug} className="flex flex-col rounded-3xl border border-line bg-card p-6 shadow-card">
+              <div className="flex items-center gap-3">
+                <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent-dark"><CalculatorIcon name={c.icon} className="h-5 w-5" /></span>
+                <h3 className="text-lg font-semibold">{c.shortTitle}</h3>
+              </div>
+              <p className="mt-4 text-sm leading-relaxed text-ink-soft">{c.education.what}</p>
+              <p className="mt-3 text-sm leading-relaxed text-ink-soft"><b>Why it matters:</b> {c.education.why}</p>
+              <p className="tabular mt-3 rounded-xl bg-wash p-3 text-sm leading-relaxed text-ink-soft"><b>Example:</b> {c.education.example}</p>
+              <Link href={`/restaurant/${c.slug}`} className="mt-auto inline-flex items-center gap-1.5 pt-5 text-sm font-semibold text-accent-dark hover:underline">
+                Open the {c.shortTitle.toLowerCase()} calculator <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
             </article>
           ))}
         </div>

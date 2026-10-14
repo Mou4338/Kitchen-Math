@@ -191,7 +191,7 @@ function SendResults({ result: r }: { result: ScoreResult }) {
       <button
         type="submit"
         disabled={disabled || status === "sending"}
-        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent px-5 font-semibold text-accent-ink shadow-glow transition hover:brightness-110 disabled:opacity-50"
+        className="inline-flex h-12 items-center justify-center gap-2 rounded-xl px-5 font-semibold transition brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)] hover:brightness-110 disabled:opacity-50"
       >
         {status === "sending" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Send className="h-4 w-4" aria-hidden />}
         {status === "sending" ? "Sending…" : "Send my results"}

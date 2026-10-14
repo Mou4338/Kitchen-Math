@@ -36,7 +36,7 @@ export function FloatingActions() {
           <MessageCircle className="h-5 w-5" aria-hidden /> <span className="hidden sm:inline">WhatsApp us</span>
         </a>
       ) : (
-        <Link href="/#contact" className="inline-flex h-12 items-center gap-2 rounded-full bg-accent px-5 font-semibold text-accent-ink shadow-glow transition hover:brightness-110">
+        <Link href="/#contact" className="inline-flex h-12 items-center gap-2 rounded-full px-5 font-semibold transition brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)] hover:brightness-110">
           <CalendarCheck className="h-5 w-5" aria-hidden /> <span className="hidden sm:inline">Book a free audit</span>
         </Link>
       )}

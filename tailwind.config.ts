@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-/** Every colour is a CSS variable (see app/globals.css), so the light (white & blue) and dark (black & gold) themes swap automatically. */
+/** Every colour is a CSS variable (see app/globals.css): one black & red theme with saffron accents. */
 const v = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
 
 const config: Config = {
@@ -19,6 +19,7 @@ const config: Config = {
         accent: { DEFAULT: v("accent"), dark: v("accent-dark"), soft: v("accent-soft"), ink: v("accent-ink"), bright: v("accent-bright") },
         inverse: v("inverse"),
         "on-inverse": v("on-inverse"),
+        star: { DEFAULT: v("star"), dark: v("star-dark"), soft: v("star-soft"), ink: v("star-ink"), text: v("star-text") },
         sage: { DEFAULT: v("sage"), dark: v("sage-dark"), soft: v("sage-soft") },
         caution: { DEFAULT: v("caution"), soft: v("caution-soft") },
         danger: { DEFAULT: v("danger"), soft: v("danger-soft") },

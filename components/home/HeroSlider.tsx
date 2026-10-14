@@ -58,10 +58,9 @@ export function HeroSlider() {
           <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes="100vw" className={cn("object-cover transition-transform duration-[7000ms] ease-out", i === index ? "scale-105" : "scale-100")} />
         </div>
       ))}
-      {/* Brand overlay: navy/blue in light theme, black/gold in dark theme */}
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/85 to-inverse/35" aria-hidden />
+      {/* Brand overlay: black */}
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/25" aria-hidden />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/70 via-transparent to-transparent" aria-hidden />
-      <div className="absolute inset-0 -z-10 bg-accent/10 mix-blend-color" aria-hidden />
 
       <div className="container flex min-h-[540px] items-center py-16 sm:min-h-[600px] md:px-20 lg:min-h-[640px] xl:px-24">
         <div className="max-w-2xl text-on-inverse" aria-live="polite">

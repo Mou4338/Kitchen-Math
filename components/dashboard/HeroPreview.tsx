@@ -10,8 +10,8 @@ const PAYOUT_LINES = [
 ];
 
 const DISHES = [
-  { name: "Chicken Biryani", tag: "Star", tone: "bg-sage-soft text-sage-dark", share: 100 },
-  { name: "Paneer Butter Masala", tag: "Star", tone: "bg-sage-soft text-sage-dark", share: 66 },
+  { name: "Chicken Biryani", tag: "★ Star", tone: "bg-star text-star-ink", share: 100 },
+  { name: "Paneer Butter Masala", tag: "★ Star", tone: "bg-star text-star-ink", share: 66 },
   { name: "Tandoori Platter", tag: "Puzzle", tone: "bg-accent-soft text-accent-dark", share: 18 },
 ];
 

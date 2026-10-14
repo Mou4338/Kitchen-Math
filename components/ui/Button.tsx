@@ -9,7 +9,8 @@ const base =
   "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl font-medium transition-all duration-150 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:pointer-events-none disabled:opacity-50";
 const variants: Record<Variant, string> = {
   primary: "bg-inverse text-on-inverse hover:opacity-90",
-  accent: "bg-accent text-accent-ink shadow-glow hover:brightness-110",
+  /** Main call-to-action: Zomato red fading to Swiggy saffron. */
+  accent: "brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)] hover:brightness-110",
   outline: "border border-line-strong bg-card text-ink hover:bg-wash",
   ghost: "text-ink hover:bg-wash",
   subtle: "bg-wash text-ink hover:bg-line",

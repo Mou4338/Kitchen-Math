@@ -10,23 +10,34 @@ import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
 import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/utils/cn";
 import { SITE } from "@/lib/site";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { BrandMark } from "@/components/ui/BrandMark";
 
 const NAV = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/restaurant", label: "Tools" },
-  { href: "/restaurant/guides", label: "Guides" },
   { href: "/restaurant/calculator-history", label: "History" },
   { href: "/restaurant/help", label: "Help" },
   { href: "/restaurant/about", label: "About" },
+  { href: "/contact", label: "Contact" },
 ];
 
-export function Logo({ onClick }: { onClick?: () => void } = {}) {
+export function Logo({ onClick, onAccent }: { onClick?: () => void; onAccent?: boolean } = {}) {
+  // On the red footer the full lockup sits in a black pill, exactly as in the brand artwork.
+  // Brand colours are fixed: ivory → saffron for "Kitchen", red for "Math".
+  const dark = "[--logo-from:242_241_236] [--logo-to:242_169_59]";
   return (
-    <Link href="/" onClick={onClick} className="flex items-center gap-2.5 font-semibold tracking-tight text-ink" aria-label={`${SITE.name} home`}>
-      <span className="grid h-8 w-8 place-items-center rounded-lg bg-inverse text-sm font-bold text-accent-bright">₹</span>
-      <span className="text-[17px]">{SITE.name}</span>
+    <Link
+      href="/"
+      onClick={onClick}
+      className={`flex items-center gap-2.5 font-semibold tracking-tight ${dark} ${onAccent ? "w-fit rounded-2xl bg-[#0A090B] py-2 pl-2 pr-4 shadow-[0_10px_24px_-10px_rgb(0_0_0/0.7)]" : ""}`}
+      aria-label={`${SITE.name} home`}
+    >
+      <BrandMark bowl="#F2F1EC" rupee="#0A090B" className="h-9 w-9 shrink-0" />
+      <span className={onAccent ? "text-[19px]" : "text-[18px]"}>
+        <span className="logo-kitchen">Kitchen</span>
+        <span className="text-[#E23744]">Math</span>
+      </span>
     </Link>
   );
 }
@@ -42,7 +53,7 @@ export function Header() {
   const navClass = (active: boolean) =>
     cn(
       "relative rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-wash hover:text-ink",
-      active ? "text-accent after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-accent" : "text-muted",
+      active ? "text-accent after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-[linear-gradient(90deg,rgb(var(--accent)),rgb(var(--star)))]" : "text-muted",
     );
 
   const closeMenus = () => {
@@ -72,7 +83,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="no-print sticky top-0 z-40 border-b border-line/70 bg-paper/80 backdrop-blur-xl">
+    <header className="site-header no-print sticky top-0 z-40 border-b border-line/70 bg-paper/85 text-ink backdrop-blur-xl [color-scheme:dark]">
       <div className="container flex h-16 items-center justify-between gap-4">
         <Logo onClick={closeMenus} />
         <nav aria-label="Main" className="hidden items-center gap-0.5 xl:flex">
@@ -121,7 +132,6 @@ export function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <ThemeToggle />
           <Link onClick={closeMenus} href="/#contact" className={buttonClass("accent", "sm", "hidden sm:inline-flex")}>
             Free growth audit
           </Link>

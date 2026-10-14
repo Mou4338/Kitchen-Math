@@ -46,8 +46,8 @@ export function WelcomeSection() {
             <div className="absolute -inset-3 rotate-[8deg] rounded-[62%_38%_55%_45%/48%_60%_40%_52%] bg-accent/15" aria-hidden />
             <div className="absolute inset-0 overflow-hidden rounded-[38%_62%_45%_55%/60%_40%_60%_40%] bg-inverse shadow-lift">
               <Image src={photo.src} alt={photo.alt} fill sizes="(min-width: 1024px) 520px, 90vw" className="object-cover" />
-              {/* duotone tint like the reference: blue in light theme, gold in dark theme */}
-              <div className="absolute inset-0 bg-accent/35 mix-blend-color" aria-hidden />
+              {/* duotone tint like the reference: red in both themes */}
+              <div className="absolute inset-0 bg-accent/20 mix-blend-color" aria-hidden />
               <div className="absolute inset-0 bg-gradient-to-tr from-inverse/40 to-transparent" aria-hidden />
             </div>
             <div className="absolute -left-2 bottom-8 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">

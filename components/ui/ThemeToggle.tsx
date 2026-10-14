@@ -5,7 +5,7 @@ import { useSyncExternalStore } from "react";
 import { getTheme, setTheme, subscribeTheme, type Theme } from "@/lib/theme";
 import { cn } from "@/lib/utils/cn";
 
-/** Switch between the white & blue (light) and black & gold (dark) themes. */
+/** Switch between the white, red & saffron (light) and black & red (dark) themes. */
 export function ThemeToggle({ className }: { className?: string }) {
   const theme = useSyncExternalStore<Theme | null>(subscribeTheme, getTheme, () => null);
   const isDark = theme === "dark";
@@ -13,7 +13,7 @@ export function ThemeToggle({ className }: { className?: string }) {
     <button
       type="button"
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      aria-label={isDark ? "Switch to light theme (white and blue)" : "Switch to dark theme (black and gold)"}
+      aria-label={isDark ? "Switch to light theme (white, red and saffron)" : "Switch to dark theme (black and red)"}
       title={isDark ? "Light theme" : "Dark theme"}
       className={cn(
         "relative grid h-10 w-10 place-items-center overflow-hidden rounded-xl border border-line bg-card text-ink transition-colors hover:border-accent hover:text-accent",

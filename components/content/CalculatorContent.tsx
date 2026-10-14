@@ -77,7 +77,7 @@ export function FaqBlock({ faqs }: { faqs: { q: string; a: string }[] }) {
           <details key={f.q} className="group px-5 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium">
               {f.q}
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-wash text-muted transition-transform group-open:rotate-45" aria-hidden>+</span>
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-star-soft font-semibold text-star-dark transition-transform group-open:rotate-45" aria-hidden>+</span>
             </summary>
             <p className="pb-5 text-sm leading-relaxed text-ink-soft">{f.a}</p>
           </details>
