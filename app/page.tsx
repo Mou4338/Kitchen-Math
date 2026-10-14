@@ -156,10 +156,9 @@ export default function CompanyHome() {
       <section id="services" className="relative isolate scroll-mt-20 overflow-hidden bg-wash py-16 sm:py-24">
         <div className="grid-lines grid-fade absolute inset-0 -z-10" aria-hidden />
         <div className="pointer-events-none absolute -right-32 -top-32 -z-10 h-96 w-96 rounded-full bg-accent/10 blur-3xl" aria-hidden />
-        {/* Saffron glow rising from the bottom and falling from the top, with a fine saffron line on each edge */}
-        <div className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(65%_32%_at_50%_0%,rgb(var(--star)/0.22),transparent_75%),radial-gradient(65%_32%_at_50%_100%,rgb(var(--star)/0.18),transparent_75%)]" aria-hidden />
+        {/* Saffron glow falling from the top, with a fine saffron line on the top edge */}
+        <div className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(65%_32%_at_50%_0%,rgb(var(--star)/0.22),transparent_75%)]" aria-hidden />
         <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
             <p className="eyebrow text-star-dark">What we do</p>

@@ -25,24 +25,28 @@ export default function AboutPage() {
         accent="numbers."
         crumbs={[{ name: "Home", path: "/" }, { name: "About", path: "/restaurant/about" }]}
       />
-    <div className="container max-w-4xl pb-16 pt-12">
-      <p className="mb-10 text-lg leading-relaxed text-ink-soft">
+    <div className="relative isolate overflow-hidden">
+      <div className="grid-lines grid-fade absolute inset-0 -z-10" aria-hidden />
+      <div className="container max-w-4xl pb-16 pt-12">
+      <p className="eyebrow text-star-dark">Our principles</p>
+      <p className="mb-10 mt-3 text-lg leading-relaxed text-ink-soft">
         After commission, discounts, ads and GST, delivery-app orders can quietly lose money. A price copied from the dine-in menu or an untracked discount can turn a busy month into a loss. {SITE.name} puts the key numbers in front of owners for free, without software subscriptions or sign-ups.
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {PRINCIPLES.map((p) => (
-          <div key={p.title} className="rounded-2xl border border-line bg-card p-6 shadow-card">
-            <h2 className="text-lg font-semibold">{p.title}</h2>
+          <div key={p.title} className="card-glow rounded-3xl border border-line bg-card p-6 shadow-card">
+            <span className="brand-gradient grid h-9 w-9 place-items-center rounded-full text-sm font-bold text-accent-ink [text-shadow:0_1px_2px_rgb(0_0_0/0.25)]">{PRINCIPLES.indexOf(p) + 1}</span>
+            <h2 className="mt-4 text-lg font-semibold">{p.title}</h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.body}</p>
           </div>
         ))}
       </div>
-      <div className="mt-10 rounded-3xl bg-inverse p-6 text-on-inverse sm:p-8">
-        <h2 className="text-xl font-semibold text-on-inverse">A note on estimates</h2>
-        <p className="mt-2 text-sm leading-relaxed text-on-inverse/75">Results depend entirely on the numbers you enter and on simplified models. They are for planning and conversation, not financial, tax or legal advice. Check important decisions with your accountant.</p>
+      <div className="mt-10 rounded-3xl border border-line bg-card p-6 shadow-lift sm:p-8">
+        <h2 className="text-xl font-semibold">A note on estimates</h2>
+        <p className="mt-2 text-sm leading-relaxed text-ink-soft">Results depend entirely on the numbers you enter and on simplified models. They are for planning and conversation, not financial, tax or legal advice. Check important decisions with your accountant.</p>
         <Link href="/restaurant#tools" className={buttonClass("accent", "md", "mt-5")}>Explore the calculators</Link>
       </div>
-    </div>
+    </div></div>
 
     </>
   );

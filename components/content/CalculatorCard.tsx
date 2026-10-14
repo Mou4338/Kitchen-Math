@@ -8,10 +8,10 @@ export function CalculatorCard({ c, compact, variant = "default" }: { c: Calcula
     return (
       <Link
         href={`/restaurant/${c.slug}`}
-        className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-card p-6 shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 hover:shadow-lift"
+        className="card-glow group relative flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-card p-6 shadow-card"
       >
-        <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-accent transition-transform duration-300 group-hover:scale-x-100" aria-hidden />
-        <span className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-ink shadow-glow transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
+        <span className="brand-gradient absolute inset-x-0 top-0 h-1 origin-left scale-x-0 transition-transform duration-300 group-hover:scale-x-100" aria-hidden />
+        <span className="brand-gradient grid h-12 w-12 place-items-center rounded-xl text-accent-ink shadow-glow transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105">
           <CalculatorIcon name={c.icon} className="h-6 w-6" />
         </span>
         <h3 className="mt-5 flex items-center gap-2 text-lg font-bold">
@@ -28,10 +28,10 @@ export function CalculatorCard({ c, compact, variant = "default" }: { c: Calcula
   return (
     <Link
       href={`/restaurant/${c.slug}`}
-      className="group relative flex h-full flex-col gap-4 rounded-2xl border border-line bg-card p-5 shadow-card transition-all duration-200 hover:-translate-y-0.5 hover:border-line-strong hover:shadow-lift"
+      className="card-glow group relative flex h-full flex-col gap-4 rounded-3xl border border-line bg-card p-5 shadow-card"
     >
       <div className="flex items-start justify-between gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-xl bg-accent-soft text-accent-dark transition-colors group-hover:bg-accent group-hover:text-accent-ink">
+        <span className="icon-tile grid h-11 w-11 place-items-center rounded-xl transition-transform duration-300 group-hover:-rotate-6">
           <CalculatorIcon name={c.icon} className="h-5 w-5" />
         </span>
         {c.isNew ? <span className="rounded-full bg-sage-soft px-2 py-0.5 text-[11px] font-semibold text-sage-dark">New</span> : null}

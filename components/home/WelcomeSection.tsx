@@ -28,7 +28,7 @@ export function WelcomeSection() {
           <ul className="mt-6 grid gap-2.5 sm:grid-cols-2">
             {POINTS.map((p) => (
               <li key={p} className="flex items-center gap-2.5 text-sm font-medium">
-                <span className="grid h-6 w-6 place-items-center rounded-full bg-accent text-accent-ink"><Check className="h-3.5 w-3.5" aria-hidden /></span>
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-star text-star-ink"><Check className="h-3.5 w-3.5" aria-hidden /></span>
                 {p}
               </li>
             ))}

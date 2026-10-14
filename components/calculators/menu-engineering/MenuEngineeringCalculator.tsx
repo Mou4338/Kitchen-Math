@@ -172,7 +172,7 @@ export default function MenuEngineeringCalculator() {
         <SourceBar source={source} onExample={resetToExample} onClear={() => commit([blankItem()])} />
         <div className="rounded-2xl border border-line bg-card p-4 shadow-card sm:p-5">
           <div className="flex items-center gap-2">
-            <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent-soft text-accent-dark"><Smartphone className="h-5 w-5" aria-hidden /></span>
+            <span className="icon-tile grid h-9 w-9 place-items-center rounded-xl"><Smartphone className="h-5 w-5" aria-hidden /></span>
             <div>
               <h2 className="text-base font-semibold">Platform rates</h2>
               <p className="text-xs text-muted">Entered once, used for every dish. GST on commission is fixed at {GST_ON_COMMISSION_PERCENT}%.</p>

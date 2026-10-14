@@ -134,7 +134,7 @@ export function ResultActions({ slug, calculatorTitle, path, values, report, onR
             <label htmlFor={inputId} className="text-xs font-semibold text-muted">Scenario name</label>
             <input id={inputId} autoFocus value={name} onChange={(e) => setName(e.target.value)} maxLength={60} placeholder="e.g. My restaurant – September" className="mt-1 h-11 w-full rounded-lg border border-line-strong bg-card px-3 text-sm outline-none focus:border-accent" />
           </div>
-          <button type="submit" className="h-11 rounded-lg bg-accent px-4 text-sm font-semibold text-accent-ink hover:brightness-110">Save on this device</button>
+          <button type="submit" className="h-11 rounded-lg px-4 text-sm font-semibold hover:brightness-110 brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)]">Save on this device</button>
         </form>
       ) : null}
 

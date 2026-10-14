@@ -78,7 +78,7 @@ export function HeroSlider() {
                 <Link href={slide.cta.href} className={buttonClass("accent", "lg")}>
                   {slide.cta.label} <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
-                <Link href="#tools" className="inline-flex h-12 items-center rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">
+                <Link href="#tools" className="btn-glass">
                   Explore all tools
                 </Link>
               </div>

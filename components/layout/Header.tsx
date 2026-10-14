@@ -112,7 +112,7 @@ export function Header() {
                 >
                   {CALCULATORS.map((c) => (
                     <Link onClick={closeMenus} key={c.slug} href={`/restaurant/${c.slug}`} className="flex items-start gap-3 rounded-xl p-2.5 hover:bg-wash">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent-soft text-accent-dark">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg icon-tile">
                         <CalculatorIcon name={c.icon} className="h-4 w-4" />
                       </span>
                       <span className="min-w-0">
@@ -157,7 +157,7 @@ export function Header() {
               <div className="grid gap-1 sm:grid-cols-2">
                 {CALCULATORS.map((c) => (
                   <Link onClick={closeMenus} key={c.slug} href={`/restaurant/${c.slug}`} className="flex min-h-[48px] items-center gap-3 rounded-xl px-2 hover:bg-wash">
-                    <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent-soft text-accent-dark">
+                    <span className="grid h-8 w-8 place-items-center rounded-lg icon-tile">
                       <CalculatorIcon name={c.icon} className="h-4 w-4" />
                     </span>
                     <span className="text-[15px] font-medium">{c.shortTitle}</span>

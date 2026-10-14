@@ -82,8 +82,8 @@ export function Scorecard() {
       </div>
 
       <aside className="flex flex-col gap-4 lg:sticky lg:top-24" aria-live="polite">
-        <div className="rounded-3xl bg-inverse p-6 text-on-inverse shadow-lift sm:p-8">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-bright">Your growth score</p>
+        <div className="panel-band rounded-3xl p-6 shadow-lift sm:p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-star-text">Your growth score</p>
           <div className="mt-4 flex items-center gap-5">
             <CircularScore value={r.overall} tone={tone(r.overall)} label="Growth score" size={108} />
             <div>

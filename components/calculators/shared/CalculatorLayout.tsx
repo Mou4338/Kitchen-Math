@@ -26,7 +26,7 @@ export function CalculatorLayout({ inputs, results, summary }: { inputs: ReactNo
               <span className="eyebrow block">{summary.label}</span>
               <span className={cn("tabular block truncate text-xl font-bold", toneText[summary.tone ?? "neutral"], !summary.tone && "text-ink")}>{summary.value}</span>
             </span>
-            <span className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-accent px-3.5 text-sm font-medium text-accent-ink">
+            <span className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl px-3.5 text-sm font-medium brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)]">
               Results <ArrowDown className="h-4 w-4" aria-hidden />
             </span>
           </a>
@@ -41,7 +41,7 @@ export function InputGroup({ title, description, children, icon, className }: { 
   return (
     <section className={cn("rounded-2xl border border-line bg-card p-5 shadow-card sm:p-6", className)} aria-label={title}>
       <div className="mb-4 flex items-start gap-3">
-        {icon ? <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent-dark">{icon}</span> : null}
+        {icon ? <span className="icon-tile grid h-9 w-9 shrink-0 place-items-center rounded-xl">{icon}</span> : null}
         <div>
           <h2 className="text-base font-semibold">{title}</h2>
           {description ? <p className="mt-0.5 text-sm text-muted">{description}</p> : null}

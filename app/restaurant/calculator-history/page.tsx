@@ -20,9 +20,9 @@ export default function HistoryPage() {
         crumbs={[{ name: "Home", path: "/" }, { name: "Tools", path: "/restaurant" }, { name: "Saved scenarios", path: "/restaurant/calculator-history" }]}
         compact
       />
-      <div className="container max-w-4xl pb-16 pt-10">
+      <div className="section-warm"><div className="container max-w-4xl pb-16 pt-10">
         <HistoryList />
-      </div>
+      </div></div>
     </>
   );
 }

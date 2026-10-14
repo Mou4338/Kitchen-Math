@@ -17,10 +17,10 @@ export function HowToUse({ slug, steps }: { slug: string; steps: string[] }) {
   const toggle = () => writeJson(key, open ? "closed" : "open");
 
   return (
-    <section className="no-print overflow-hidden rounded-2xl border border-accent/25 bg-accent-soft/60" aria-labelledby={`${slug}-howto`}>
+    <section className="no-print overflow-hidden rounded-3xl border border-line bg-card shadow-card" aria-labelledby={`${slug}-howto`}>
       <button type="button" onClick={toggle} aria-expanded={open} aria-controls={`${slug}-howto-body`} className="flex w-full items-center justify-between gap-3 px-5 py-4 text-left">
         <span className="flex items-center gap-3">
-          <span className="grid h-9 w-9 place-items-center rounded-xl bg-accent text-accent-ink"><Lightbulb className="h-[18px] w-[18px]" aria-hidden /></span>
+          <span className="brand-gradient grid h-9 w-9 place-items-center rounded-xl text-accent-ink shadow-glow"><Lightbulb className="h-[18px] w-[18px]" aria-hidden /></span>
           <span>
             <span id={`${slug}-howto`} className="block font-semibold">How to use this calculator</span>
             <span className="block text-xs text-muted">{steps.length} quick steps · takes under a minute</span>

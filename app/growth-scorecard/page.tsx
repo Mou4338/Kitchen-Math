@@ -21,9 +21,9 @@ export default function GrowthScorecardPage() {
         crumbs={[{ name: "Home", path: "/" }, { name: "Growth scorecard", path: "/growth-scorecard" }]}
         compact
       />
-      <div className="container py-10 sm:py-14">
+      <div><div className="container py-10 sm:py-14">
         <Scorecard />
-      </div>
+      </div></div>
     </>
   );
 }

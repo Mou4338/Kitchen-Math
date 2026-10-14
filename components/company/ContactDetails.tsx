@@ -27,13 +27,12 @@ export function ContactDetails() {
   return (
     <div className="grid gap-5">
       {/* Helpline */}
-      <div className="band-sheen relative isolate flex flex-col gap-5 overflow-hidden rounded-3xl p-6 text-on-inverse shadow-lift sm:flex-row sm:items-center sm:p-7">
-        <div className="grid-lines grid-lines-inverse absolute inset-0 -z-10" aria-hidden />
+      <div className="panel-solid-red relative flex flex-col gap-5 overflow-hidden rounded-3xl p-6 text-white shadow-lift sm:flex-row sm:items-center sm:p-7">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-accent shadow-[0_8px_18px_-8px_rgb(0_0_0/0.5)]"><Mail className="h-5 w-5" aria-hidden /></span>
         <div className="min-w-0 flex-1">
-          <h3 className="text-lg font-bold text-on-inverse">Our helpline</h3>
-          <p className="mt-1 text-sm leading-relaxed text-on-inverse/80">Questions about your menu, pricing, ads or delivery apps? Email us and a growth consultant will reply within one business day.</p>
-          <a href={`mailto:${c.email}`} className="mt-3 inline-block break-all font-mono text-[15px] font-semibold text-on-inverse hover:underline">{c.email}</a>
+          <h3 className="text-lg font-bold text-white">Our helpline</h3>
+          <p className="mt-1 text-sm leading-relaxed text-white/90">Questions about your menu, pricing, ads or delivery apps? Email us and a growth consultant will reply within one business day.</p>
+          <a href={`mailto:${c.email}`} className="mt-3 inline-block break-all font-mono text-[15px] font-semibold text-white hover:underline">{c.email}</a>
         </div>
         <button
           type="button"
@@ -61,8 +60,8 @@ export function ContactDetails() {
       </div>
 
       {/* Office */}
-      <div className="flex gap-4 rounded-3xl border border-line bg-card p-5 shadow-card sm:p-6">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent-soft text-accent-dark"><MapPin className="h-5 w-5" aria-hidden /></span>
+      <div className="card-glow flex gap-4 rounded-3xl border border-line bg-card p-5 shadow-card sm:p-6">
+        <span className="icon-tile grid h-11 w-11 shrink-0 place-items-center rounded-xl"><MapPin className="h-5 w-5" aria-hidden /></span>
         <div className="min-w-0">
           <h3 className="font-bold">Office</h3>
           <p className="mt-1 text-sm leading-relaxed text-ink-soft">{c.address}</p>
@@ -78,7 +77,7 @@ export function ContactDetails() {
       </div>
 
       {/* Hours */}
-      <div className="flex gap-4 rounded-3xl border border-line bg-card p-5 shadow-card sm:p-6">
+      <div className="card-glow flex gap-4 rounded-3xl border border-line bg-card p-5 shadow-card sm:p-6">
         <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-star-soft text-star-dark"><Clock className="h-5 w-5" aria-hidden /></span>
         <div>
           <h3 className="font-bold">Business hours</h3>
@@ -103,7 +102,7 @@ export function ContactNextSteps() {
         <p className="eyebrow text-star-dark">What happens next</p>
         <ol className="mt-4 grid gap-4 sm:grid-cols-3">
           {NEXT.map((s, i) => (
-            <li key={s.title} className="rounded-3xl border border-line bg-card p-5 shadow-card">
+            <li key={s.title} className="card-glow rounded-3xl border border-line bg-card p-5 shadow-card">
               <span className="brand-gradient grid h-9 w-9 place-items-center rounded-full text-sm font-bold text-accent-ink [text-shadow:0_1px_2px_rgb(0_0_0/0.25)]">{i + 1}</span>
               <h3 className="mt-4 font-bold">{s.title}</h3>
               <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.body}</p>

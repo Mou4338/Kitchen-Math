@@ -61,17 +61,18 @@ export default function HelpPage() {
       >
         <div className="flex flex-wrap gap-3">
           <Link href="/restaurant/menu-pricing-calculator" className={buttonClass("accent", "lg")}>Try the Menu Pricing calculator <ArrowRight className="h-4 w-4" aria-hidden /></Link>
-          <a href="#guides" className="inline-flex h-12 items-center gap-2 rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10"><BookOpen className="h-4 w-4" aria-hidden /> Guides</a>
-          <a href="#glossary" className="inline-flex h-12 items-center rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">Glossary</a>
+          <a href="#guides" className="btn-glass"><BookOpen className="h-4 w-4" aria-hidden /> Guides</a>
+          <a href="#glossary" className="btn-glass">Glossary</a>
         </div>
       </PageHero>
     <div className="container pb-20 pt-4">
 
       <section className="mt-16" aria-labelledby="start">
-        <h2 id="start" className="text-3xl font-semibold">Getting started</h2>
+        <p className="eyebrow text-star-dark">Step by step</p>
+        <h2 id="start" className="mt-2 text-3xl font-semibold">Getting started</h2>
         <div className="mt-6 grid gap-5 md:grid-cols-3">
           {STEPS.map(({ Art, title, body }) => (
-            <article key={title} className="rounded-3xl border border-line bg-card p-6 shadow-card">
+            <article key={title} className="card-glow rounded-3xl border border-line bg-card p-6 shadow-card">
               <Art className="mx-auto h-40 w-full max-w-[260px]" />
               <h3 className="mt-4 text-lg font-semibold">{title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink-soft">{body}</p>
@@ -86,9 +87,9 @@ export default function HelpPage() {
         <p className="mt-2 max-w-2xl text-ink-soft">The key idea behind each calculator in two minutes, with a worked example you can check yourself.</p>
         <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {CALCULATORS.map((c) => (
-            <article key={c.slug} className="flex flex-col rounded-3xl border border-line bg-card p-6 shadow-card">
+            <article key={c.slug} className="card-glow flex flex-col rounded-3xl border border-line bg-card p-6 shadow-card">
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent-dark"><CalculatorIcon name={c.icon} className="h-5 w-5" /></span>
+                <span className="icon-tile grid h-10 w-10 place-items-center rounded-xl"><CalculatorIcon name={c.icon} className="h-5 w-5" /></span>
                 <h3 className="text-lg font-semibold">{c.shortTitle}</h3>
               </div>
               <p className="mt-4 text-sm leading-relaxed text-ink-soft">{c.education.what}</p>
@@ -103,14 +104,15 @@ export default function HelpPage() {
       </section>
 
       <section className="mt-16" aria-labelledby="colours">
-        <h2 id="colours" className="text-3xl font-semibold">Reading your results</h2>
+        <p className="eyebrow text-star-dark">Colours</p>
+        <h2 id="colours" className="mt-2 text-3xl font-semibold">Reading your results</h2>
         <div className="mt-6 grid gap-4 md:grid-cols-3">
           {[
             ["bg-sage", "Green", "Within the reference range. Keep doing what you're doing."],
             ["bg-caution", "Amber", "Slightly outside the range. Worth a look this month."],
             ["bg-danger", "Red", "Well outside the range, or a loss. Act on this first."],
           ].map(([dot, name, text]) => (
-            <div key={name} className="flex gap-3 rounded-2xl border border-line bg-card p-5 shadow-card">
+            <div key={name} className="card-glow flex gap-3 rounded-3xl border border-line bg-card p-5 shadow-card">
               <span className={`mt-1 h-3 w-3 shrink-0 rounded-full ${dot}`} aria-hidden />
               <div>
                 <p className="font-semibold">{name}</p>
@@ -123,11 +125,12 @@ export default function HelpPage() {
       </section>
 
       <section className="mt-16" aria-labelledby="actions">
-        <h2 id="actions" className="text-3xl font-semibold">Buttons under every result</h2>
+        <p className="eyebrow text-star-dark">Save, share, export</p>
+        <h2 id="actions" className="mt-2 text-3xl font-semibold">Buttons under every result</h2>
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ACTIONS.map(({ Icon, title, body }) => (
-            <div key={title} className="rounded-2xl border border-line bg-card p-5 shadow-card transition hover:-translate-y-0.5 hover:shadow-lift">
-              <span className="grid h-10 w-10 place-items-center rounded-xl bg-accent-soft text-accent-dark"><Icon className="h-5 w-5" aria-hidden /></span>
+            <div key={title} className="card-glow rounded-3xl border border-line bg-card p-5 shadow-card">
+              <span className="icon-tile grid h-10 w-10 place-items-center rounded-xl"><Icon className="h-5 w-5" aria-hidden /></span>
               <h3 className="mt-3 font-semibold">{title}</h3>
               <p className="mt-1 text-sm leading-relaxed text-ink-soft">{body}</p>
             </div>
@@ -135,7 +138,7 @@ export default function HelpPage() {
         </div>
       </section>
 
-      <section className="mt-16 grid items-center gap-8 rounded-3xl bg-inverse p-6 text-on-inverse sm:p-10 md:grid-cols-[1fr_1.4fr]" aria-labelledby="privacy">
+      <section className="panel-band mt-16 grid items-center gap-8 rounded-3xl p-6 shadow-lift sm:p-10 md:grid-cols-[1fr_1.4fr]" aria-labelledby="privacy">
         <PrivacyShield className="mx-auto w-full max-w-[280px]" />
         <div>
           <h2 id="privacy" className="text-3xl font-semibold text-on-inverse">Your numbers stay with you</h2>
@@ -144,7 +147,8 @@ export default function HelpPage() {
       </section>
 
       <section id="glossary" className="mt-16 scroll-mt-24" aria-labelledby="glossary-title">
-        <h2 id="glossary-title" className="text-3xl font-semibold">Glossary</h2>
+        <p className="eyebrow text-star-dark">Words we use</p>
+        <h2 id="glossary-title" className="mt-2 text-3xl font-semibold">Glossary</h2>
         <dl className="mt-6 grid gap-x-8 divide-y divide-line rounded-3xl border border-line bg-card px-6 shadow-card md:grid-cols-2 md:divide-y-0">
           {GLOSSARY.map(([term, def]) => (
             <div key={term} className="py-4 md:border-b md:border-line">
@@ -156,13 +160,14 @@ export default function HelpPage() {
       </section>
 
       <section className="mt-16" aria-labelledby="help-faq">
-        <h2 id="help-faq" className="text-3xl font-semibold">Common questions</h2>
+        <p className="eyebrow text-star-dark">FAQ</p>
+        <h2 id="help-faq" className="mt-2 text-3xl font-semibold">Common questions</h2>
         <div className="mt-6 divide-y divide-line rounded-3xl border border-line bg-card shadow-card">
           {FAQS.map((f) => (
             <details key={f.q} className="group px-6 [&_summary::-webkit-details-marker]:hidden">
               <summary className="flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium">
                 {f.q}
-                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-accent-soft text-accent-dark transition-transform group-open:rotate-45" aria-hidden>+</span>
+                <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-star-soft font-semibold text-star-dark transition-transform group-open:rotate-45" aria-hidden>+</span>
               </summary>
               <p className="pb-5 text-sm leading-relaxed text-ink-soft">{f.a}</p>
             </details>

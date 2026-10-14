@@ -8,8 +8,8 @@ import { CalculatorCard } from "./CalculatorCard";
 
 export function FormulaBlock({ c }: { c: CalculatorMeta }) {
   return (
-    <section aria-labelledby="formula-title" className="print-break rounded-2xl border border-line bg-inverse p-6 text-on-inverse sm:p-8">
-      <p className="eyebrow text-accent-bright">Formula</p>
+    <section aria-labelledby="formula-title" className="panel-band print-break rounded-3xl p-6 shadow-lift sm:p-8">
+      <p className="eyebrow text-star-text">Formula</p>
       <h2 id="formula-title" className="mt-1 text-xl font-semibold text-on-inverse">How the numbers are calculated</h2>
       <dl className="mt-5 grid gap-4 sm:grid-cols-2">
         {c.formula.map((f) => (

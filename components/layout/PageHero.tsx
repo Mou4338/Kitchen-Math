@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { Sparkles } from "lucide-react";
 import type { ReactNode } from "react";
 import { Breadcrumbs } from "@/components/layout/Breadcrumbs";
 import type { Photo } from "@/lib/content/images";
@@ -32,7 +33,7 @@ export function PageHero({
         <Breadcrumbs items={crumbs} onDark />
         <div className="mt-6 max-w-3xl text-on-inverse">
           <p className="inline-flex items-center gap-2 rounded-full border border-on-inverse/20 bg-on-inverse/10 px-3.5 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-accent-bright backdrop-blur">
-            {eyebrow}
+            <Sparkles className="h-3.5 w-3.5 shrink-0 text-star" aria-hidden /> {eyebrow}
           </p>
           <h1 className="mt-5 text-[2.2rem] font-semibold leading-[1.06] text-on-inverse sm:text-5xl lg:text-[3.4rem]">
             <span className="text-accent-bright">{title}</span>

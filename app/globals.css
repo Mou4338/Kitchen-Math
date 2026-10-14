@@ -151,7 +151,7 @@
   }
   /* Red drop shadow, shaped like the example card's black one: soft, wide, falling mostly below. */
   .red-edge-glow {
-    box-shadow: 0 34px 70px -20px rgb(var(--accent) / 0.45), 0 12px 28px -10px rgb(var(--accent) / 0.3);
+    box-shadow: 0 22px 44px -26px rgb(var(--accent) / 0.28), 0 8px 18px -12px rgb(var(--accent) / 0.16);
   }
   /* Zomato red → Swiggy saffron: used sparingly as the "both platforms" accent. */
   .brand-gradient { background-image: linear-gradient(120deg, rgb(var(--accent)) 0%, rgb(var(--accent)) 35%, rgb(var(--star)) 100%); }
@@ -163,6 +163,86 @@
     background-image: linear-gradient(90deg, rgb(var(--logo-from)) 0%, rgb(var(--logo-from)) 12%, rgb(var(--logo-to)) 78%, rgb(var(--logo-to)) 100%);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  /* ---------- Shared building blocks so every page matches the home page ---------- */
+  /* Card that lifts with a saffron edge and glow on hover (same as the service cards) */
+  .card-glow { transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+  .card-glow:hover {
+    transform: translateY(-4px);
+    border-color: rgb(var(--star) / 0.6);
+    box-shadow: 0 0 0 1px rgb(var(--star) / 0.35), 0 26px 50px -22px rgb(var(--star) / 0.6);
+  }
+  /* White-to-saffron icon tile with a red icon (same as the free-tools tiles) */
+  .icon-tile {
+    background: linear-gradient(135deg, #FFFFFF 0%, #FFFFFF 50%, #FDE3BA 100%);
+    color: rgb(var(--accent));
+    box-shadow: 0 8px 18px -10px rgb(0 0 0 / 0.7);
+  }
+  /* Section with fine grid lines (no glow) */
+  /* overflow: clip (not hidden) so sticky result panels inside still stick while scrolling */
+  .section-warm { position: relative; isolation: isolate; overflow: clip; background-color: rgb(var(--wash)); }
+  .section-warm::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgb(var(--ink) / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--ink) / 0.05) 1px, transparent 1px);
+    background-size: 84px 84px;
+    -webkit-mask-image: radial-gradient(90% 80% at 50% 40%, #000 35%, transparent 100%);
+    mask-image: radial-gradient(90% 80% at 50% 40%, #000 35%, transparent 100%);
+  }
+  /* Dark-to-red sheen panel with grid lines (same as "How we work") — for full sections or rounded boxes */
+  .panel-band {
+    position: relative; isolation: isolate; overflow: hidden; color: rgb(var(--on-inverse));
+    background:
+      radial-gradient(70% 90% at 100% 0%, rgb(var(--hero-a) / 0.42), transparent 65%),
+      linear-gradient(105deg, rgb(var(--inverse)) 0%, rgb(var(--inverse)) 38%, rgb(var(--hero-b) / 0.85) 100%);
+  }
+  .panel-band::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgb(var(--on-inverse) / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--on-inverse) / 0.06) 1px, transparent 1px);
+    background-size: 84px 84px;
+  }
+  /* Red band with grid lines and a saffron corner glow (same as the free-tools band) */
+  .panel-red {
+    position: relative; isolation: isolate; overflow: hidden; color: rgb(var(--accent-ink));
+    background:
+      radial-gradient(45% 60% at 100% 0%, rgb(var(--star) / 0.55), transparent 70%),
+      radial-gradient(35% 45% at 0% 100%, rgb(var(--star) / 0.25), transparent 70%),
+      linear-gradient(135deg, rgb(var(--accent)) 0%, rgb(var(--accent)) 60%, color-mix(in srgb, rgb(var(--accent)) 80%, black) 100%);
+  }
+  .panel-red::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+    background-size: 84px 84px;
+  }
+  /* Solid Zomato-red panel with grid lines, no gradient */
+  .panel-solid-red { position: relative; isolation: isolate; overflow: hidden; color: #FFFFFF; background-color: rgb(var(--accent)); }
+  .panel-solid-red::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+    background-image:
+      linear-gradient(rgb(255 255 255 / 0.12) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.12) 1px, transparent 1px);
+    background-size: 84px 84px;
+  }
+  /* Glass button for dark photo banners and dark panels */
+  .btn-glass {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem; height: 3rem; padding: 0 1.25rem;
+    border-radius: .75rem; font-weight: 500; color: rgb(var(--on-inverse));
+    border: 1px solid rgb(var(--on-inverse) / 0.3); background: rgb(var(--inverse) / 0.3);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+    box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.8); transition: background .2s, transform .2s;
+  }
+  .btn-glass:hover { background: rgb(var(--on-inverse) / 0.12); transform: translateY(-1px); }
+  /* White button for red panels */
+  .btn-white {
+    display: inline-flex; align-items: center; justify-content: center; gap: .5rem; height: 3rem; padding: 0 1.5rem;
+    border-radius: .75rem; font-weight: 600; background: #FFFFFF; color: rgb(var(--accent));
+    box-shadow: 0 14px 30px -12px rgb(0 0 0 / 0.55); transition: transform .2s;
+  }
+  .btn-white:hover { transform: translateY(-2px); }
   .grid-dots {
     background-image: radial-gradient(rgb(var(--ink) / 0.07) 1px, transparent 1px);
     background-size: 22px 22px;

@@ -38,7 +38,7 @@ export function CalculatorPage({ meta, children }: { meta: CalculatorMeta; child
           <a href="#calculator" className={buttonClass("accent", "lg")}>
             Start calculating <ArrowDown className="h-4 w-4" aria-hidden />
           </a>
-          <Link href="/restaurant/help" className="inline-flex h-12 items-center gap-2 rounded-xl border border-on-inverse/30 px-5 font-medium text-on-inverse transition hover:bg-on-inverse/10">
+          <Link href="/restaurant/help" className="btn-glass">
             <BookOpen className="h-4 w-4" aria-hidden /> How to use
           </Link>
         </div>
@@ -49,7 +49,8 @@ export function CalculatorPage({ meta, children }: { meta: CalculatorMeta; child
         </ul>
       </PageHero>
 
-      <div id="calculator" className="container scroll-mt-20 pb-28 pt-8 lg:pb-8">
+      <div>
+      <div id="calculator" className="container scroll-mt-20 pb-28 pt-8 lg:pb-16">
         <div className="flex flex-col gap-10">
           <HowToUse slug={meta.slug} steps={meta.howTo} />
           {children}
@@ -58,6 +59,7 @@ export function CalculatorPage({ meta, children }: { meta: CalculatorMeta; child
           <FaqBlock faqs={meta.faqs} />
           <RelatedCalculators c={meta} />
         </div>
+      </div>
       </div>
       <JsonLd data={calculatorAppSchema(meta)} />
     </>
