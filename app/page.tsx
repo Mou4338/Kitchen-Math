@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ArrowRight, Calculator, ClipboardCheck, Check, Mail, MapPin, MessageCircle, Phone, Repeat, ShoppingBag, Sparkles, TrendingUp, Users, X, Equal,
+  ArrowRight, Calculator, ClipboardCheck, Check, Clock, ShieldCheck, Mail, MapPin, MessageCircle, Phone, Repeat, ShoppingBag, Sparkles, TrendingUp, Users, X, Equal,
 } from "lucide-react";
 import { ContactForm } from "@/components/company/ContactForm";
 import { HeroBackdrop } from "@/components/company/HeroBackdrop";
@@ -155,10 +155,21 @@ export default function CompanyHome() {
       {/* 4 · SERVICES (warm wash) */}
       <section id="services" className="relative isolate scroll-mt-20 overflow-hidden bg-wash py-16 sm:py-24">
         <div className="grid-lines grid-fade absolute inset-0 -z-10" aria-hidden />
-        <div className="pointer-events-none absolute -right-32 -top-32 -z-10 h-96 w-96 rounded-full bg-accent/10 blur-3xl" aria-hidden />
-        {/* Saffron glow falling from the top, with a fine saffron line on the top edge */}
-        <div className="pointer-events-none absolute inset-0 -z-10 [background:radial-gradient(65%_32%_at_50%_0%,rgb(var(--star)/0.22),transparent_75%)]" aria-hidden />
+        {/* Giant outline words drifting slowly left → right behind the heading */}
+        <div className="contact-marquee pointer-events-none absolute inset-x-0 top-6 -z-10 overflow-hidden sm:top-10" aria-hidden>
+          <div className="marquee-track marquee-reverse">
+            {[0, 1].map((k) => (
+              <span key={k} className="outline-text flex shrink-0 items-center gap-10 pr-10 text-[72px] font-extrabold uppercase leading-none tracking-tight sm:text-[132px]">
+                {["Menu", "Pricing", "Ads", "Conversion", "Ratings", "Local market"].map((w) => (
+                  <span key={w} className="flex items-center gap-10 whitespace-nowrap">{w}<span className="text-[0.4em]">✦</span></span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+        {/* Fine saffron line on the top and bottom edges (no glow) */}
         <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
             <p className="eyebrow text-star-dark">What we do</p>
@@ -273,9 +284,10 @@ export default function CompanyHome() {
         />
       </section>
 
-      {/* 11 · CONTACT: top-to-bottom fade, red → black */}
-      <section id="contact" className="contact-fade relative isolate -mb-20 scroll-mt-20 overflow-hidden py-16 sm:py-24">
-        <div className="grid-lines grid-lines-inverse absolute inset-0 -z-10" aria-hidden />
+      {/* 11 · CONTACT: charcoal band with a soft ivory spotlight and a saffron hairline; two saffron-framed cards */}
+      <section id="contact" className="contact-graphite relative isolate -mb-20 scroll-mt-20 overflow-hidden py-16 sm:py-24">
+        <div className="grid-lines grid-lines-inverse grid-vignette absolute inset-0 -z-10" aria-hidden />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-star/60 to-transparent" aria-hidden />
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
             <p className="eyebrow text-star-text">Get in touch</p>
@@ -284,43 +296,53 @@ export default function CompanyHome() {
           </Reveal>
           <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
             <Reveal>
-              <div className="red-edge-glow flex h-full flex-col overflow-hidden rounded-3xl border border-white/10 bg-card/85 backdrop-blur-xl">
-                {/* Bright photo, only a light fade at the bottom edge so it stays vivid */}
-                <div className="relative aspect-[16/10] w-full overflow-hidden">
+              <div className="saffron-solid flex h-full flex-col overflow-hidden rounded-3xl">
+                <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-black/15">
                   <Image src={COMPANY_IMAGES.contact.src} alt={COMPANY_IMAGES.contact.alt} fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[rgb(var(--shade)/0.45)] via-transparent to-transparent" aria-hidden />
-                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full bg-[rgb(var(--shade)/0.55)] px-3.5 py-1.5 text-xs font-semibold text-[rgb(var(--shade-ink))] backdrop-blur">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" aria-hidden />
+                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
                     <span className="h-2 w-2 rounded-full bg-star" aria-hidden /> Free · no obligation
                   </span>
                 </div>
                 <div className="p-6 sm:p-8">
-                  <p className="eyebrow text-star-dark">How it works</p>
-                  <ol className="mt-4 grid gap-4">
+                  <p className="inline-flex items-center gap-2 rounded-full bg-[#0F0A06] px-3.5 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-star shadow-[0_8px_18px_-10px_rgb(0_0_0/0.7)]"><Sparkles className="h-3.5 w-3.5" aria-hidden />How it works</p>
+                  <ol className="relative mt-5 grid gap-3">
+                    <span className="absolute bottom-8 left-[33px] top-8 w-px border-l border-dashed border-black/35" aria-hidden />
                     {[
                       ["Tell us about your restaurant", "Takes about a minute."],
                       ["We review your numbers", "Menu, pricing, ads, conversion, ratings and competitors."],
                       ["Get your starting point", "Your biggest growth constraint and what to fix first."],
                     ].map(([t, d], i) => (
-                      <li key={t} className="flex gap-4">
-                        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line-strong bg-wash text-sm font-bold text-star-dark">{i + 1}</span>
-                        <span><span className="block font-semibold">{t}</span><span className="block text-sm text-muted">{d}</span></span>
+                      <li key={t} className="saffron-glass relative flex items-center gap-4 rounded-2xl p-3.5 pr-4">
+                        <span className="ink-badge relative grid h-10 w-10 shrink-0 place-items-center rounded-full font-serif text-lg italic">{i + 1}</span>
+                        <span><span className="block text-[17px] font-bold text-[#0F0A06]">{t}</span><span className="block text-[15px] font-medium text-[#0F0A06]/85">{d}</span></span>
                       </li>
                     ))}
                   </ol>
-                  <ul className="mt-6 grid gap-2 border-t border-line pt-6 text-sm">
-                    <li><a href={`mailto:${c.email}`} className="flex items-center gap-3 rounded-xl px-2 py-2 text-ink-soft transition hover:bg-wash hover:text-ink"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-wash text-accent-dark"><Mail className="h-4 w-4" aria-hidden /></span>{c.email}</a></li>
-                    {c.phone ? <li><a href={`tel:${c.phone.replace(/\s/g, "")}`} className="flex items-center gap-3 rounded-xl px-2 py-2 text-ink-soft transition hover:bg-wash hover:text-ink"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-wash text-accent-dark"><Phone className="h-4 w-4" aria-hidden /></span>{c.phone}</a></li> : null}
-                    {c.whatsapp ? <li><a href={`https://wa.me/${c.whatsapp}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl px-2 py-2 text-ink-soft transition hover:bg-wash hover:text-ink"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-wash text-accent-dark"><MessageCircle className="h-4 w-4" aria-hidden /></span>Chat on WhatsApp</a></li> : null}
-                    <li><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`} target="_blank" rel="noopener noreferrer" className="flex items-start gap-3 rounded-xl px-2 py-2 text-ink-soft transition hover:bg-wash hover:text-ink"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-wash text-accent-dark"><MapPin className="h-4 w-4" aria-hidden /></span><span className="pt-1.5 leading-relaxed">{c.address}</span></a></li>
+                  <ul className="mt-6 grid gap-2.5 border-t border-dashed border-black/30 pt-6 text-sm">
+                    <li><a href={`mailto:${c.email}`} className="saffron-glass group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><Mail className="h-4 w-4" aria-hidden /></span>{c.email}</a></li>
+                    {c.phone ? <li><a href={`tel:${c.phone.replace(/\s/g, "")}`} className="saffron-glass group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><Phone className="h-4 w-4" aria-hidden /></span>{c.phone}</a></li> : null}
+                    {c.whatsapp ? <li><a href={`https://wa.me/${c.whatsapp}`} target="_blank" rel="noopener noreferrer" className="saffron-glass group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><MessageCircle className="h-4 w-4" aria-hidden /></span>Chat on WhatsApp</a></li> : null}
+                    <li><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`} target="_blank" rel="noopener noreferrer" className="saffron-glass group flex items-start gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><MapPin className="h-4 w-4" aria-hidden /></span><span className="pt-1.5 leading-relaxed">{c.address}</span></a></li>
                   </ul>
                 </div>
               </div>
             </Reveal>
             <Reveal delay={0.1}>
-              <div className="red-edge-glow rounded-3xl border border-white/10 bg-card/85 p-6 backdrop-blur-xl sm:p-10">
-                <h3 className="text-2xl font-bold">Tell us about your restaurant</h3>
-                <p className="mt-1 text-sm text-muted">We reply by phone, WhatsApp or email.</p>
-                <div className="mt-6 border-t border-line pt-6"><ContactForm /></div>
+              <div className="saffron-solid h-full rounded-3xl p-6 sm:p-10">
+                <div className="flex items-start gap-4">
+                  <span className="ink-badge grid h-12 w-12 shrink-0 place-items-center rounded-2xl"><ClipboardCheck className="h-5 w-5" aria-hidden /></span>
+                  <div>
+                    <h3 className="text-2xl font-extrabold text-[#0F0A06] sm:text-[28px]">Tell us about your restaurant</h3>
+                    <p className="mt-1 text-[15px] font-medium text-[#0F0A06]/80">We reply by phone, WhatsApp or email.</p>
+                  </div>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {["Free", "No obligation", "1 business day reply"].map((t) => (
+                    <span key={t} className="saffron-glass inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-[#0F0A06]"><Check className="h-3.5 w-3.5" aria-hidden />{t}</span>
+                  ))}
+                </div>
+                <div className="mt-6 border-t border-dashed border-black/30 pt-6"><ContactForm tone="saffron" /></div>
               </div>
             </Reveal>
           </div>

@@ -149,6 +149,89 @@
       rgb(var(--inverse)) 42%,
       rgb(var(--inverse)) 100%);
   }
+  /* Home contact band: warm graphite, a step lighter than black, so it reads as its own band between the red sections. */
+  .contact-graphite {
+    background:
+      radial-gradient(55% 38% at 50% 0%, rgb(242 241 236 / 0.08), transparent 70%),
+      linear-gradient(180deg, #121014 0%, #0C0B0E 100%);
+  }
+  /* Contact boxes: smoked-glass panel with a light hairline edge that fades top to bottom, deep black shadow. No colour glow. */
+  .recessed-card {
+    border: 1px solid transparent;
+    background:
+      linear-gradient(180deg, #19171B 0%, #0E0D10 55%, #0B0A0C 100%) padding-box,
+      linear-gradient(180deg, rgb(255 255 255 / 0.24) 0%, rgb(255 255 255 / 0.06) 45%, rgb(255 255 255 / 0.03) 80%, rgb(255 255 255 / 0.10) 100%) border-box;
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 40px 80px -40px rgb(0 0 0 / 0.95), 0 16px 32px -18px rgb(0 0 0 / 0.8);
+  }
+  /* Viewfinder-style saffron corner brackets, top-left and bottom-right, sitting just outside a card. */
+  .corner-frame { position: relative; }
+  .corner-frame::before, .corner-frame::after {
+    content: ""; position: absolute; width: 28px; height: 28px; pointer-events: none; z-index: 1;
+  }
+  .corner-frame::before { top: -10px; left: -10px; border-top: 2px solid rgb(var(--star)); border-left: 2px solid rgb(var(--star)); border-top-left-radius: 12px; }
+  .corner-frame::after { bottom: -10px; right: -10px; border-bottom: 2px solid rgb(var(--star)); border-right: 2px solid rgb(var(--star)); border-bottom-right-radius: 12px; }
+  /* Contact rings: fade out towards the bottom so they only frame the heading. */
+  .contact-rings {
+    -webkit-mask-image: linear-gradient(180deg, black 30%, transparent 75%);
+    mask-image: linear-gradient(180deg, black 30%, transparent 75%);
+  }
+  /* Giant outline words drifting slowly behind the contact heading */
+  .contact-marquee {
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 15%, black 85%, transparent);
+  }
+  .marquee-track { display: flex; width: max-content; animation: km-marquee 70s linear infinite; }
+  .marquee-reverse { animation-direction: reverse; }
+  @keyframes km-marquee { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+  .outline-text { color: transparent; -webkit-text-stroke: 1px rgb(255 255 255 / 0.10); }
+  /* Half-circle "ticket" cut-outs where the perforated divider meets the panel edge */
+  .ticket-notch {
+    position: absolute; z-index: 2; width: 28px; height: 28px; border-radius: 9999px;
+    background: #0F0E11; box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.10);
+  }
+  /* Contact cards: 1px saffron frame, a faint warm saffron wash at the top fading into charcoal, black shadow (no glow). */
+  .saffron-card {
+    border: 1px solid rgb(var(--star) / 0.55);
+    background: linear-gradient(180deg, rgb(var(--star) / 0.08) 0%, #141216 30%, #0E0D10 100%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 40px 80px -40px rgb(0 0 0 / 0.95), 0 16px 32px -18px rgb(0 0 0 / 0.8);
+  }
+  /* Solid saffron card (left contact box): warm saffron with a faint white grid and a soft top highlight, dark ink text. */
+  .saffron-solid {
+    color: #1A1210;
+    border: 1px solid #F7C77A;
+    background:
+      radial-gradient(60% 35% at 12% 0%, rgb(255 255 255 / 0.32), transparent 70%),
+      radial-gradient(50% 30% at 100% 100%, rgb(160 80 10 / 0.22), transparent 70%),
+      linear-gradient(rgb(255 255 255 / 0.10) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(90deg, rgb(255 255 255 / 0.10) 1px, transparent 1px) 0 0 / 48px 48px,
+      linear-gradient(180deg, #F5B24A 0%, #F2A93B 45%, #E2952A 100%);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.35), 0 40px 80px -40px rgb(0 0 0 / 0.95), 0 16px 32px -18px rgb(0 0 0 / 0.8);
+  }
+  /* Frosted ivory row on the saffron cards */
+  .saffron-glass {
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.42), rgb(255 255 255 / 0.18));
+    border: 1px solid rgb(255 255 255 / 0.55);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.6), 0 10px 22px -14px rgb(90 45 0 / 0.55);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease;
+  }
+  .saffron-glass:hover {
+    transform: translateY(-2px);
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.55), rgb(255 255 255 / 0.28));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.7), 0 16px 28px -14px rgb(90 45 0 / 0.6);
+  }
+  /* Black badge with a saffron numeral/icon and a thin inner ring */
+  .ink-badge {
+    background: radial-gradient(circle at 30% 25%, #2A2018, #0F0A06 70%);
+    color: rgb(var(--star));
+    box-shadow: inset 0 0 0 1px rgb(242 169 59 / 0.35), 0 8px 16px -8px rgb(0 0 0 / 0.6);
+  }
+  /* Grid that fades out towards the section edges. */
+  .grid-vignette {
+    -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 35%, transparent 100%);
+    mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, black 35%, transparent 100%);
+  }
   /* Red drop shadow, shaped like the example card's black one: soft, wide, falling mostly below. */
   .red-edge-glow {
     box-shadow: 0 22px 44px -26px rgb(var(--accent) / 0.28), 0 8px 18px -12px rgb(var(--accent) / 0.16);
