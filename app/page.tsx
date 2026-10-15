@@ -294,17 +294,17 @@ export default function CompanyHome() {
             <h2 className="mt-2 text-4xl font-bold text-on-inverse sm:text-5xl">Book a free <span className="font-serif font-normal italic text-star-text">growth audit</span></h2>
             <p className="mt-4 text-on-inverse/80">Tell us about your restaurant. We&apos;ll look for your biggest growth constraint and suggest where to start.</p>
           </Reveal>
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-10">
+          <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
             <Reveal>
               <div className="saffron-solid flex h-full flex-col overflow-hidden rounded-3xl">
-                <div className="relative aspect-[16/10] w-full overflow-hidden border-b border-black/15">
+                <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-black/15">
                   <Image src={COMPANY_IMAGES.contact.src} alt={COMPANY_IMAGES.contact.alt} fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" aria-hidden />
                   <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
                     <span className="h-2 w-2 rounded-full bg-star" aria-hidden /> Free · no obligation
                   </span>
                 </div>
-                <div className="p-6 sm:p-8">
+                <div className="p-5 sm:p-7">
                   <p className="inline-flex items-center gap-2 rounded-full bg-[#0F0A06] px-3.5 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-star shadow-[0_8px_18px_-10px_rgb(0_0_0/0.7)]"><Sparkles className="h-3.5 w-3.5" aria-hidden />How it works</p>
                   <ol className="relative mt-5 grid gap-3">
                     <span className="absolute bottom-8 left-[33px] top-8 w-px border-l border-dashed border-black/35" aria-hidden />
@@ -329,11 +329,11 @@ export default function CompanyHome() {
               </div>
             </Reveal>
             <Reveal delay={0.1}>
-              <div className="saffron-solid h-full rounded-3xl p-6 sm:p-10">
+              <div className="saffron-solid h-full rounded-3xl p-5 sm:p-8">
                 <div className="flex items-start gap-4">
                   <span className="ink-badge grid h-12 w-12 shrink-0 place-items-center rounded-2xl"><ClipboardCheck className="h-5 w-5" aria-hidden /></span>
                   <div>
-                    <h3 className="text-2xl font-extrabold text-[#0F0A06] sm:text-[28px]">Tell us about your restaurant</h3>
+                    <h3 className="text-xl font-extrabold text-[#0F0A06] sm:text-2xl">Tell us about your restaurant</h3>
                     <p className="mt-1 text-[15px] font-medium text-[#0F0A06]/80">We reply by phone, WhatsApp or email.</p>
                   </div>
                 </div>

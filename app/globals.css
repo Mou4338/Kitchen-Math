@@ -302,7 +302,13 @@
     background-size: 84px 84px;
   }
   /* Solid Zomato-red panel with grid lines, no gradient */
-  .panel-solid-red { position: relative; isolation: isolate; overflow: hidden; color: #FFFFFF; background-color: rgb(var(--accent)); }
+  /* Helpline box: Zomato red flowing diagonally into deep wine and near-black, with the white grid on top. */
+  .panel-solid-red {
+    position: relative; isolation: isolate; overflow: hidden; color: #FFFFFF;
+    background:
+      radial-gradient(70% 90% at 0% 0%, rgb(255 255 255 / 0.12), transparent 60%),
+      linear-gradient(125deg, rgb(var(--accent)) 0%, #B8222F 38%, #6A1520 72%, #2A0A0E 100%);
+  }
   .panel-solid-red::before {
     content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
     background-image:
