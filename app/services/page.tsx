@@ -51,9 +51,9 @@ export default function ServicesPage() {
             <section key={s.id} id={s.id} className="scroll-mt-36" aria-labelledby={`${s.id}-t`}>
               <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
                 <Reveal className={i % 2 ? "lg:order-2" : ""}>
-                  <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-inverse shadow-lift">
-                    <Image src={s.image.src} alt={s.image.alt} fill sizes="(min-width: 1024px) 50vw, 100vw" className="object-cover transition-transform duration-700 hover:scale-105" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-inverse/60 to-transparent" aria-hidden />
+                  <div className={`relative aspect-[4/3] overflow-hidden rounded-3xl shadow-lift ${s.image.src.startsWith("/") ? "border border-line bg-[#FBF6F2]" : "bg-inverse"}`}>
+                    <Image src={s.image.src} alt={s.image.alt} fill unoptimized={s.image.src.startsWith("/")} sizes="(min-width: 1024px) 50vw, 100vw" className={`object-cover transition-transform duration-700 ${s.image.src.startsWith("/") ? "hover:scale-[1.02]" : "hover:scale-105"}`} />
+                    {!s.image.src.startsWith("/") && <div className="absolute inset-0 bg-gradient-to-t from-inverse/60 to-transparent" aria-hidden />}
                     <span className="brand-gradient-text absolute bottom-5 left-5 font-serif text-6xl italic">{s.number}</span>
                   </div>
                 </Reveal>

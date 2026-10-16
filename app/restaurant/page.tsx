@@ -3,7 +3,6 @@ import { ArrowRight, Calculator, IndianRupee, Lock, UserX } from "lucide-react";
 import { CalculatorCard } from "@/components/content/CalculatorCard";
 import { HeroSlider } from "@/components/home/HeroSlider";
 import { PhotoGallery } from "@/components/home/PhotoGallery";
-import { WelcomeSection } from "@/components/home/WelcomeSection";
 import { PrivacyShield, StepAnalyze, StepEnter, StepSave } from "@/components/illustrations/Illustrations";
 import { buttonClass } from "@/components/ui/Button";
 import { JsonLd } from "@/components/ui/JsonLd";
@@ -54,7 +53,6 @@ export default function RestaurantHome() {
         </Reveal>
       </div>
 
-      <WelcomeSection />
 
       {/* Our calculators (services-style grid) */}
       <section id="tools" className="section-warm scroll-mt-20 py-16 sm:py-24">

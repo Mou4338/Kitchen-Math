@@ -52,12 +52,11 @@ export function HeroSlider() {
         setTouchX(null);
       }}
     >
-      {/* Photos (cross-fade) */}
-      {HERO_SLIDES.map((s, i) => (
-        <div key={s.src} className={cn("absolute inset-0 -z-10 transition-opacity duration-1000", i === index ? "opacity-100" : "opacity-0")} aria-hidden={i !== index}>
-          <Image src={s.src} alt={s.alt} fill priority={i === 0} sizes="100vw" className={cn("object-cover transition-transform duration-[7000ms] ease-out", i === index ? "scale-105" : "scale-100")} />
-        </div>
-      ))}
+      {/* One static photo for every slide (only the home page hero rotates photos) */}
+      <div className="absolute inset-0 -z-10" aria-hidden>
+        <Image src={HERO_SLIDES[0].src} alt="" fill priority sizes="100vw" className="object-cover" />
+        {HERO_SLIDES[0].fadeRight ? <div className="absolute inset-y-0 right-0 w-2/5 bg-gradient-to-l from-black via-black/90 to-transparent" /> : null}
+      </div>
       {/* Brand overlay: black */}
       <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/25" aria-hidden />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/70 via-transparent to-transparent" aria-hidden />

@@ -13,6 +13,7 @@ import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Reveal } from "@/components/ui/Motion";
 import { CALCULATORS } from "@/lib/content/calculators";
+import { WELCOME_PHOTO } from "@/lib/content/images";
 import { COMPANY_IMAGES, GROWTH_EQUATION, PROCESS, SERVICES } from "@/lib/content/company";
 import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
@@ -112,8 +113,10 @@ export default function CompanyHome() {
           <Reveal>
             <div className="relative mx-auto aspect-[5/4] w-full max-w-[560px]">
               <div className="absolute inset-0 overflow-hidden rounded-3xl bg-inverse shadow-lift">
-                <Image src={COMPANY_IMAGES.team.src} alt={COMPANY_IMAGES.team.alt} fill sizes="(min-width: 1024px) 560px, 90vw" className="object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-t from-inverse/30 to-transparent" aria-hidden />
+                <Image src={WELCOME_PHOTO.src} alt={WELCOME_PHOTO.alt} fill sizes="(min-width: 1024px) 560px, 90vw" className="object-cover object-top" />
+                {/* duotone tint, same as the photo used on the Tools page before */}
+                <div className="absolute inset-0 bg-accent/20 mix-blend-color" aria-hidden />
+                <div className="absolute inset-0 bg-gradient-to-tr from-inverse/40 to-transparent" aria-hidden />
               </div>
               <div className="absolute -bottom-8 -right-2 aspect-square w-[42%] overflow-hidden rounded-3xl border-4 border-paper shadow-lift sm:-right-6">
                 <Image src={COMPANY_IMAGES.dish.src} alt={COMPANY_IMAGES.dish.alt} fill sizes="240px" className="object-cover" />
@@ -122,6 +125,15 @@ export default function CompanyHome() {
                 <p className="eyebrow">Framework</p>
                 <p className="text-2xl font-bold text-accent">6 services</p>
                 <p className="text-xs text-muted">Menu to local market</p>
+              </div>
+              <div className="absolute -right-2 top-6 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-right-6">
+                <p className="eyebrow">Profit / order</p>
+                <p className="tabular text-2xl font-bold text-accent">₹66.75</p>
+              </div>
+              <div className="absolute -left-2 bottom-6 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">
+                <p className="eyebrow">Menu price</p>
+                <p className="tabular text-2xl font-bold text-sage-dark">₹333.76</p>
+                <p className="text-xs text-muted">Example · 20% margin</p>
               </div>
             </div>
           </Reveal>
@@ -284,7 +296,7 @@ export default function CompanyHome() {
         />
       </section>
 
-      {/* 11 · CONTACT: charcoal band with a soft ivory spotlight and a saffron hairline; two saffron-framed cards */}
+      {/* 11 · CONTACT: charcoal band with a soft ivory spotlight and a saffron hairline; one split card */}
       <section id="contact" className="contact-graphite relative isolate -mb-20 scroll-mt-20 overflow-hidden py-16 sm:py-24">
         <div className="grid-lines grid-lines-inverse grid-vignette absolute inset-0 -z-10" aria-hidden />
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-star/60 to-transparent" aria-hidden />
@@ -294,58 +306,63 @@ export default function CompanyHome() {
             <h2 className="mt-2 text-4xl font-bold text-on-inverse sm:text-5xl">Book a free <span className="font-serif font-normal italic text-star-text">growth audit</span></h2>
             <p className="mt-4 text-on-inverse/80">Tell us about your restaurant. We&apos;ll look for your biggest growth constraint and suggest where to start.</p>
           </Reveal>
-          <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-8">
-            <Reveal>
-              <div className="saffron-solid flex h-full flex-col overflow-hidden rounded-3xl">
-                <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-black/15">
-                  <Image src={COMPANY_IMAGES.contact.src} alt={COMPANY_IMAGES.contact.alt} fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" aria-hidden />
-                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
+          {/* One split card (template style) with the red → saffron highlight on its top and bottom edges:
+              dark panel with the photo, steps and contact rows on the left, dark form panel on the right. */}
+          <Reveal>
+            <div className="contact-card mx-auto grid max-w-5xl overflow-hidden rounded-[28px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+              {/* Left: photo fading into charcoal, saffron-glass steps and contact rows */}
+              <div className="relative flex flex-col">
+                <div className="relative aspect-[16/9] w-full overflow-hidden">
+                  <Image src={COMPANY_IMAGES.contact.src} alt={COMPANY_IMAGES.contact.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#161518] via-[#161518]/10 to-transparent" aria-hidden />
+                  <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/60 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur">
                     <span className="h-2 w-2 rounded-full bg-star" aria-hidden /> Free · no obligation
                   </span>
                 </div>
-                <div className="p-5 sm:p-7">
-                  <p className="inline-flex items-center gap-2 rounded-full bg-[#0F0A06] px-3.5 py-1.5 text-[12px] font-bold uppercase tracking-[0.16em] text-star shadow-[0_8px_18px_-10px_rgb(0_0_0/0.7)]"><Sparkles className="h-3.5 w-3.5" aria-hidden />How it works</p>
+                <div className="flex flex-1 flex-col p-5 sm:p-7">
+                  <p className="eyebrow inline-flex items-center gap-2 text-star-text"><Sparkles className="h-3.5 w-3.5" aria-hidden />How it works</p>
                   <ol className="relative mt-5 grid gap-3">
-                    <span className="absolute bottom-8 left-[33px] top-8 w-px border-l border-dashed border-black/35" aria-hidden />
+                    <span className="absolute bottom-8 left-[33px] top-8 w-px border-l border-dashed border-star/50" aria-hidden />
                     {[
                       ["Tell us about your restaurant", "Takes about a minute."],
                       ["We review your numbers", "Menu, pricing, ads, conversion, ratings and competitors."],
                       ["Get your starting point", "Your biggest growth constraint and what to fix first."],
                     ].map(([t, d], i) => (
-                      <li key={t} className="saffron-glass relative flex items-center gap-4 rounded-2xl p-3.5 pr-4">
-                        <span className="ink-badge relative grid h-10 w-10 shrink-0 place-items-center rounded-full font-serif text-lg italic">{i + 1}</span>
-                        <span><span className="block text-[17px] font-bold text-[#0F0A06]">{t}</span><span className="block text-[15px] font-medium text-[#0F0A06]/85">{d}</span></span>
+                      <li key={t} className="contact-row relative flex items-center gap-4 rounded-2xl p-3.5 pr-4">
+                        <span className="contact-icon relative grid h-10 w-10 shrink-0 place-items-center rounded-full font-serif text-lg italic">{i + 1}</span>
+                        <span><span className="block text-[16px] font-bold text-white">{t}</span><span className="block text-[14px] text-white/80">{d}</span></span>
                       </li>
                     ))}
                   </ol>
-                  <ul className="mt-6 grid gap-2.5 border-t border-dashed border-black/30 pt-6 text-sm">
-                    <li><a href={`mailto:${c.email}`} className="saffron-glass group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><Mail className="h-4 w-4" aria-hidden /></span>{c.email}</a></li>
-                    {c.phone ? <li><a href={`tel:${c.phone.replace(/\s/g, "")}`} className="saffron-glass group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><Phone className="h-4 w-4" aria-hidden /></span>{c.phone}</a></li> : null}
-                    {c.whatsapp ? <li><a href={`https://wa.me/${c.whatsapp}`} target="_blank" rel="noopener noreferrer" className="saffron-glass group flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><MessageCircle className="h-4 w-4" aria-hidden /></span>Chat on WhatsApp</a></li> : null}
-                    <li><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`} target="_blank" rel="noopener noreferrer" className="saffron-glass group flex items-start gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-[#0F0A06]"><span className="grid h-9 w-9 shrink-0 place-items-center ink-badge rounded-xl"><MapPin className="h-4 w-4" aria-hidden /></span><span className="pt-1.5 leading-relaxed">{c.address}</span></a></li>
+                  <hr className="contact-divider mt-6" aria-hidden />
+                  <ul className="mt-6 grid gap-2.5 text-sm">
+                    <li><a href={`mailto:${c.email}`} className="contact-link flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-white"><span className="contact-icon grid h-9 w-9 shrink-0 place-items-center rounded-xl"><Mail className="h-4 w-4" aria-hidden /></span>{c.email}</a></li>
+                    {c.phone ? <li><a href={`tel:${c.phone.replace(/\s/g, "")}`} className="contact-link flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-white"><span className="contact-icon grid h-9 w-9 shrink-0 place-items-center rounded-xl"><Phone className="h-4 w-4" aria-hidden /></span>{c.phone}</a></li> : null}
+                    {c.whatsapp ? <li><a href={`https://wa.me/${c.whatsapp}`} target="_blank" rel="noopener noreferrer" className="contact-link flex items-center gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-white"><span className="contact-icon grid h-9 w-9 shrink-0 place-items-center rounded-xl"><MessageCircle className="h-4 w-4" aria-hidden /></span>Chat on WhatsApp</a></li> : null}
+                    <li><a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(c.address)}`} target="_blank" rel="noopener noreferrer" className="contact-link flex items-start gap-3 rounded-2xl px-3 py-2.5 text-[15px] font-semibold text-white"><span className="contact-icon grid h-9 w-9 shrink-0 place-items-center rounded-xl"><MapPin className="h-4 w-4" aria-hidden /></span><span className="pt-1.5 leading-relaxed">{c.address}</span></a></li>
                   </ul>
                 </div>
               </div>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <div className="saffron-solid h-full rounded-3xl p-5 sm:p-8">
+              {/* Right: dark form panel */}
+              <div className="relative border-t border-white/10 bg-[linear-gradient(180deg,#19171B_0%,#121114_100%)] p-6 sm:p-9 lg:border-l lg:border-t-0">
                 <div className="flex items-start gap-4">
-                  <span className="ink-badge grid h-12 w-12 shrink-0 place-items-center rounded-2xl"><ClipboardCheck className="h-5 w-5" aria-hidden /></span>
+                  <span className="contact-icon grid h-12 w-12 shrink-0 place-items-center rounded-2xl"><ClipboardCheck className="h-5 w-5" aria-hidden /></span>
                   <div>
-                    <h3 className="text-xl font-extrabold text-[#0F0A06] sm:text-2xl">Tell us about your restaurant</h3>
-                    <p className="mt-1 text-[15px] font-medium text-[#0F0A06]/80">We reply by phone, WhatsApp or email.</p>
+                    <h3 className="text-xl font-extrabold text-white sm:text-2xl">Tell us about your restaurant</h3>
+                    <p className="mt-1 text-[15px] text-white/65">We reply by phone, WhatsApp or email.</p>
                   </div>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {["Free", "No obligation", "1 business day reply"].map((t) => (
-                    <span key={t} className="saffron-glass inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold text-[#0F0A06]"><Check className="h-3.5 w-3.5" aria-hidden />{t}</span>
+                    <span key={t} className="inline-flex items-center gap-1.5 rounded-full bg-star px-3 py-1 text-xs font-bold text-[#0F0A06]"><Check className="h-3.5 w-3.5" aria-hidden />{t}</span>
                   ))}
                 </div>
-                <div className="mt-6 border-t border-dashed border-black/30 pt-6"><ContactForm tone="saffron" /></div>
+                <hr className="mt-6 h-px border-0 bg-white/[0.12]" aria-hidden />
+                <p className="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-star-text"><Sparkles className="h-3.5 w-3.5" aria-hidden />Your details</p>
+                <div className="mt-4"><ContactForm tone="panel" /></div>
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
         </div>
       </section>
 

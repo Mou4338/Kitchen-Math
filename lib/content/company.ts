@@ -28,7 +28,7 @@ export const SERVICES: Service[] = [
       "Combos and add-ons around your bestsellers",
       "Remove dead items and add dishes customers are searching for",
     ],
-    image: { src: u("1782541370275-6761522e39d1"), alt: "Hands serving chicken biryani with lemon and sauce" },
+    image: { src: "/images/services/menu-optimization.webp", alt: "A biryani listing before and after optimization: no photo and a one-line description versus a photo, full name, description, bestseller tag and serving size, lifting menu-to-cart from 5.7% to 9.1%" },
   },
   {
     id: "pricing-order-value", number: "02", title: "Pricing & Order Value", icon: "pricing",
@@ -38,7 +38,7 @@ export const SERVICES: Service[] = [
       "Smart price points across variants and combos",
       "Raise average order value with add-ons and minimum order value",
     ],
-    image: { src: u("1631515242808-497c3fbd3972"), alt: "Table spread with bowls of curries, sides and sauces" },
+    image: { src: "/images/services/pricing-order-value.webp", alt: "Chicken biryani priced at ₹333.76 to keep a 20% profit with a break-even of ₹220.53, beside a basket where a raita add-on and gulab jamun combo raise order value from ₹334 to ₹502 and unlock free delivery" },
   },
   {
     id: "ads-discounts", number: "03", title: "Ads & Discounts", icon: "ads",
@@ -48,7 +48,7 @@ export const SERVICES: Service[] = [
       "Find which ad types actually bring profitable orders",
       "Cut waste and move budget to what works",
     ],
-    image: { src: u("1760888549280-4aef010720bd"), alt: "Hand holding a phone with a food ordering app" },
+    image: { src: "/images/services/ads-discounts.webp", alt: "Orders per ₹1,000 of ad spend rising week by week, beside a comparison of profit per biryani order under three offers, where 10% off earns ₹43.64 more than 50% off" },
   },
   {
     id: "conversion-funnel", number: "04", title: "Conversion (Funnel)", icon: "funnel",
@@ -58,7 +58,7 @@ export const SERVICES: Service[] = [
       "Compare lunch, dinner and late-night performance",
       "Fix the weakest step first",
     ],
-    image: { src: u("1625463006115-09f08489f591"), alt: "Two friends laughing while choosing food on a phone" },
+    image: { src: "/images/services/conversion-funnel.webp", alt: "Ordering funnel from 10,000 listing views to 610 orders with menu-to-cart as the weakest step, beside the fix that lifts menu-to-cart from 26% to 32% for 127 more orders from the same traffic" },
   },
   {
     id: "ratings-dish-performance", number: "05", title: "Ratings & Dish Performance", icon: "reviews",
@@ -68,7 +68,7 @@ export const SERVICES: Service[] = [
       "Spot recurring complaints, cancellations and stock-outs",
       "Protect ratings during peak hours",
     ],
-    image: { src: u("1663530761401-15eefb544889"), alt: "Chef finishing a plated dish with sauce" },
+    image: { src: "/images/services/ratings-dish-performance.webp", alt: "Butter chicken rated 3.7 with its most common complaints, beside a scale, fix, boost or remove grid that sorts dishes by sales and rating" },
   },
   {
     id: "local-market-competitors", number: "06", title: "Local Market & Competitors", icon: "competitor",
@@ -78,7 +78,7 @@ export const SERVICES: Service[] = [
       "Competitor bestsellers, prices and offers",
       "Turn their gaps into your growth",
     ],
-    image: { src: u("1774979160994-3306b4872084"), alt: "Restaurant staff outside the outlet with a delivery scooter" },
+    image: { src: "/images/services/local-market-competitors-2.webp", alt: "Dishes in demand in your 3 km delivery zone that are missing from your menu, beside a rival watch comparing your biryani price with 3 nearby competitors and suggesting a ₹199 mini biryani bowl" },
   },
 ];
 
@@ -110,10 +110,10 @@ export const COMPANY_IMAGES = {
   ],
   team: { src: u("1517245386807-bb43f82c33c4"), alt: "Consultant walking a client through numbers on a laptop" },
   dish: { src: u("1772730064951-89b427965dbc", 900), alt: "Bowl of chicken tikka masala garnished with mint" },
-  contact: { src: u("1758518731462-d091b0b4ed0d", 1800), alt: "Consultant smiling while talking with a client in the office" },
+  contact: { src: u("1632152133952-98b268dc4b86", 1800), alt: "Paper forms and a pen on a wooden table" },
   meeting: { src: u("1551135049-8a33b5883817", 1800), alt: "Team reviewing a plan on paper around a table" },
   ordering: { src: u("1663661759279-5edbf3d58e0c", 1200), alt: "Customer holding a phone to order food" },
-  servicesHero: { src: u("1542744173-8e7e53415bb0", 2000), alt: "Consultant presenting to a restaurant team" },
+  servicesHero: { src: "/images/heroes/tablet-insights.webp", alt: "Restaurant owner checking sales insights and best-selling items on a tablet beside a receipt printer" },
   /** Faint background photos behind the darker feature bands. */
   kitchen: { src: u("1721637713270-5470ea1d6389", 2000), alt: "" },
 };

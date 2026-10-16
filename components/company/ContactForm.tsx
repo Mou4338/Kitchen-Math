@@ -8,9 +8,13 @@ import { SITE } from "@/lib/site";
 const PLATFORMS = ["Swiggy", "Zomato", "Own website / app", "Dine-in only"];
 
 /** Enquiry form. Submissions are saved to Google Sheets through /api/lead. */
-/** tone="saffron": ivory fields, dark ink labels and a black submit button, for use on a solid saffron card. */
-export function ContactForm({ tone = "default" }: { tone?: "default" | "saffron" } = {}) {
+/** tone="saffron": ivory fields and dark ink labels, for a solid saffron card.
+ *  tone="dark": charcoal fields and light labels, for a dark contact card. */
+export function ContactForm({ tone = "default" }: { tone?: "default" | "saffron" | "dark" | "panel" } = {}) {
   const sf = tone === "saffron";
+  const dk = tone === "dark";
+  /** tone="panel": compact charcoal fields and light labels, for the split contact card. */
+  const pn = tone === "panel";
   const [name, setName] = useState("");
   const [restaurant, setRestaurant] = useState("");
   const [phone, setPhone] = useState("");
@@ -28,10 +32,14 @@ export function ContactForm({ tone = "default" }: { tone?: "default" | "saffron"
     if (t) setMessage(`I'd like to discuss: ${t.slice(0, 80)}.\n`);
   }, []);
 
-  const field = sf
+  const field = pn
+    ? "h-11 w-full rounded-xl border border-white/[0.12] bg-white/[0.04] px-3.5 text-[15px] text-white outline-none transition placeholder:text-white/35 hover:border-star/50 focus:border-star focus:bg-white/[0.06] focus:ring-2 focus:ring-star/25"
+    : dk
+    ? "h-12 w-full rounded-xl border border-star/70 bg-star/[0.07] px-4 text-[15px] text-white shadow-[inset_0_1px_0_rgb(255_226_180/0.10)] outline-none backdrop-blur-[10px] transition placeholder:text-white/45 hover:border-star focus:border-star focus:bg-star/[0.12] focus:ring-4 focus:ring-star/20"
+    : sf
     ? "h-12 w-full rounded-xl border border-white/60 bg-[#FFF8EC]/90 px-4 text-[15px] font-medium text-[#0F0A06] shadow-[inset_0_1px_3px_rgb(90_45_0/0.15),0_1px_0_rgb(255_255_255/0.5)] outline-none transition placeholder:text-[#0F0A06]/45 hover:border-black/30 focus:border-[#0F0A06] focus:bg-white focus:ring-4 focus:ring-black/10"
     : "h-12 w-full rounded-xl border border-line bg-wash px-4 text-sm text-ink outline-none transition placeholder:text-muted-light hover:border-line-strong focus:border-accent focus:bg-card focus:ring-4 focus:ring-accent/15";
-  const label = sf ? "grid gap-1.5 text-sm font-bold text-[#0F0A06]" : "grid gap-1.5 text-sm font-medium";
+  const label = pn ? "grid gap-1.5 text-[13px] font-semibold text-white/80" : dk ? "grid gap-1.5 text-sm font-semibold text-white" : sf ? "grid gap-1.5 text-sm font-bold text-[#0F0A06]" : "grid gap-1.5 text-sm font-medium";
 
   if (status === "sent") {
     return (
@@ -94,7 +102,7 @@ export function ContactForm({ tone = "default" }: { tone?: "default" | "saffron"
         <label>Website<input tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} /></label>
       </div>
       <fieldset>
-        <legend className={sf ? "text-sm font-bold text-[#0F0A06]" : "text-sm font-medium"}>Where do you sell?</legend>
+        <legend className={pn ? "text-[13px] font-semibold text-white/80" : dk ? "text-sm font-semibold text-white" : sf ? "text-sm font-bold text-[#0F0A06]" : "text-sm font-medium"}>Where do you sell?</legend>
         <div className="mt-2 flex flex-wrap gap-2">
           {PLATFORMS.map((p) => {
             const on = platforms.includes(p);
@@ -104,7 +112,7 @@ export function ContactForm({ tone = "default" }: { tone?: "default" | "saffron"
                 type="button"
                 aria-pressed={on}
                 onClick={() => setPlatforms(on ? platforms.filter((x) => x !== p) : [...platforms, p])}
-                className={`inline-flex h-10 items-center gap-1.5 rounded-full border px-4 text-sm font-medium transition ${sf ? (on ? "border-[#0F0A06] bg-[#0F0A06] text-star" : "border-black/20 bg-[#FFF8EC] text-[#0F0A06] hover:border-black/40") : on ? "border-accent bg-accent text-accent-ink shadow-glow" : "border-line bg-wash text-ink-soft hover:border-line-strong hover:text-ink"}`}
+                className={`inline-flex items-center gap-1.5 rounded-full border font-medium transition ${pn ? "h-9 px-3.5 text-xs" : "h-10 px-4 text-sm"} ${pn ? (on ? "border-star bg-star font-semibold text-[#0F0A06]" : "border-white/[0.12] bg-white/[0.04] text-white/80 hover:border-star/50 hover:text-white") : dk ? (on ? "border-star bg-star font-semibold text-[#0F0A06]" : "border-star/70 bg-star/[0.07] text-white/90 hover:border-star hover:bg-star/[0.12]") : sf ? (on ? "border-[#0F0A06] bg-[#0F0A06] text-star" : "border-black/20 bg-[#FFF8EC] text-[#0F0A06] hover:border-black/40") : on ? "border-accent bg-accent text-accent-ink shadow-glow" : "border-line bg-wash text-ink-soft hover:border-line-strong hover:text-ink"}`}
               >
                 {on ? <Check className="h-3.5 w-3.5" aria-hidden /> : null}
                 {p}
@@ -117,16 +125,16 @@ export function ContactForm({ tone = "default" }: { tone?: "default" | "saffron"
         <textarea value={message} onChange={(e) => setMessage(e.target.value)} rows={4} maxLength={2000} className={`${field} h-auto py-3`} placeholder="e.g. More orders at dinner, better ratings, lower ad spend…" />
       </label>
       {error ? (
-        <p role="alert" className="text-sm font-medium text-danger">
+        <p role="alert" className={`text-sm font-medium ${dk || pn ? "text-[#ff8a93]" : "text-danger"}`}>
           {error}{" "}
           <a className="underline" href={`mailto:${SITE.company.email}`}>Or email us</a>.
         </p>
       ) : null}
-      <button type="submit" disabled={status === "sending"} className={`mt-2 inline-flex h-14 w-full items-center justify-center gap-2 rounded-xl px-6 text-base font-semibold transition ${sf ? "bg-[linear-gradient(180deg,#2A2018,#0F0A06)] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_18px_32px_-14px_rgb(0_0_0/0.75)] hover:-translate-y-0.5 [&_svg]:text-star" : "brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)] hover:brightness-110"} active:scale-[0.98] disabled:opacity-70`}>
+      <button type="submit" disabled={status === "sending"} className={`inline-flex items-center justify-center gap-2 font-semibold transition ${pn ? "mt-2 h-12 w-full rounded-xl px-6 text-[15px]" : "mt-2 h-14 w-full rounded-xl px-6 text-base"} ${sf ? "bg-[linear-gradient(180deg,#2A2018,#0F0A06)] text-white shadow-[inset_0_1px_0_rgb(255_255_255/0.12),0_18px_32px_-14px_rgb(0_0_0/0.75)] hover:-translate-y-0.5 [&_svg]:text-star" : "brand-gradient text-accent-ink shadow-glow [text-shadow:0_1px_2px_rgb(0_0_0/0.28)] hover:brightness-110"} active:scale-[0.98] disabled:opacity-70`}>
         {status === "sending" ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden /> : <Send className="h-4 w-4" aria-hidden />}
         {status === "sending" ? "Sending…" : "Request my free growth audit"}
       </button>
-      <p className={sf ? "text-center text-xs font-medium text-[#0F0A06]/75" : "text-center text-xs text-muted"}>We only use your details to reply to this enquiry.</p>
+      <p className={pn ? "text-center text-xs text-white/55" : dk ? "text-center text-xs text-white/75" : sf ? "text-center text-xs font-medium text-[#0F0A06]/75" : "text-center text-xs text-muted"}>We only use your details to reply to this enquiry.</p>
     </form>
   );
 }

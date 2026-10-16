@@ -8,6 +8,21 @@ const ink = "text-[rgb(var(--footer-ink))]";
 const lift = "[text-shadow:0_1px_2px_rgb(var(--shade)/0.45),0_2px_10px_rgb(var(--shade)/0.3)]";
 const link = `${ink} ${lift} font-medium opacity-90 transition hover:opacity-100 hover:underline underline-offset-4`;
 
+const MORE_LINKS: [string, string][] = [
+  ["Home", "/"],
+  ["Growth consulting services", "/services"],
+  ["Book a free growth audit", "/#contact"],
+  ["Growth scorecard", "/growth-scorecard"],
+  ["Free tools", "/restaurant"],
+  ["Guides", "/restaurant/help#guides"],
+  ["Help & how-to", "/restaurant/help"],
+  ["Saved scenarios", "/restaurant/calculator-history"],
+  ["About", "/restaurant/about"],
+  ["Contact", "/contact"],
+  ["Privacy", "/privacy"],
+  ["Terms", "/terms"],
+];
+
 /** Zomato-red footer (same in both themes) with white text, a faint grid and soft gray shadows. */
 export function Footer() {
   return (
@@ -16,7 +31,7 @@ export function Footer() {
       {/* light top edge so the footer reads as a raised panel */}
       <div className="absolute inset-x-0 top-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-80" aria-hidden />
 
-      <div className="container grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
+      <div className="container grid gap-10 py-14 md:grid-cols-[minmax(0,24rem)_minmax(0,1fr)] md:gap-x-14 lg:gap-x-20">
         <div className="max-w-sm">
           <Logo onAccent />
           <p className={`mt-4 text-sm leading-relaxed ${lift}`}>{SITE.description}</p>
@@ -28,6 +43,8 @@ export function Footer() {
             Results are estimates based on the numbers you enter. Benchmarks are indicative. Nothing here is financial, tax or legal advice.
           </p>
         </div>
+        {/* Link columns sit together, centred in the space beside the brand block: Calculators, then More right beside it. */}
+        <div className="flex flex-wrap gap-x-14 gap-y-10 md:justify-self-center lg:gap-x-16">
         <nav aria-label="Calculators">
           <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] opacity-80 [text-shadow:0_1px_2px_rgb(var(--shade)/0.4)]">Calculators</p>
           <ul className="grid gap-2.5 text-sm">
@@ -38,21 +55,18 @@ export function Footer() {
         </nav>
         <nav aria-label="More">
           <p className="mb-4 text-[11px] font-bold uppercase tracking-[0.18em] opacity-80 [text-shadow:0_1px_2px_rgb(var(--shade)/0.4)]">More</p>
-          <ul className="grid gap-2.5 text-sm sm:grid-cols-2 sm:gap-x-6">
-            <li><Link className={link} href="/">Home</Link></li>
-            <li><Link className={link} href="/services">Growth consulting services</Link></li>
-            <li><Link className={link} href="/#contact">Book a free growth audit</Link></li>
-            <li><Link className={link} href="/growth-scorecard">Growth scorecard</Link></li>
-            <li><Link className={link} href="/restaurant">Free tools</Link></li>
-            <li><Link className={link} href="/restaurant/help#guides">Guides</Link></li>
-            <li><Link className={link} href="/restaurant/help">Help &amp; how-to</Link></li>
-            <li><Link className={link} href="/restaurant/calculator-history">Saved scenarios</Link></li>
-            <li><Link className={link} href="/restaurant/about">About</Link></li>
-            <li><Link className={link} href="/contact">Contact</Link></li>
-            <li><Link className={link} href="/privacy">Privacy</Link></li>
-            <li><Link className={link} href="/terms">Terms</Link></li>
-          </ul>
+          {/* Two independent columns, so a long link never leaves a gap beside a short one. */}
+          <div className="grid gap-y-2.5 text-sm sm:grid-cols-2 sm:gap-x-10">
+            {[MORE_LINKS.slice(0, 6), MORE_LINKS.slice(6)].map((col, i) => (
+              <ul key={i} className="flex flex-col gap-2.5">
+                {col.map(([label, href]) => (
+                  <li key={href}><Link className={`${link} whitespace-nowrap`} href={href}>{label}</Link></li>
+                ))}
+              </ul>
+            ))}
+          </div>
         </nav>
+        </div>
       </div>
       <div className="border-t border-[rgb(var(--shade)/0.15)] bg-[rgb(var(--shade)/0.1)]">
         <div className={`container flex flex-wrap items-center justify-between gap-2 py-5 text-xs font-medium opacity-90 ${lift}`}>

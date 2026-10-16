@@ -24,8 +24,26 @@ export function PageHero({
 }) {
   return (
     <section className="relative isolate overflow-hidden bg-inverse">
-      <Image src={photo.src} alt={photo.alt} fill priority sizes="100vw" className="-z-10 object-cover" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/30" aria-hidden />
+      {photo.fit === "contain" ? (
+        <>
+          {/* Phones and tablets: fill the banner behind the text */}
+          <Image src={photo.src} alt={photo.alt} fill priority sizes="100vw" className="-z-10 object-cover lg:hidden" />
+          {/* Desktops: the whole picture, uncropped, on the right, fading into the dark background */}
+          <div
+            className="absolute inset-y-0 right-0 -z-10 hidden max-w-[62%] [mask-image:linear-gradient(to_right,transparent,black_35%)] lg:block"
+            style={{ aspectRatio: String(photo.aspect ?? 16 / 9) }}
+            aria-hidden
+          >
+            <Image src={photo.src} alt="" fill priority sizes="62vw" className="object-cover" />
+          </div>
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/30" aria-hidden />
+        </>
+      ) : (
+        <>
+          <Image src={photo.src} alt={photo.alt} fill priority sizes="100vw" className="-z-10 object-cover" style={photo.position ? { objectPosition: photo.position } : undefined} />
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/30" aria-hidden />
+        </>
+      )}
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/70 via-transparent to-transparent" aria-hidden />
       <div className="grid-lines grid-lines-inverse grid-fade absolute inset-0 -z-10 opacity-70" aria-hidden />
 
