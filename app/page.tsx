@@ -38,6 +38,8 @@ export default function CompanyHome() {
       {/* 1 · HERO (deep band) */}
       <section className="relative isolate overflow-hidden bg-inverse">
         <HeroBackdrop />
+        {/* Fine saffron line along the bottom edge, between the hero and "Welcome to KitchenMath" */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
         {/* Royal overlay: deep band colour (black), lighter on the right so the room shows through */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/20" aria-hidden />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-inverse/80 via-transparent to-inverse/35" aria-hidden />
@@ -52,7 +54,7 @@ export default function CompanyHome() {
               <Sparkles className="h-3.5 w-3.5 shrink-0 text-star-text" aria-hidden /> <span className="truncate">{c.division}</span>
             </p>
             <h1 className="mt-5 text-[2.25rem] font-semibold leading-[1.05] text-on-inverse [overflow-wrap:anywhere] min-[400px]:text-[2.6rem] sm:mt-6 sm:text-6xl sm:leading-[1.03] lg:text-[4.2rem]">
-              <span className="text-accent-bright">Grow your restaurant</span> <span className="font-serif font-normal italic">with clarity.</span>
+              <span className="text-accent-bright">Grow your restaurant sales</span> <span className="font-serif font-normal italic">with clarity.</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-on-inverse/85 sm:mt-6 sm:text-lg">
               We find the one thing holding your restaurant back across menu, pricing, visibility, conversion, customers and competition. Then we fix it and measure the impact.
@@ -89,20 +91,6 @@ export default function CompanyHome() {
               </div>
               <div className="brand-gradient mt-5 rounded-2xl px-4 py-3 text-center font-semibold text-accent-ink shadow-[0_12px_26px_-14px_rgb(var(--shade)/0.7)] [text-shadow:0_1px_2px_rgb(var(--shade)/0.25)]">Sustainable restaurant growth</div>
             </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 2 · GROWTH EQUATION BAND (blush) */}
-      <section className="relative isolate overflow-hidden bg-accent py-16 text-accent-ink sm:py-20">
-        <div className="grid-lines absolute inset-0 -z-10 [--grid-a:0.14] [--grid-c:var(--accent-ink)]" aria-hidden />
-        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[rgb(var(--shade)/0)] to-[rgb(var(--shade)/0.15)]" aria-hidden />
-        <div className="container">
-          <Reveal className="mx-auto max-w-3xl text-center">
-            <p className="font-serif text-2xl italic leading-snug text-accent-ink sm:text-[2rem]">
-              &ldquo;The objective is not simply to generate more traffic. It is to identify the biggest growth constraint, take the right action, and measure the impact.&rdquo;
-            </p>
-            <p className="mt-5 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink/85"><span className="h-0.5 w-8 rounded-full bg-star" aria-hidden />Our approach<span className="h-0.5 w-8 rounded-full bg-star" aria-hidden /></p>
           </Reveal>
         </div>
       </section>
@@ -181,6 +169,20 @@ export default function CompanyHome() {
         </div>
       </section>
 
+      {/* 2 · GROWTH EQUATION BAND (blush) */}
+      <section className="relative isolate overflow-hidden bg-accent py-16 text-accent-ink sm:py-20">
+        <div className="grid-lines absolute inset-0 -z-10 [--grid-a:0.14] [--grid-c:var(--accent-ink)]" aria-hidden />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-b from-[rgb(var(--shade)/0)] to-[rgb(var(--shade)/0.15)]" aria-hidden />
+        <div className="container">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <p className="font-serif text-2xl italic leading-snug text-accent-ink sm:text-[2rem]">
+              &ldquo;The objective is not simply to generate more traffic. It is to identify the biggest growth constraint, take the right action, and measure the impact.&rdquo;
+            </p>
+            <p className="mt-5 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink/85"><span className="h-0.5 w-8 rounded-full bg-star" aria-hidden />Our approach<span className="h-0.5 w-8 rounded-full bg-star" aria-hidden /></p>
+          </Reveal>
+        </div>
+      </section>
+
       {/* 4 · SERVICES (warm wash) */}
       <section id="services" className="relative isolate scroll-mt-20 overflow-hidden bg-wash py-16 sm:py-24">
         <div className="grid-lines grid-fade absolute inset-0 -z-10" aria-hidden />
@@ -196,8 +198,7 @@ export default function CompanyHome() {
             ))}
           </div>
         </div>
-        {/* Fine saffron line on the top and bottom edges (no glow) */}
-        <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
+        {/* Fine saffron line on the bottom edge (no glow) */}
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-55" aria-hidden />
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
