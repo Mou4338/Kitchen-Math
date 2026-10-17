@@ -27,7 +27,6 @@ const MORE_LINKS: [string, string][] = [
 export function Footer() {
   return (
     <footer className={`no-print relative isolate mt-20 overflow-hidden bg-[linear-gradient(160deg,rgb(var(--footer-a))_0%,rgb(var(--footer-b))_100%)] ${ink} shadow-[0_-24px_50px_-24px_rgb(120_120_130/0.55)]`}>
-      <div className="grid-lines absolute inset-0 -z-10 [--grid-a:0.08] [--grid-c:var(--shade)]" aria-hidden />
       {/* light top edge so the footer reads as a raised panel */}
       <div className="absolute inset-x-0 top-0 h-0.5 bg-[linear-gradient(90deg,transparent,rgb(var(--star))_30%,rgb(var(--star))_70%,transparent)] opacity-80" aria-hidden />
 

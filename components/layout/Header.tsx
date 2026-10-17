@@ -53,7 +53,7 @@ export function Header() {
   const navClass = (active: boolean) =>
     cn(
       "relative rounded-lg px-2.5 py-2 text-sm font-medium transition-colors hover:bg-wash hover:text-ink",
-      active ? "text-accent after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-[linear-gradient(90deg,rgb(var(--accent)),rgb(var(--star)))]" : "text-muted",
+      active ? "text-accent after:absolute after:inset-x-3 after:-bottom-[13px] after:h-0.5 after:rounded-full after:bg-[linear-gradient(90deg,rgb(var(--accent)),rgb(var(--star)))]" : "text-white/80 hover:text-white",
     );
 
   const closeMenus = () => {
@@ -83,7 +83,7 @@ export function Header() {
   }, [menuOpen]);
 
   return (
-    <header className="site-header no-print sticky top-0 z-40 border-b border-line/70 bg-paper/85 text-ink backdrop-blur-xl [color-scheme:dark]">
+    <header className="site-header no-print sticky top-0 z-40 text-ink [color-scheme:dark]">
       <div className="container flex h-16 items-center justify-between gap-4">
         <Logo onClick={closeMenus} />
         <nav aria-label="Main" className="hidden items-center gap-0.5 xl:flex">

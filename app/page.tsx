@@ -110,7 +110,8 @@ export default function CompanyHome() {
       {/* 3 · WHO WE ARE (white) */}
       <section className="container py-16 sm:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          <Reveal>
+          {/* Photo on the right on laptops & desktops (text first); on phones the photo still comes first */}
+          <Reveal className="lg:order-2">
             <div className="relative mx-auto aspect-[5/4] w-full max-w-[560px]">
               <div className="absolute inset-0 overflow-hidden rounded-3xl bg-inverse shadow-lift">
                 <Image src={WELCOME_PHOTO.src} alt={WELCOME_PHOTO.alt} fill sizes="(min-width: 1024px) 560px, 90vw" className="object-cover object-top" />
@@ -118,22 +119,38 @@ export default function CompanyHome() {
                 <div className="absolute inset-0 bg-accent/20 mix-blend-color" aria-hidden />
                 <div className="absolute inset-0 bg-gradient-to-tr from-inverse/40 to-transparent" aria-hidden />
               </div>
-              <div className="absolute -bottom-8 -right-2 aspect-square w-[42%] overflow-hidden rounded-3xl border-4 border-paper shadow-lift sm:-right-6">
+              <div className="absolute -bottom-8 -left-2 aspect-square w-[42%] overflow-hidden rounded-3xl border-4 border-paper shadow-lift sm:-left-6">
                 <Image src={COMPANY_IMAGES.dish.src} alt={COMPANY_IMAGES.dish.alt} fill sizes="240px" className="object-cover" />
               </div>
-              <div className="absolute -left-2 top-6 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">
-                <p className="eyebrow">Framework</p>
-                <p className="text-2xl font-bold text-accent">6 services</p>
-                <p className="text-xs text-muted">Menu to local market</p>
+              {/* Tablets, laptops & desktops: small stat cards on the edges of the photo, clear of both faces */}
+              <div className="absolute -left-3 top-5 hidden rounded-xl border border-line bg-card px-3 py-2 shadow-lift xl:px-3.5 xl:py-2.5 sm:block xl:-left-6">
+                <p className="eyebrow text-[10px] xl:text-[11px]">Framework</p>
+                <p className="text-lg font-bold leading-tight text-accent xl:text-xl">6 services</p>
+                <p className="text-[11px] text-muted">Menu to local market</p>
               </div>
-              <div className="absolute -right-2 top-6 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-right-6">
-                <p className="eyebrow">Profit / order</p>
-                <p className="tabular text-2xl font-bold text-accent">₹66.75</p>
+              <div className="absolute -right-4 -top-4 hidden rounded-xl border border-line bg-card px-2.5 py-1.5 shadow-lift sm:block xl:-right-8">
+                <p className="eyebrow text-[9px] xl:text-[10px]">Profit / order</p>
+                <p className="tabular text-base font-bold leading-tight text-accent xl:text-lg">₹66.75</p>
               </div>
-              <div className="absolute -left-2 bottom-6 rounded-2xl border border-line bg-card px-4 py-3 shadow-lift sm:-left-6">
-                <p className="eyebrow">Menu price</p>
-                <p className="tabular text-2xl font-bold text-sage-dark">₹333.76</p>
-                <p className="text-xs text-muted">Example · 20% margin</p>
+              <div className="absolute -right-3 bottom-5 hidden rounded-xl border border-line bg-card px-3 py-2 shadow-lift xl:px-3.5 xl:py-2.5 sm:block xl:-right-6">
+                <p className="eyebrow text-[10px] xl:text-[11px]">Menu price</p>
+                <p className="tabular text-lg font-bold leading-tight text-sage-dark xl:text-xl">₹333.76</p>
+                <p className="text-[11px] text-muted">Example · 20% margin</p>
+              </div>
+            </div>
+            {/* Phones: the same three cards in a compact row under the photo */}
+            <div className="mx-auto mt-12 grid w-full grid-cols-3 gap-2 sm:hidden">
+              <div className="rounded-xl border border-line bg-card px-2.5 py-2 shadow-card">
+                <p className="eyebrow text-[9px]">Framework</p>
+                <p className="text-sm font-bold text-accent">6 services</p>
+              </div>
+              <div className="rounded-xl border border-line bg-card px-2.5 py-2 shadow-card">
+                <p className="eyebrow text-[9px]">Profit / order</p>
+                <p className="tabular text-sm font-bold text-accent">₹66.75</p>
+              </div>
+              <div className="rounded-xl border border-line bg-card px-2.5 py-2 shadow-card">
+                <p className="eyebrow text-[9px]">Menu price</p>
+                <p className="tabular text-sm font-bold text-sage-dark">₹333.76</p>
               </div>
             </div>
           </Reveal>
@@ -224,7 +241,7 @@ export default function CompanyHome() {
       </section>
 
       {/* 8 · SCORECARD CTA (blush) */}
-      <section className="container pb-16 sm:pb-24">
+      <section className="container py-16 sm:py-24">
         <Reveal>
           <div className="grid items-center gap-6 rounded-3xl border border-accent/25 bg-accent-soft p-6 sm:p-10 md:grid-cols-[auto_minmax(0,1fr)_auto]">
             <span className="brand-gradient grid h-16 w-16 place-items-center rounded-2xl text-accent-ink shadow-glow"><ClipboardCheck className="h-8 w-8" aria-hidden /></span>
@@ -306,12 +323,12 @@ export default function CompanyHome() {
             <h2 className="mt-2 text-4xl font-bold text-on-inverse sm:text-5xl">Book a free <span className="font-serif font-normal italic text-star-text">growth audit</span></h2>
             <p className="mt-4 text-on-inverse/80">Tell us about your restaurant. We&apos;ll look for your biggest growth constraint and suggest where to start.</p>
           </Reveal>
-          {/* One split card (template style) with the red → saffron highlight on its top and bottom edges:
+          {/* One split card (template style); the red → saffron highlight runs along the top of the form panel only:
               dark panel with the photo, steps and contact rows on the left, dark form panel on the right. */}
           <Reveal>
-            <div className="contact-card mx-auto grid max-w-5xl overflow-hidden rounded-[28px] lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+            <div className="contact-card mx-auto grid max-w-5xl overflow-hidden rounded-[28px] before:hidden lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
               {/* Left: photo fading into charcoal, saffron-glass steps and contact rows */}
-              <div className="relative flex flex-col">
+              <div className="relative isolate flex flex-col">
                 <div className="relative aspect-[16/9] w-full overflow-hidden">
                   <Image src={COMPANY_IMAGES.contact.src} alt={COMPANY_IMAGES.contact.alt} fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#161518] via-[#161518]/10 to-transparent" aria-hidden />
@@ -345,6 +362,8 @@ export default function CompanyHome() {
               </div>
               {/* Right: dark form panel */}
               <div className="relative border-t border-white/10 bg-[linear-gradient(180deg,#19171B_0%,#121114_100%)] p-6 sm:p-9 lg:border-l lg:border-t-0">
+                {/* red → saffron highlight along the top of the form panel only */}
+                <span className="pointer-events-none absolute inset-x-7 top-0 h-0.5 rounded-full bg-[linear-gradient(90deg,transparent,rgb(var(--accent))_25%,rgb(var(--star))_75%,transparent)]" aria-hidden />
                 <div className="flex items-start gap-4">
                   <span className="contact-icon grid h-12 w-12 shrink-0 place-items-center rounded-2xl"><ClipboardCheck className="h-5 w-5" aria-hidden /></span>
                   <div>
