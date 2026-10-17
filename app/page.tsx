@@ -13,7 +13,6 @@ import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Reveal } from "@/components/ui/Motion";
 import { CALCULATORS } from "@/lib/content/calculators";
-import { WELCOME_PHOTO } from "@/lib/content/images";
 import { COMPANY_IMAGES, GROWTH_EQUATION, PROCESS, SERVICES } from "@/lib/content/company";
 import { pageMetadata } from "@/lib/seo";
 import { SITE } from "@/lib/site";
@@ -53,8 +52,10 @@ export default function CompanyHome() {
             <p className="inline-flex max-w-full items-center gap-2 rounded-full border border-on-inverse/20 bg-on-inverse/10 px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.1em] text-accent-bright backdrop-blur sm:px-3.5 sm:text-xs sm:tracking-[0.14em]">
               <Sparkles className="h-3.5 w-3.5 shrink-0 text-star-text" aria-hidden /> <span className="truncate">{c.division}</span>
             </p>
-            <h1 className="mt-5 text-[2.25rem] font-semibold leading-[1.05] text-on-inverse [overflow-wrap:anywhere] min-[400px]:text-[2.6rem] sm:mt-6 sm:text-6xl sm:leading-[1.03] lg:text-[4.2rem]">
-              <span className="text-accent-bright">Grow your restaurant sales</span> <span className="font-serif font-normal italic">with clarity.</span>
+            <h1 className="mt-5 text-[2.25rem] font-semibold leading-[1.05] text-on-inverse [overflow-wrap:anywhere] min-[400px]:text-[2.6rem] sm:mt-6 sm:text-6xl sm:leading-[1.03] lg:text-[3.4rem]">
+              {/* Laptops & desktops: "Grow your restaurant" stays on the first line */}
+              <span className="text-accent-bright lg:block lg:whitespace-nowrap">Grow your restaurant</span>{" "}
+              <span className="text-accent-bright">sales</span> <span className="font-serif font-normal italic">with clarity.</span>
             </h1>
             <p className="mt-5 max-w-xl text-base leading-relaxed text-on-inverse/85 sm:mt-6 sm:text-lg">
               We find the one thing holding your restaurant back across menu, pricing, visibility, conversion, customers and competition. Then we fix it and measure the impact.
@@ -98,47 +99,57 @@ export default function CompanyHome() {
       {/* 3 · WHO WE ARE (white) */}
       <section className="container py-16 sm:py-24">
         <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-          {/* Photo on the right on laptops & desktops (text first); on phones the photo still comes first */}
-          <Reveal className="lg:order-2">
-            <div className="relative mx-auto aspect-[5/4] w-full max-w-[560px]">
-              <div className="absolute inset-0 overflow-hidden rounded-3xl bg-inverse shadow-lift">
-                <Image src={WELCOME_PHOTO.src} alt={WELCOME_PHOTO.alt} fill sizes="(min-width: 1024px) 560px, 90vw" className="object-cover object-top" />
-                {/* duotone tint, same as the photo used on the Tools page before */}
-                <div className="absolute inset-0 bg-accent/20 mix-blend-color" aria-hidden />
-                <div className="absolute inset-0 bg-gradient-to-tr from-inverse/40 to-transparent" aria-hidden />
-              </div>
-              <div className="absolute -bottom-8 -left-2 aspect-square w-[42%] overflow-hidden rounded-3xl border-4 border-paper shadow-lift sm:-left-6">
-                <Image src={COMPANY_IMAGES.dish.src} alt={COMPANY_IMAGES.dish.alt} fill sizes="240px" className="object-cover" />
-              </div>
-              {/* Tablets, laptops & desktops: small stat cards on the edges of the photo, clear of both faces */}
-              <div className="absolute -left-3 top-5 hidden rounded-xl border border-line bg-card px-3 py-2 shadow-lift xl:px-3.5 xl:py-2.5 sm:block xl:-left-6">
-                <p className="eyebrow text-[10px] xl:text-[11px]">Framework</p>
-                <p className="text-lg font-bold leading-tight text-accent xl:text-xl">6 services</p>
-                <p className="text-[11px] text-muted">Menu to local market</p>
-              </div>
-              <div className="absolute -right-4 -top-4 hidden rounded-xl border border-line bg-card px-2.5 py-1.5 shadow-lift sm:block xl:-right-8">
-                <p className="eyebrow text-[9px] xl:text-[10px]">Profit / order</p>
-                <p className="tabular text-base font-bold leading-tight text-accent xl:text-lg">₹66.75</p>
-              </div>
-              <div className="absolute -right-3 bottom-5 hidden rounded-xl border border-line bg-card px-3 py-2 shadow-lift xl:px-3.5 xl:py-2.5 sm:block xl:-right-6">
-                <p className="eyebrow text-[10px] xl:text-[11px]">Menu price</p>
-                <p className="tabular text-lg font-bold leading-tight text-sage-dark xl:text-xl">₹333.76</p>
-                <p className="text-[11px] text-muted">Example · 20% margin</p>
-              </div>
-            </div>
-            {/* Phones: the same three cards in a compact row under the photo */}
-            <div className="mx-auto mt-12 grid w-full grid-cols-3 gap-2 sm:hidden">
-              <div className="rounded-xl border border-line bg-card px-2.5 py-2 shadow-card">
-                <p className="eyebrow text-[9px]">Framework</p>
-                <p className="text-sm font-bold text-accent">6 services</p>
-              </div>
-              <div className="rounded-xl border border-line bg-card px-2.5 py-2 shadow-card">
-                <p className="eyebrow text-[9px]">Profit / order</p>
-                <p className="tabular text-sm font-bold text-accent">₹66.75</p>
-              </div>
-              <div className="rounded-xl border border-line bg-card px-2.5 py-2 shadow-card">
-                <p className="eyebrow text-[9px]">Menu price</p>
-                <p className="tabular text-sm font-bold text-sage-dark">₹333.76</p>
+          {/* Right on laptops & desktops (below the text on phones): an "at a glance" panel with the three key numbers */}
+          <Reveal className="lg:order-2" delay={0.1}>
+            <div className="relative mx-auto w-full max-w-[560px]">
+              <div className="absolute -inset-6 -z-10 rounded-[40px] bg-[radial-gradient(60%_60%_at_70%_30%,rgb(var(--accent)/0.18),transparent_70%),radial-gradient(50%_50%_at_20%_90%,rgb(var(--star)/0.12),transparent_70%)] blur-2xl" aria-hidden />
+              <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-[linear-gradient(180deg,#1A181C_0%,#121114_100%)] p-5 shadow-lift sm:p-7">
+                <span className="pointer-events-none absolute inset-x-8 top-0 h-0.5 rounded-full bg-[linear-gradient(90deg,transparent,rgb(var(--accent))_25%,rgb(var(--star))_75%,transparent)]" aria-hidden />
+                <p className="eyebrow text-star-text">{SITE.name} at a glance</p>
+
+                {/* Framework */}
+                <div className="mt-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                  <div className="flex items-baseline justify-between gap-3">
+                    <p className="eyebrow">Framework</p>
+                    <p className="text-xs text-muted">Menu to local market</p>
+                  </div>
+                  <p className="mt-1 text-3xl font-bold text-accent sm:text-4xl">6 services</p>
+                  <ul className="mt-3 flex flex-wrap gap-1.5">
+                    {SERVICES.map((sv) => (
+                      <li key={sv.id} className="rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] font-medium text-white/75">{sv.title}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Example numbers */}
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                    <p className="eyebrow">Menu price</p>
+                    <p className="tabular mt-1 text-2xl font-bold text-sage-dark sm:text-3xl">₹333.76</p>
+                    <p className="mt-0.5 text-xs text-muted">Example · 20% margin</p>
+                  </div>
+                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                    <p className="eyebrow">Profit / order</p>
+                    <p className="tabular mt-1 text-2xl font-bold text-accent sm:text-3xl">₹66.75</p>
+                    <p className="mt-0.5 text-xs text-muted">After every deduction</p>
+                  </div>
+                </div>
+
+                {/* Where the ₹333.76 goes (same worked example as the calculators) */}
+                <div className="mt-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:p-5">
+                  <p className="eyebrow">Where ₹333.76 goes</p>
+                  <div className="mt-3 flex h-3 overflow-hidden rounded-full" aria-hidden>
+                    <span className="bg-white/25" style={{ width: "41.05%" }} />
+                    <span className="bg-white/45" style={{ width: "38.95%" }} />
+                    <span className="brand-gradient" style={{ width: "20%" }} />
+                  </div>
+                  <dl className="mt-3 grid grid-cols-3 gap-2 text-xs">
+                    <div><dt className="flex items-center gap-1.5 text-muted"><span className="h-2 w-2 rounded-full bg-white/25" />Platform</dt><dd className="tabular mt-0.5 font-semibold text-white">₹137.01</dd></div>
+                    <div><dt className="flex items-center gap-1.5 text-muted"><span className="h-2 w-2 rounded-full bg-white/45" />Your costs</dt><dd className="tabular mt-0.5 font-semibold text-white">₹130.00</dd></div>
+                    <div><dt className="flex items-center gap-1.5 text-muted"><span className="brand-gradient h-2 w-2 rounded-full" />Profit</dt><dd className="tabular mt-0.5 font-semibold text-white">₹66.75</dd></div>
+                  </dl>
+                  <p className="sr-only">Of a ₹333.76 selling price, ₹137.01 goes to the platform as discount, commission with GST and ads, ₹130 covers dish, labour and packaging, and ₹66.75 is profit.</p>
+                </div>
               </div>
             </div>
           </Reveal>
