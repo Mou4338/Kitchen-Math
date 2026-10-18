@@ -123,7 +123,7 @@ export default function MenuPricingCalculator() {
 
   const results = (
     <>
-      <section className="flex flex-col rounded-2xl border border-accent/40 bg-inverse p-5 text-on-inverse shadow-card sm:p-6" aria-label="Recommended price">
+      <section className="flex flex-col rounded-2xl border border-star/50 bg-inverse p-5 text-on-inverse shadow-card sm:p-6" aria-label="Recommended price">
         <p className="eyebrow" style={{ color: "rgb(var(--on-inverse) / 0.6)" }}>Recommended price</p>
         {blocked ? (
           <p className="mt-2 text-xl font-bold text-danger">{NO_PRICE_MESSAGE}</p>

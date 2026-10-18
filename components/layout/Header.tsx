@@ -10,7 +10,7 @@ import { CalculatorIcon } from "@/components/ui/CalculatorIcon";
 import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/utils/cn";
 import { SITE } from "@/lib/site";
-import { BrandMark } from "@/components/ui/BrandMark";
+import Image from "next/image";
 
 const NAV = [
   { href: "/", label: "Home" },
@@ -24,7 +24,7 @@ const NAV = [
 
 export function Logo({ onClick, onAccent }: { onClick?: () => void; onAccent?: boolean } = {}) {
   // On the red footer the full lockup sits in a black pill, exactly as in the brand artwork.
-  // Brand colours are fixed: ivory → saffron for "Kitchen", red for "Math".
+  // Brand colours follow the logo artwork: white "Kitchen", yellow → orange "Math".
   const dark = "[--logo-from:242_241_236] [--logo-to:242_169_59]";
   return (
     <Link
@@ -33,10 +33,11 @@ export function Logo({ onClick, onAccent }: { onClick?: () => void; onAccent?: b
       className={`flex items-center gap-2.5 font-semibold tracking-tight ${dark} ${onAccent ? "w-fit rounded-2xl bg-[#0A090B] py-2 pl-2 pr-4 shadow-[0_10px_24px_-10px_rgb(0_0_0/0.7)]" : ""}`}
       aria-label={`${SITE.name} home`}
     >
-      <BrandMark bowl="#F2F1EC" rupee="#0A090B" className="h-9 w-9 shrink-0" />
-      <span className={onAccent ? "text-[19px]" : "text-[18px]"}>
-        <span className="logo-kitchen">Kitchen</span>
-        <span className="text-[#E23744]">Math</span>
+      {/* Brand mark: chef hat, fork, leaf and rising bars (transparent PNG made from the logo artwork) */}
+      <Image src="/brand/logo-mark.png" alt="" width={273} height={256} priority className="h-10 w-auto shrink-0" />
+      <span className={`font-extrabold ${onAccent ? "text-[20px]" : "text-[20px]"}`}>
+        <span className="text-white">Kitchen</span>
+        <span className="bg-[linear-gradient(90deg,#FFB21E,#FF5A1F)] bg-clip-text text-transparent">Math</span>
       </span>
     </Link>
   );

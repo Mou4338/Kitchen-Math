@@ -32,7 +32,7 @@ export function HowToUse({ slug, steps }: { slug: string; steps: string[] }) {
         <ol className="grid gap-3 sm:grid-cols-2">
           {steps.map((s, i) => (
             <li key={s} className="flex gap-3 rounded-xl bg-card p-3.5 shadow-card">
-              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-inverse text-xs font-bold text-accent-bright">{i + 1}</span>
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-inverse text-xs font-bold text-star-text ring-1 ring-star/40">{i + 1}</span>
               <span className="text-sm leading-relaxed text-ink-soft">{s}</span>
             </li>
           ))}

@@ -60,7 +60,7 @@ export function FieldGrid({ children, cols = 2 }: { children: ReactNode; cols?: 
 export function BlockTitle({ eyebrow, title, description }: { eyebrow?: string; title: string; description?: string }) {
   return (
     <div className="mb-4 max-w-2xl">
-      {eyebrow ? <p className="eyebrow mb-1.5 text-accent-dark">{eyebrow}</p> : null}
+      {eyebrow ? <p className="eyebrow mb-1.5 text-star-text">{eyebrow}</p> : null}
       <h2 className="text-xl font-semibold sm:text-2xl">{title}</h2>
       {description ? <p className="mt-1.5 text-sm text-muted sm:text-base">{description}</p> : null}
     </div>

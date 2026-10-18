@@ -332,7 +332,7 @@ export default function CompanyHome() {
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
             <p className="eyebrow text-star-text">Get in touch</p>
-            <h2 className="mt-2 text-4xl font-bold text-on-inverse sm:text-5xl">Book a free <span className="font-serif font-normal italic text-star-text">growth audit</span></h2>
+            <h2 className="mt-2 text-4xl font-bold text-on-inverse sm:text-5xl">Book a free <span className="font-serif font-normal italic text-accent">growth audit</span></h2>
             <p className="mt-4 text-on-inverse/80">Tell us about your restaurant. We&apos;ll look for your biggest growth constraint and suggest where to start.</p>
           </Reveal>
           {/* One split card (template style); the red → saffron highlight runs along the top of the form panel only:
@@ -402,6 +402,8 @@ export default function CompanyHome() {
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
           name: SITE.name,
+          logo: `${SITE.url}/brand/kitchenmath-logo-full.png`,
+          image: `${SITE.url}/brand/kitchenmath-og.jpg`,
           description: "Restaurant growth consulting: menu optimization, pricing & order value, ads & discounts, conversion, ratings & dish performance, and local market & competitors.",
           url: SITE.url,
           email: c.email,

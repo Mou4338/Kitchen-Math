@@ -17,8 +17,8 @@ export const metadata: Metadata = {
   title: { default: `${SITE.name}: Restaurant Profitability Calculators`, template: `%s | ${SITE.name}` },
   description: SITE.description,
   applicationName: SITE.name,
-  openGraph: { siteName: SITE.name, locale: SITE.locale, type: "website", images: [{ url: "/brand/kitchenmath-logo.png", width: 1080, height: 1080, alt: "KitchenMath logo" }] },
-  twitter: { card: "summary" },
+  openGraph: { siteName: SITE.name, locale: SITE.locale, type: "website", images: [{ url: "/brand/kitchenmath-og.jpg", width: 1200, height: 630, alt: "KitchenMath: Restaurant growth on Zomato & Swiggy" }] },
+  twitter: { card: "summary_large_image", images: ["/brand/kitchenmath-og.jpg"] },
   robots: { index: true, follow: true },
 };
 

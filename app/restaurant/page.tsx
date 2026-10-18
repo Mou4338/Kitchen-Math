@@ -72,8 +72,9 @@ export default function RestaurantHome() {
         </div>
       </section>
 
-      {/* How it works */}
-      <section className="py-16 sm:py-24">
+      {/* How it works: soft white glow from the top and a saffron hairline, same as the home page contact band */}
+      <section className="contact-graphite relative isolate overflow-hidden py-16 sm:py-24">
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-star/60 to-transparent" aria-hidden />
         <div className="container">
           <Reveal className="mx-auto mb-12 max-w-2xl text-center">
             <p className="eyebrow text-star-dark">How it works</p>

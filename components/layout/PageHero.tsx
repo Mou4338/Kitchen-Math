@@ -41,6 +41,13 @@ export function PageHero({
       ) : (
         <>
           <Image src={photo.src} alt={photo.alt} fill priority sizes="100vw" className="-z-10 object-cover" style={photo.position ? { objectPosition: photo.position } : undefined} />
+          {photo.fadeEdges ? (
+            <>
+              {/* soften the picture's hard edges into the dark banner */}
+              <div className="absolute inset-y-0 right-0 -z-10 w-[22%] bg-gradient-to-l from-inverse via-inverse/85 to-transparent" aria-hidden />
+              <div className="absolute inset-x-0 top-0 -z-10 h-1/4 bg-gradient-to-b from-inverse/80 to-transparent" aria-hidden />
+            </>
+          ) : null}
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-inverse via-inverse/75 to-inverse/30" aria-hidden />
         </>
       )}

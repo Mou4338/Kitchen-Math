@@ -11,6 +11,8 @@ export interface Photo {
   /** "contain": show the whole picture on the right of a banner instead of filling (and cropping) it. */
   /** CSS object-position for the banner crop, e.g. "right" for wide banners with the subject on the right. */
   position?: string;
+  /** Fade the picture's right, top and bottom edges into the dark banner (for pictures with a hard edge). */
+  fadeEdges?: boolean;
   fit?: "cover" | "contain";
   /** Width ÷ height of the picture, needed with fit "contain". */
   aspect?: number;
@@ -20,9 +22,8 @@ const u = (id: string) => `https://images.unsplash.com/photo-${id}?auto=format&f
 
 export const HERO_SLIDES: (Photo & { eyebrow: string; title: [string, string]; text: string; cta: { label: string; href: string }; /** Darken the photo's right edge (for photos with a bright edge). */ fadeRight?: boolean })[] = [
   {
-    src: u("1551288049-bebda4e38f71"),
-    alt: "Performance analytics and sales graphs on a laptop screen",
-    fadeRight: true,
+    src: "/images/heroes/tools-dashboard.webp",
+    alt: "Restaurant dashboard showing orders by menu price against profit margin, profit per order by dish, and key numbers: 1,284 orders, ₹412 average order value, 58.9% payout and ₹66.75 profit per order",
     eyebrow: "Menu pricing",
     title: ["Price Every Dish", "for Profit."],
     text: "Enter dish cost, labour and packaging with your discount, commission and ads. Get the exact break-even price and the price that keeps your margin.",
@@ -81,8 +82,8 @@ export const PAGE_HEROES: Record<string, PageHeroImage> = {
 
 /** Banner photo for every inner page (calculators use their slug as the key). */
 export const PAGE_IMAGES: Record<string, Photo> = {
-  "online-sale-payout-calculator": { src: "/images/heroes/online-payout-banner.webp", position: "right", alt: "Restaurant partner app on a tablet and phone showing live delivery orders, bills and rider status" },
-  "menu-pricing-calculator": { src: "/images/heroes/menu-pricing-banner.webp", position: "right", alt: "Guest holding an open restaurant menu with starters, mains, desserts and dish photos" },
+  "online-sale-payout-calculator": { src: "/images/heroes/online-payout-banner.webp", position: "right", fadeEdges: true, alt: "Restaurant partner app on a tablet and phone showing live delivery orders, bills and rider status" },
+  "menu-pricing-calculator": { src: "/images/heroes/menu-pricing-banner.webp", position: "right", fadeEdges: true, alt: "Guest holding an open restaurant menu with starters, mains, desserts and dish photos" },
   "menu-engineering-calculator": { src: u("1547573854-74d2a71d0826"), alt: "Table spread with many plates of beautifully presented dishes" },
   guides: { src: u("1454165804606-c3d57bc86b40"), alt: "Hand with a pencil beside a laptop" },
   help: { src: u("1759752393975-7ca7b302fcc6"), alt: "Hands typing on a laptop with a spreadsheet of figures on screen" },

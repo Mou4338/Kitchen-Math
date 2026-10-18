@@ -27,7 +27,7 @@ export function EducationBlock({ c }: { c: CalculatorMeta }) {
   const e = c.education;
   return (
     <section aria-labelledby="learn-title" className="print-break">
-      <p className="eyebrow text-accent-dark">Learn</p>
+      <p className="eyebrow text-star-text">Learn</p>
       <h2 id="learn-title" className="mt-1 text-2xl font-semibold">Understanding {c.shortTitle.toLowerCase()}</h2>
       <div className="mt-6 grid gap-5 md:grid-cols-3">
         {[

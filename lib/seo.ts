@@ -9,8 +9,8 @@ export function pageMetadata({ title, description, path, keywords }: { title: st
     description,
     keywords,
     alternates: { canonical: path },
-    openGraph: { title, description, url, siteName: SITE.name, locale: SITE.locale, type: "website" },
-    twitter: { card: "summary", title, description },
+    openGraph: { title, description, url, siteName: SITE.name, locale: SITE.locale, type: "website", images: [{ url: "/brand/kitchenmath-og.jpg", width: 1200, height: 630, alt: "KitchenMath logo" }] },
+    twitter: { card: "summary_large_image", title, description, images: ["/brand/kitchenmath-og.jpg"] },
   };
 }
 
